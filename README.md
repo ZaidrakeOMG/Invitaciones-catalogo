@@ -1,6 +1,15 @@
-# CAZAMI STUDIO · Catálogo editorial de lujo (V6)
+# CAZAMI STUDIO · Atelier de invitaciones digitales (V7)
 
 Catálogo comercial y portafolio web creado con **Astro 5, TypeScript, CSS y JavaScript**. Sitio estático, responsive y preparado para GitHub + Vercel.
+
+## Novedades V7
+
+- Presentación de apertura animada con monograma CZ, una vez por sesión.
+- Rediseño editorial contemporáneo de todas las secciones y versión móvil.
+- Iconos SVG propios en `src/components/Icon.astro`, sin emojis decorativos.
+- Animaciones de aparición, detalles de movimiento y transiciones suaves, respetando accesibilidad.
+- Hoja visual nueva en `src/styles/redesign.css` aplicada sobre los componentes existentes.
+- Servicios claramente separados: invitaciones, funciones, pases, acceso, recepción y NFC.
 
 ## Qué incluye
 
@@ -31,7 +40,7 @@ npm run dev
 
 ## Publicación
 
-Crear repositorio vacío **ZaidrakeOMG/cazami-catalogo** y ejecutar `SUBIR-A-GITHUB.bat`, o usar comandos de Git incluidos en `DEPLOY-GITHUB-VERCEL.md`. En Vercel usar **Import Git Repository**, framework Astro, Build Command `npm run build` y Output Directory `dist`.
+Crear repositorio vacío **ZaidrakeOMG/Invitaciones-catalogo** y ejecutar `SUBIR-A-GITHUB.bat`, o usar comandos de Git incluidos en `DEPLOY-GITHUB-VERCEL.md`. En Vercel usar **Import Git Repository**, framework Astro, Build Command `npm run build` y Output Directory `dist`.
 
 ## Portadas web frente a pases digitales
 
