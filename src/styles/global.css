@@ -307,3 +307,6 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .portfolio-pagination__button {gap:3px;padding:7px 5px;}
   .portfolio-pagination__button svg {width:14px;height:14px;}
 }
+
+/* En las tarjetas las capturas se anclan arriba para enseñar el inicio de la carta. */
+.preview__screenshot { object-position:center top; }
