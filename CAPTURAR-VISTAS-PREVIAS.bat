@@ -1,20 +1,20 @@
 @echo off
 chcp 65001 >nul
-title CAZAMI - Capturar las portadas reales
+title CAZAMI - Portadas del inicio de las cartas
 cd /d "%~dp0"
-echo ===== CAZAMI STUDIO - CAPTURAR VISTAS REALES =====
-echo Se utilizaran los 14 enlaces Netlify, SIN proyectos ZIP.
+echo ===== CAZAMI STUDIO - PORTADAS DE INVITACIONES =====
+echo Se capturara el INICIO de las 14 invitaciones, no el pase digital.
 call npm install
 if errorlevel 1 goto :error
-call npm run capturar:vistas
+call npm run capturar:vistas -- --force
 if errorlevel 1 goto :error
 echo.
-echo Capturas guardadas en public\previews-real\
-echo Ya puedes ejecutar INICIAR-CAZAMI.bat o subir los cambios a GitHub.
+echo Capturas guardadas en public\intro-previews\
+echo Sube esas capturas a GitHub para verlas en el catalogo publicado.
 pause
 exit /b 0
 :error
-echo No se pudieron generar todas las capturas.
+echo Algunas capturas no se pudieron generar.
 echo Si falta Chrome, ejecuta: npx playwright install chromium
 pause
 exit /b 1
