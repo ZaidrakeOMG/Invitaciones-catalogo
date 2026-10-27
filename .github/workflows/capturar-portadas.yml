@@ -1,0 +1,58 @@
+name: Actualizar portadas reales de invitaciones
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/capturar-portadas.yml"
+      - "scripts/capture-previews.mjs"
+      - "src/data/catalog.ts"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  portadas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Descargar catálogo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Instalar navegador
+        run: npx playwright install --with-deps chromium
+      - name: Capturar el inicio de las cartas
+        id: captura
+        shell: bash
+        run: |
+          set +e
+          npm run capturar:vistas -- --force
+          resultado=$?
+          echo "resultado=$resultado" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Guardar nuevas portadas en GitHub
+        shell: bash
+        run: |
+          if [ -d public/intro-previews ]; then
+            git add public/intro-previews/
+            if ! git diff --cached --quiet; then
+              git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "assets: actualizar portadas iniciales reales"
+              git push
+            else
+              echo "No hay portadas nuevas."
+            fi
+          fi
+      - name: Notificar capturas fallidas
+        if: steps.captura.outputs.resultado != '0'
+        run: |
+          echo "::warning::Algunas invitaciones no pudieron capturarse; se conservaron sus fichas editoriales."
+          exit 1
