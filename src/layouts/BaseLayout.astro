@@ -1,6 +1,5 @@
 ---
 import '../styles/global.css';
-import '../styles/redesign.css';
 import {site,contactHref} from '../data/site';
 import Icon from '../components/Icon.astro';
 interface Props {title?:string;description?:string;image?:string}
@@ -13,38 +12,41 @@ const og=origin?new URL(image,origin).toString():undefined;
 <html lang="es">
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="theme-color" content="#171a18"/><meta name="description" content={description}/>
+<meta name="theme-color" content="#1c2622"/><meta name="description" content={description}/>
 <meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/>
-{og && <meta property="og:image" content={og}/>}{canonical && <><meta property="og:url" content={canonical}/><link rel="canonical" href={canonical}/></>}
-<link rel="icon" type="image/png" href="/favicon.png"/>
+{og&&<meta property="og:image" content={og}/>}{canonical&&<><meta property="og:url" content={canonical}/><link rel="canonical" href={canonical}/></>}
+<link rel="icon" href="/favicon.png" type="image/png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet"/>
 <title>{title}</title>
 </head>
-<body class="cazami-v7">
-<div class="intro-loader" id="intro-loader" role="status" aria-label="Cargando catálogo CAZAMI"><div class="intro-loader__center"><div class="intro-loader__logo"><img src="/brand/cz-blanco.png" alt="" width="150" height="150" /></div><span class="intro-loader__name">C A Z A M I</span><small>ESTUDIO DE INVITACIONES</small></div><div class="intro-loader__track"><span></span></div><span class="intro-loader__folio">DISEÑADO PARA RECORDAR</span></div>
-<div id="reading-progress" class="reading-progress" aria-hidden="true"></div>
-<div class="announcement"><div class="wrap"><span><span class="announcement__dot"></span> CAZAMI STUDIO</span><span>INVITACIONES DIGITALES DE AUTOR</span><span>MX · ESTUDIO CREATIVO</span></div></div>
-<header class="header" id="header"><div class="wrap header__inner">
-<a class="brand" href="/" aria-label="CAZAMI Studio, inicio"><img src="/brand/cz-blanco.png" alt="" width="42" height="42"/><span>CAZAMI<small>STUDIO</small></span></a>
-<nav class="navigation" id="navigation" aria-label="Navegación principal"><a href="/#inicio">Inicio</a><a href="/#servicios">Servicios</a><a href="/#coleccion">Portafolio</a><a href="/#pases">Pases digitales</a><a href="/#nfc">Tarjetas NFC</a><a href="/#contacto">Contacto</a><a class="mobile-quote" href={contactHref()} target="_blank" rel="noopener noreferrer">Solicitar cotización <Icon name="arrowUp" size={17}/></a></nav>
-<a class="header__quote" href={contactHref()} target="_blank" rel="noopener noreferrer">Cotizar proyecto <Icon name="arrowUp" size={17}/></a>
-<button class="menu-toggle" id="menu-toggle" type="button" aria-controls="navigation" aria-expanded="false" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+<body>
+<div class="intro" id="intro" aria-label="CAZAMI Studio"><div class="intro__mark"><img src="/brand/cz-blanco.png" width="128" height="128" alt=""/><span>CAZAMI</span><small>STUDIO DE INVITACIONES</small></div><div class="intro__progress"><span></span></div></div>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+<header class="site-header" id="site-header"><div class="shell site-header__inside">
+<a class="site-brand" href="/#inicio" aria-label="CAZAMI Studio, inicio"><img src="/brand/cz-blanco.png" width="43" height="43" alt=""/><span>CAZAMI <small>STUDIO</small></span></a>
+<nav class="site-nav" id="site-nav" aria-label="Navegación principal"><a href="/#concepto">Nosotros</a><a href="/#invitaciones">Invitaciones</a><a href="/#coleccion">Portafolio</a><a href="/#pases">Pases</a><a href="/#nfc">NFC</a><a href="/#proceso">Proceso</a><a class="site-nav__mobile" href={contactHref('Hola, CAZAMI. Quiero cotizar una invitación personalizada.')} target="_blank" rel="noopener noreferrer">Solicitar cotización <Icon name="arrowUp" size={18}/></a></nav>
+<a class="site-header__cta" href={contactHref('Hola, CAZAMI. Quiero una cotización personalizada.')} target="_blank" rel="noopener noreferrer">Hablemos <Icon name="arrowUp" size={17}/></a>
+<button class="menu-button" id="menu-button" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Abrir menú"><Icon name="menu" size={23}/></button>
 </div></header>
-<main id="main"><slot /></main>
-<footer class="footer"><div class="wrap"><div class="footer__top"><div><a href="/" class="footer__brand">CAZAMI<span>®</span></a><p>Las historias extraordinarias merecen<br/>una primera impresión inolvidable.</p></div><a class="footer__up" href="#inicio"><Icon name="arrowUp" size={17}/> Volver arriba</a></div><div class="footer__line"></div><div class="footer__bottom"><span>© {new Date().getFullYear()} CAZAMI STUDIO · CREADO CON INTENCIÓN</span><div><a href={contactHref()} target="_blank" rel="noopener noreferrer">WhatsApp <Icon name="arrowUp" size={14}/></a><a href={site.tiktok} target="_blank" rel="noopener noreferrer">TikTok <Icon name="arrowUp" size={14}/></a><a href={site.facebook} target="_blank" rel="noopener noreferrer">Facebook <Icon name="arrowUp" size={14}/></a></div></div></div></footer>
+<main id="contenido"><slot/></main>
+<footer class="site-footer"><div class="shell"><div class="site-footer__top"><div class="site-footer__brand">CAZAMI <span>STUDIO</span></div><a class="footer-top" href="#inicio">Volver al inicio <Icon name="arrowUp" size={16}/></a></div><div class="site-footer__bottom"><p>Diseñamos primeras impresiones que permanecen.</p><div><a href={contactHref()} target="_blank" rel="noopener noreferrer">WhatsApp</a><a href={site.tiktok} target="_blank" rel="noopener noreferrer">TikTok</a><a href={site.facebook} target="_blank" rel="noopener noreferrer">Facebook</a></div><small>© {new Date().getFullYear()} CAZAMI STUDIO</small></div></div></footer>
 <script>
-const loader=document.getElementById('intro-loader');
-const dismiss=()=>{if(!loader||loader.classList.contains('intro-loader--exit'))return;loader.classList.add('intro-loader--exit');window.setTimeout(()=>loader.remove(),800);};
-const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if(sessionStorage.getItem('cazami-visited')||reduced){dismiss();}else{sessionStorage.setItem('cazami-visited','1');window.setTimeout(dismiss,1500);}
-window.addEventListener('pageshow',()=>{if(loader&&document.readyState==='complete'&&sessionStorage.getItem('cazami-visited'))window.setTimeout(dismiss,1100);},{once:true});
-const header=document.getElementById('header');const toggle=document.getElementById('menu-toggle');const navigation=document.getElementById('navigation');
-const close=()=>{toggle?.setAttribute('aria-expanded','false');toggle?.setAttribute('aria-label','Abrir menú');navigation?.classList.remove('navigation--open');document.body.classList.remove('menu-open');};
-toggle?.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!open));toggle.setAttribute('aria-label',open?'Abrir menú':'Cerrar menú');navigation?.classList.toggle('navigation--open',!open);document.body.classList.toggle('menu-open',!open);});
-navigation?.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
-const bar=document.getElementById('reading-progress');const update=()=>{header?.classList.toggle('header--scrolled',window.scrollY>15);if(bar){const max=document.documentElement.scrollHeight-window.innerHeight;bar.style.transform=`scaleX(${max>0?window.scrollY/max:0})`;}};
-window.addEventListener('scroll',update,{passive:true});update();
-if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});},{threshold:.05,rootMargin:'0px 0px -10px 0px'});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));}else document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
+ const loader=document.getElementById('intro');
+ const motion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const already=window.sessionStorage.getItem('cazami-intro-seen')==='1';
+ const hide=()=>{if(!loader)return;loader.classList.add('intro--done');window.setTimeout(()=>loader.remove(),520);};
+ if(motion||already)hide();else{window.sessionStorage.setItem('cazami-intro-seen','1');window.setTimeout(hide,1250);}
+ const toggle=document.getElementById('menu-button') as HTMLButtonElement|null;
+ const nav=document.getElementById('site-nav');
+ const close=()=>{toggle?.setAttribute('aria-expanded','false');toggle?.setAttribute('aria-label','Abrir menú');nav?.classList.remove('site-nav--open');document.body.classList.remove('menu-open');};
+ toggle?.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!open));toggle.setAttribute('aria-label',open?'Abrir menú':'Cerrar menú');nav?.classList.toggle('site-nav--open',!open);document.body.classList.toggle('menu-open',!open);});
+ nav?.querySelectorAll('a').forEach(link=>link.addEventListener('click',close));document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+ const progress=document.getElementById('reading-progress');
+ const paintScroll=()=>{if(progress){const max=document.documentElement.scrollHeight-window.innerHeight;progress.style.transform=`scaleX(${max>0?window.scrollY/max:0})`;}};
+ window.addEventListener('scroll',paintScroll,{passive:true});paintScroll();
+ if('IntersectionObserver' in window&&!motion){const io=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in-view');io.unobserve(entry.target);}});},{threshold:.08,rootMargin:'0px 0px -24px 0px'});document.querySelectorAll('.rise').forEach(el=>io.observe(el));}else{document.querySelectorAll('.rise').forEach(el=>el.classList.add('in-view'));}
 </script>
-</body></html>
+</body>
+</html>

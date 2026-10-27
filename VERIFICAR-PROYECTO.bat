@@ -9,7 +9,7 @@ if errorlevel 1 (
   exit /b 1
 )
 echo.
-echo ==== CAZAMI STUDIO V6 - VERIFICACION ====
+echo ==== CAZAMI STUDIO V8 - VERIFICACION ====
 echo.
 call npm install
 if errorlevel 1 goto :error

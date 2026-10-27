@@ -1,19 +1,27 @@
-# Verificación de entrega V6
+# CAZAMI Studio V8 — Estado de las verificaciones
 
-**Revisado en este entorno**
+## Revisión estática realizada
 
-- 14 URLs de demostraciones conservadas y localizadas exclusivamente en el portafolio.
-- 6 fotografías de pases reales conservadas en `public/passes/`; ninguna se referencia como portada de invitación web.
-- La única captura aportada de portada web es Zaid & Camila.
-- Las vistas embebidas se deshabilitan para interacción y poseen enlaces externos a las demostraciones.
-- El video NFC carece de pista de audio (ffprobe reporta solo stream de video) y el reproductor está configurado `muted`.
-- CSS sin errores sintácticos reportados por el analizador; archivos TypeScript de datos y scripts sin errores en revisión individual con `tsc`.
-- Navegación y contenido comercial revisados; WhatsApp y TikTok presentes, sin precios inventados.
+- 14 proyectos con enlaces de demostración distintos.
+- 6 archivos WEBP correspondientes exclusivamente a pases digitales.
+- Captura real de Zaid & Camila incluida.
+- Video de NFC local incluido.
+- **0 emojis** en el código de Astro, TypeScript y CSS.
+- Las tarjetas no contienen iframes; se evita el escalado que deformaba la vista previa.
+- La galería de pases no recorta los originales (`object-fit: contain`).
+- 15 fragmentos de TypeScript examinados sin errores de sintaxis.
+- Hoja CSS procesada sin errores de sintaxis.
+- Menú móvil, filtros, buscador, cuadro de ampliación y controles de video implementados.
 
-**Pendiente de ejecutar en la computadora de publicación**
+## Pruebas pendientes en la computadora del usuario / CI
 
-- `npm install` y `npm run build` para validación completa del compilador Astro, porque el registro npm no estaba disponible en este entorno.
-- Pruebas finales visuales en navegador real, móvil y escritorio. El navegador de pruebas de este entorno bloqueó las URL locales.
-- Revisión de QR reales antes de publicar (incluido QR visible del pase de Bernardo).
+- `npm install` y `npm run build` (el entorno de preparación carece de acceso al registro npm).
+- Pruebas visuales en navegador (Chromium restringido en este entorno).
+- Revisión final en Chrome y Safari móvil.
+- Confirmar en Vercel que la nueva compilación termina en **Ready**.
 
-El proyecto se entrega como código fuente editable, no como un build `dist/` ya compilado.
+## Consideraciones
+
+- Se incluyen fichas editoriales en las tarjetas sin captura auténtica; **no se simula una captura web**.
+- Puedes generar capturas reales desde los sitios externos ejecutando `npm run capturar:vistas` con conexión a Internet y Chrome o Playwright disponible. Las imágenes deben volver a subirse al repositorio.
+- Los pases digitales contienen datos de ejemplo de eventos. Antes de compartir el sitio públicamente, comprueba que los QR de muestras no sean accesos vigentes.

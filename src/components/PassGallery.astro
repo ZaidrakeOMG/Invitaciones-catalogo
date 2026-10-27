@@ -1,36 +1,28 @@
 ---
-import {contactHref} from '../data/site';
 import Icon from './Icon.astro';
-const passes = [
-  {name:'Aislinn & José',kind:'Boda · Pase digital personalizado',img:'/passes/aislinn-jose.webp'},
-  {name:'Scarlett Marisol',kind:'XV años · Pase digital personalizado',img:'/passes/scarlett-marisol.webp'},
-  {name:'Romina Manola',kind:'XV años · Pase digital personalizado',img:'/passes/romina-manola.webp'},
-  {name:'Bernardo',kind:'XV años · Pase digital con QR',img:'/passes/bernardo.webp'},
-  {name:'Mayte',kind:'XV años · Pase digital personalizado',img:'/passes/mayte.webp'},
-  {name:'Valeria Elizabeth',kind:'XV años · Pase digital personalizado',img:'/passes/valeria-elizabeth.webp'},
+import {contactHref} from '../data/site';
+const passes=[
+ {name:'Aislinn & José',kind:'Boda',img:'/passes/aislinn-jose.webp'},
+ {name:'Scarlett Marisol',kind:'XV años',img:'/passes/scarlett-marisol.webp'},
+ {name:'Romina Manola',kind:'XV años',img:'/passes/romina-manola.webp'},
+ {name:'Bernardo',kind:'XV años · QR',img:'/passes/bernardo.webp'},
+ {name:'Mayte',kind:'XV años',img:'/passes/mayte.webp'},
+ {name:'Valeria Elizabeth',kind:'XV años',img:'/passes/valeria-elizabeth.webp'},
 ];
 ---
-<section class="passes-section section-space" id="pases" aria-labelledby="passes-title">
-  <div class="wrap">
-    <div class="section-bar section-bar--inverse"><span>05 — EJEMPLOS REALES</span><span>PASES DIGITALES · NO SON PORTADAS WEB</span></div>
-    <div class="passes-header"><div><h2 class="display-title" id="passes-title">La atención empieza <em>en cada nombre.</em></h2><p class="lead">Un pase digital personalizado comunica a quién va dirigida la invitación y los lugares autorizados, según el diseño de cada evento.</p></div><div class="passes-explanation"><b>Sobre estas imágenes</b><p>Son seis ejemplos auténticos de <strong>pases digitales</strong> hechos por CAZAMI. No representan la portada ni el diseño completo de una invitación web.</p><a class="text-arrow text-arrow--light" href={contactHref('Hola, CAZAMI. Quiero cotizar pases digitales personalizados.')} target="_blank" rel="noopener noreferrer">Solicitar cotización <Icon name="arrowUp" size={16}/></a></div></div>
-    <div class="passes-carousel"><div class="passes-carousel__side"><Icon name="sparkles" class="star-ornament" size={31}/><span>PIEZAS DEL ESTUDIO</span><strong>Identidad y organización, en un solo pase.</strong><small>Desliza para conocer los diseños reales</small></div>
-      <div class="passes-rail" id="passes-rail" tabindex="0" aria-label="Seis ejemplos de pases digitales personalizados">
-        {passes.map((pass,index)=><figure class="pass-card"><button class="pass-card__image" type="button" data-view-pass data-img={pass.img} data-name={pass.name} aria-label={`Ampliar pase digital de ${pass.name}`}><span class="pass-card__mockup"><img src={pass.img} loading="lazy" decoding="async" alt={`Pase digital real de ${pass.name}`} /></span><span class="pass-card__zoom">VER COMPLETO <Icon name="arrowUp" size={15}/></span></button><figcaption><span>{String(index+1).padStart(2,'0')} / 06 · PASE DIGITAL</span><b>{pass.name}</b><small>{pass.kind}</small></figcaption></figure>)}
-      </div>
-    </div>
-    <div class="passes-tail"><span>Se conservan los diseños originales y las proporciones de los pases.</span><div><button type="button" id="passes-prev" class="v7-arrow-previous" aria-label="Anterior pase"><Icon name="arrow" size={18}/></button><button type="button" id="passes-next" aria-label="Siguiente pase"><Icon name="arrow" size={18}/></button></div></div>
-  </div>
-  <dialog class="pass-dialog" id="pass-dialog" aria-label="Vista ampliada del pase digital"><button type="button" id="pass-dialog-close" aria-label="Cerrar pase">Cerrar</button><img id="pass-dialog-image" alt="" /></dialog>
+<section class="passes-block section" id="pases" aria-labelledby="passes-heading"><div class="shell">
+ <div class="section-meta section-meta--on-dark"><span>05 / PASES DIGITALES</span><span>DISEÑO REAL · EJEMPLOS DEL ESTUDIO</span></div>
+ <div class="passes-block__heading"><div class="rise"><p class="kicker kicker--light">Una pieza para cada invitado</p><h2 class="display display--light" id="passes-heading">El detalle está <em>en su nombre.</em></h2></div><div class="passes-block__description rise"><p>Diseñamos pases digitales personalizados con la información que cada evento necesita: destinatario, personas autorizadas y detalles de acceso.</p><p class="passes-block__disclaimer"><Icon name="shield" size={18}/> Estas son imágenes de <strong>pases digitales</strong>, no portadas de invitaciones web.</p></div></div>
+ <div class="pass-grid" id="pass-grid">{passes.map((pass,index)=><figure class="pass-tile rise"><button type="button" class="pass-tile__visual" data-pass-image={pass.img} data-pass-name={pass.name} aria-label={`Ver pase digital completo de ${pass.name}`}><div class="pass-tile__phone"><div class="pass-tile__notch" aria-hidden="true"></div><img src={pass.img} alt={`Ejemplo original de pase digital personalizado: ${pass.name}`} loading="lazy" decoding="async"/><span class="pass-tile__zoom"><Icon name="gallery" size={16}/> Ampliar pase</span></div></button><figcaption><span>{String(index+1).padStart(2,'0')} / {pass.kind}</span><strong>{pass.name}</strong><small>EJEMPLO DE PASE DIGITAL</small></figcaption></figure>)}</div>
+ <div class="passes-block__end"><p>Los diseños se muestran sin alterar sus elementos principales. Las imágenes son demostrativas de pases personalizados.</p><a class="text-link text-link--light" href={contactHref('Hola, CAZAMI. Quiero cotizar pases digitales personalizados.')} target="_blank" rel="noopener noreferrer">Cotizar pases digitales <Icon name="arrowUp" size={18}/></a></div>
+</div>
+<dialog class="pass-modal" id="pass-modal" aria-label="Vista ampliada de un pase digital"><div class="pass-modal__bar"><span id="pass-modal-title">Pase digital CAZAMI</span><button type="button" id="pass-modal-close" aria-label="Cerrar vista"><Icon name="close" size={21}/></button></div><img id="pass-modal-img" alt=""/></dialog>
 </section>
 <script>
- const rail=document.getElementById('passes-rail');
- function move(dir:number){const w=rail?.querySelector('.pass-card')?.getBoundingClientRect().width||320;rail?.scrollBy({left:dir*(w+20),behavior:'smooth'});}
- document.getElementById('passes-prev')?.addEventListener('click',()=>move(-1));
- document.getElementById('passes-next')?.addEventListener('click',()=>move(1));
- const dialog=document.getElementById('pass-dialog') as HTMLDialogElement|null;
- const expanded=document.getElementById('pass-dialog-image') as HTMLImageElement|null;
- document.querySelectorAll<HTMLButtonElement>('[data-view-pass]').forEach(button=>button.addEventListener('click',()=>{if(!dialog||!expanded)return;expanded.src=button.dataset.img||'';expanded.alt=`Pase digital original de ${button.dataset.name||''}`;dialog.showModal();}));
- document.getElementById('pass-dialog-close')?.addEventListener('click',()=>dialog?.close());
- dialog?.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
+ const modal=document.getElementById('pass-modal') as HTMLDialogElement|null;
+ const modalImg=document.getElementById('pass-modal-img') as HTMLImageElement|null;
+ const modalTitle=document.getElementById('pass-modal-title');
+ document.querySelectorAll<HTMLButtonElement>('[data-pass-image]').forEach(btn=>btn.addEventListener('click',()=>{if(!modal||!modalImg)return;modalImg.src=btn.dataset.passImage||'';modalImg.alt=`Pase digital original de ${btn.dataset.passName||''}`;if(modalTitle)modalTitle.textContent=btn.dataset.passName||'Pase digital';modal.showModal();}));
+ document.getElementById('pass-modal-close')?.addEventListener('click',()=>modal?.close());
+ modal?.addEventListener('click',event=>{if(event.target===modal)modal.close();});
 </script>

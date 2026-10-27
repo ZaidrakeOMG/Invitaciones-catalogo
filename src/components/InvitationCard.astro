@@ -1,10 +1,11 @@
 ---
 import type {Invite} from '../data/catalog';
 import LivePreview from './LivePreview.astro';
-interface Props {item:Invite; index:number}
-const {item,index} = Astro.props;
+import Icon from './Icon.astro';
+interface Props {item:Invite;index:number}
+const {item,index}=Astro.props;
 ---
-<article class="work-card reveal" data-work-card data-category={item.category} data-search={`${item.name} ${item.category} ${item.mood}`.toLocaleLowerCase('es-MX')}>
-  <a class="work-card__cover" href={item.externalDemo} target="_blank" rel="noopener noreferrer" aria-label={`Abrir la demostración original de ${item.name}`}><LivePreview item={item}/><span class="work-card__ordinal">{String(index+1).padStart(2,'0')}</span><span class="work-card__preview-type">DEMOSTRACIÓN REAL · VISTA BLOQUEADA</span></a>
-  <div class="work-card__info"><p class="eyebrow">{item.category} <span class="work-card__dot">·</span> {item.mood}</p><h3>{item.name}</h3><p>{item.subtitle}</p><div class="work-card__links"><a href={`/invitacion/${item.slug}/`}>Detalles <span aria-hidden="true">↗</span></a><a href={item.externalDemo} target="_blank" rel="noopener noreferrer">Abrir demo <span aria-hidden="true">↗</span></a></div></div>
+<article class="portfolio-card rise" data-work-card data-category={item.category} data-search={`${item.name} ${item.category} ${item.mood}`.toLocaleLowerCase('es-MX')}>
+ <a class="portfolio-card__art" href={item.externalDemo} target="_blank" rel="noopener noreferrer" aria-label={`Abrir invitación real de ${item.name}`}><LivePreview item={item}/><span class="portfolio-card__number">{String(index+1).padStart(2,'0')} / 14</span></a>
+ <div class="portfolio-card__text"><span class="micro">{item.category} <span class="sep">/</span> {item.mood}</span><h3>{item.name}</h3><p>{item.subtitle}</p><div class="portfolio-card__actions"><a href={`/invitacion/${item.slug}/`}>Conocer el proyecto <Icon name="arrow" size={17}/></a><a href={item.externalDemo} target="_blank" rel="noopener noreferrer" aria-label={`Visitar sitio original de ${item.name}`}><Icon name="arrowUp" size={20}/></a></div></div>
 </article>

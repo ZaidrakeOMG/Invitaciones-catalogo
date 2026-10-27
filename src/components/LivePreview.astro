@@ -2,16 +2,23 @@
 import type {Invite} from '../data/catalog';
 import {existsSync} from 'node:fs';
 import {resolve} from 'node:path';
-interface Props {item:Invite; context?: 'card'|'detail'}
-const {item,context='card'} = Astro.props;
-// Nunca usar public/passes como portadas. Solo capturas de URL real.
-const hasCaptured=existsSync(resolve(process.cwd(),'public','previews-real',`${item.slug}.webp`));
-const cover=item.cover||(hasCaptured?`/previews-real/${item.slug}.webp`:undefined);
+import Icon from './Icon.astro';
+interface Props {item:Invite; context?:'card'|'detail'}
+const {item,context='card'}=Astro.props;
+// La tarjeta solo muestra fotos reales cuando hay una captura verificada.
+const captured=resolve(process.cwd(),'public','previews-real',`${item.slug}.webp`);
+const cover=item.cover||(existsSync(captured)?`/previews-real/${item.slug}.webp`:undefined);
+const initials=item.name.split(/\s+|&/).filter(s=>s.length>1).slice(0,2).map(s=>s[0]).join('');
 ---
-<div class:list={['web-preview',`web-preview--${context}`]} data-web-preview>
-  {cover ? <img class="web-preview__actual" src={cover} alt={`Captura auténtica de la portada de ${item.name}`} loading="lazy" /> : <>
-    <div class="web-preview__placeholder" aria-hidden="true"><span class="web-preview__placeholder-meta">CAZAMI · DEMOSTRACIÓN WEB</span><strong>{item.name}</strong><small>Vista del sitio original al cargar</small></div>
-    <iframe class="web-preview__iframe" title={`Vista no interactiva de ${item.name}`} data-src={item.externalDemo} sandbox="allow-scripts allow-same-origin" loading="lazy" tabindex="-1" aria-hidden="true" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-  </>}
-  <div class="web-preview__blocker" aria-hidden="true"></div>
+<div class:list={['preview',`preview--${context}`,`preview--${item.category==='Bodas'?'boda':item.category==='XV años'?'xv':item.category==='Sacramentos'?'sacramento':'fiesta'}`]}>
+ {cover ? <img class="preview__screenshot" src={cover} alt={`Captura real del inicio de la invitación de ${item.name}`} loading={context==='card'?'lazy':'eager'}/> :
+  <div class="preview__editorial" aria-label="Ficha editorial del proyecto. La captura del sitio no está disponible.">
+   <div class="preview__frame" aria-hidden="true"></div>
+   <span class="preview__overline">CAZAMI STUDIO <span> / </span> {item.category}</span>
+   <div class="preview__mark" aria-hidden="true">{initials||'CZ'}</div>
+   <span class="preview__rule"></span>
+   <strong>{item.name}</strong><em>{item.subtitle}</em>
+   <span class="preview__caption">FICHA DEL PROYECTO · NO ES UNA CAPTURA WEB</span>
+  </div>}
+ <div class="preview__float"><Icon name="arrowUp" size={17}/><span>Ver invitación</span></div>
 </div>
