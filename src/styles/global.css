@@ -39,3 +39,166 @@
 .nfc-showcase__toggle .nfc-play-symbol{display:none}.nfc-showcase__toggle[data-paused="true"] .nfc-play-symbol{display:inline-flex}.nfc-showcase__toggle[data-paused="true"] .nfc-pause-symbol{display:none}
 /* Lectura cómoda: funcionalidades apiladas en pantallas estrechas */
 @media(max-width:520px){.feature-grid{grid-template-columns:minmax(0,1fr)}.feature{padding:16px 0;gap:17px}.feature h3{font-size:26px}.feature p{font-size:13px}.web-section__top{font-size:9px}.services .section-intro>p,.portfolio__heading>p,.passes-block__description>p{font-size:14px}}
+
+
+/* CAZAMI V9 — Compatibilidad iPhone Safari, Chrome, Firefox y Android
+   Ajustes progresivos: no se depende de dvh, aspect-ratio o hover. */
+:root { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html { width:100%; min-width:0; scroll-padding-top: 92px; }
+body { min-width:0; width:100%; overflow-x:hidden; }
+@supports (overflow:clip) { body { overflow-x:clip; } }
+img, picture, video, iframe, svg { max-width:100%; }
+img { height:auto; }
+button, input, textarea, select { -webkit-appearance:none; appearance:none; border-radius:0; }
+button { touch-action: manipulation; }
+a, button { -webkit-tap-highlight-color: transparent; }
+:where(a, button, input):focus-visible { outline: 2px solid #b89c72; outline-offset: 4px; }
+:where(.shell, .hero__layout, .hero__copy, .hero__visual, .portfolio-grid, .portfolio-card, .preview, .pass-grid, .nfc-block__grid, .reception-section__grid, .web-section__grid, .access-section__grid, .contact-section__layout, .section-intro) { min-width:0; }
+.site-header { -webkit-transform:none; transform:none; }
+.site-nav { min-width:0; }
+.site-brand { min-width:0; }
+.intro { min-height:100vh; min-height:100svh; animation:introFallbackHide 0s 2.7s forwards; }
+@keyframes introFallbackHide { to { opacity:0; visibility:hidden; pointer-events:none; } }
+.intro--done { animation:none; }
+@supports (height:100dvh) { .intro { min-height:100dvh; } }
+.intro__mark img { flex:0 0 auto; }
+.hero__title, .display, .detail__copy h1, .contact-section h2, .service-row__body strong, .portfolio-card__text h3 { overflow-wrap:break-word; }
+.hero__visual, .hero__device, .portfolio-card__art, .preview, .access-visual, .nfc-showcase, .nfc-showcase__phone { isolation:isolate; }
+.hero__device img, .preview__screenshot { display:block; width:100%; height:100%; object-fit:cover; }
+/* Mantener proporciones correctas al cambiar la orientación de iPhone. */
+.portfolio-grid > *, .pass-grid > *, .process-grid > *, .feature-grid > * { min-width:0; }
+.portfolio-card__art { width:100%; }
+.preview { width:100%; height:100%; }
+.portfolio-card__actions, .portfolio__heading, .portfolio__tools, .passes-block__end { min-width:0; }
+.portfolio-card__actions a { min-width:0; }
+.pass-tile__visual { border-radius:0; touch-action:pan-x pan-y; }
+.pass-tile__phone { aspect-ratio: 285 / 440; height:auto; min-height:0; }
+.pass-tile__phone img { width:100%; height:100%; object-fit:contain; }
+.pass-grid { -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; }
+.pass-modal { width:min(760px, calc(100% - 20px)); max-width:calc(100% - 20px); max-height:90vh; max-height:90svh; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+@supports (height:100dvh) { .pass-modal { max-height:90dvh; } }
+.pass-modal img { width:auto; max-width:100%; max-height:calc(90vh - 95px); object-fit:contain; }
+@supports (height:100dvh) { .pass-modal img { max-height:calc(90dvh - 95px); } }
+.nfc-showcase__phone video { display:block; width:100%; height:100%; object-fit:cover; background:#1a1b18; }
+.nfc-showcase__toggle { min-width:44px; min-height:44px; touch-action:manipulation; }
+.portfolio-search input { min-height:44px; }
+.filter-pill { min-height:44px; }
+.rise { will-change:auto; }
+/* Sin cambios en los tonos de la marca ni en las fotografías originales. */
+@media (hover:none), (pointer:coarse) {
+  .btn:hover, .pass-tile__visual:hover, .portfolio-card__art:hover .preview__editorial,
+  .portfolio-card__art:hover .preview__screenshot { transform:none; }
+  .site-nav a, .site-nav__mobile, .menu-button, .filter-pill, .portfolio-card__actions a { touch-action:manipulation; }
+}
+
+/* Tablet, Safari horizontal, navegadores móviles con barra dinámica. */
+@media (max-width:939px) {
+  .site-header { padding-top:env(safe-area-inset-top, 0px); }
+  .site-nav--open {
+    position:fixed;
+    top:calc(73px + env(safe-area-inset-top, 0px));
+    left:0; right:0; bottom:0;
+    width:100%; max-width:100%; max-height:none;
+    overflow-y:auto; overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    padding:20px max(26px, env(safe-area-inset-right, 0px)) max(28px, env(safe-area-inset-bottom, 0px)) max(26px, env(safe-area-inset-left, 0px));
+    box-shadow:none;
+    z-index:110;
+  }
+  body.menu-open { position:fixed; left:0; right:0; width:100%; height:100%; overflow:hidden; }
+  body.menu-open .site-header { position:fixed; top:0; left:0; right:0; width:100%; z-index:120; }
+  .site-nav--open > a { min-height:52px; align-items:center; }
+  .hero__layout, .manifesto__grid, .web-section__grid, .access-section__grid,
+  .reception-section__grid, .nfc-block__grid, .contact-section__layout { min-width:0; }
+}
+
+@media (max-width:767px) {
+  .shell { width:auto; max-width:none; margin-left:max(19px, env(safe-area-inset-left, 0px)); margin-right:max(19px, env(safe-area-inset-right, 0px)); }
+  .section { padding-block:clamp(58px,9vw,82px); }
+  .hero__layout { gap:clamp(30px,7vw,55px); padding-top:clamp(43px,8vw,76px); padding-bottom:72px; }
+  .hero__copy, .hero__visual { width:100%; min-width:0; }
+  .hero__title { font-size:clamp(66px, 15.2vw, 113px); line-height:.86; letter-spacing:-.065em; margin:35px 0 29px; }
+  .hero__title em { padding-left: min(7vw,38px); }
+  .hero__device { margin-right:16px; box-shadow:14px 16px 0 #121d19; }
+  .hero__device img { display:block; height:auto; min-height:0; aspect-ratio: 430 / 545; object-fit:cover; }
+  .hero__visual { max-width:min(380px, calc(100% - 14px)); }
+  .display { font-size:clamp(49px, 11.3vw, 78px); line-height: .99; letter-spacing:-.045em; }
+  .section-meta { flex-wrap:wrap; gap:4px 12px; }
+  .section-meta span:last-child { max-width:54%; }
+  .service-row__body strong { font-size:clamp(22px,6.6vw,33px); line-height:1.05; }
+  .portfolio-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:38px; }
+  .portfolio-card__art { aspect-ratio: 3 / 3.55; }
+  .portfolio-card__text h3 { font-size:clamp(29px,8vw,38px); }
+  .portfolio__tools { min-width:0; }
+  .filter-list { display:flex; width:100%; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; scroll-snap-type:x proximity; }
+  .filter-pill { flex:0 0 auto; scroll-snap-align:start; }
+  .portfolio-search { max-width:100%; }
+  .portfolio-search input { width:100%; font-size:16px; }
+  .pass-grid { display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:min(80vw, 330px); gap:16px; padding:0 6px 28px 1px; scroll-snap-type:x mandatory; }
+  .pass-tile { scroll-snap-align:start; }
+  .pass-tile__visual { padding:clamp(9px,3.3vw,18px); }
+  .pass-tile__phone { height:auto; width:100%; max-width:none; aspect-ratio:285 / 440; min-height:0; }
+  .pass-tile__phone img { display:block; width:100%; height:100%; object-fit:contain; }
+  .nfc-showcase__phone { width:min(100%,330px); max-width:100%; aspect-ratio:338 / 520; height:auto; }
+  .access-visual { min-width:0; min-height:0; padding:clamp(13px,4vw,24px); }
+  .access-card { min-width:0; max-width:100%; }
+  .process-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+  .contact-section__links { flex-wrap:wrap; }
+  .site-footer { padding-bottom:max(25px, env(safe-area-inset-bottom, 0px)); }
+}
+@media (max-width:650px) {
+  .site-nav--open { top:calc(68px + env(safe-area-inset-top, 0px)); }
+  html { scroll-padding-top:82px; }
+  .hero__title { font-size:clamp(62px,15vw,90px); }
+  .hero__visual { max-width:min(355px, calc(100% - 12px)); }
+  .hero__device img { height:auto; max-height:none; }
+  .portfolio-card__art { aspect-ratio:3 / 3.45; }
+  .pass-tile__phone { height:auto; }
+  .detail__layout { gap:28px; }
+  .detail__copy h1 { font-size:clamp(57px,13vw,85px); }
+}
+@media (max-width:410px) {
+  .shell { margin-left:max(15px, env(safe-area-inset-left, 0px)); margin-right:max(15px, env(safe-area-inset-right, 0px)); }
+  .hero__title { font-size:clamp(54px,14.3vw,66px); margin:31px 0 26px; }
+  .hero__eyebrow { font-size:9px; flex-wrap:wrap; }
+  .hero__buttons { align-items:stretch; flex-direction:column; gap:14px; }
+  .hero__buttons .btn { width:100%; }
+  .hero__visual { width:calc(100% - 12px); }
+  .display { font-size:clamp(44px,11.3vw,55px); }
+  .portfolio-card__text h3 { font-size:30px; }
+  .portfolio-card__actions { flex-wrap:wrap; gap:10px; }
+  .pass-grid { grid-auto-columns:min(83vw, 310px); }
+  .pass-tile__phone { height:auto; }
+  .process-grid { grid-template-columns:1fr; }
+  .service-row { grid-template-columns:20px 36px minmax(0,1fr) 16px; gap:8px; }
+  .service-row__icon { width:36px; height:36px; }
+  .service-row__body strong { font-size:22px; }
+  .site-footer__bottom > div { flex-wrap:wrap; }
+}
+@media (max-width:350px) {
+  .hero__title { font-size:clamp(49px,14.3vw,55px); }
+  .display { font-size:clamp(40px,12vw,44px); }
+  .site-brand > span { font-size:21px; }
+  .hero__device { box-shadow:8px 10px 0 #121d19; margin-right:8px; }
+  .pass-grid { grid-auto-columns:calc(100vw - 50px); }
+  .filter-pill { padding-inline:11px; }
+  .pass-modal__bar { min-width:0; width:100%; }
+}
+@media (max-height:500px) and (orientation:landscape) and (max-width:939px) {
+  .site-nav--open { padding-top:8px; }
+  .site-nav--open > a { min-height:39px; padding:8px 0; }
+  .hero__layout { padding-top:35px; }
+}
+@supports not (aspect-ratio:1) {
+  .portfolio-card__art { height:430px; }
+  .nfc-showcase__phone { height:460px; }
+  .pass-tile__phone { height:430px; }
+  .hero__device img { height:450px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  .rise { opacity:1!important; transform:none!important; }
+  .intro { display:none!important; }
+  .portfolio-card__art *, .btn, .pass-tile__visual { animation:none!important; transition:none!important; }
+}
