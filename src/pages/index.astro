@@ -67,10 +67,10 @@ const renderPortfolio=()=>{
     // Paginar después del observer debe mantener visibles las tarjetas cargadas.
     if(show)card.classList.add('in-view');
   });
-  if(count)count.textContent=total ? \`MOSTRANDO \${first+1}–\${last} DE \${total} PROYECTOS\` : 'SIN RESULTADOS';
+  if(count)count.textContent=total ? `MOSTRANDO ${first+1}–${last} DE ${total} PROYECTOS` : 'SIN RESULTADOS';
   if(empty)empty.hidden=total!==0;
   if(pagination)pagination.hidden=total<=pageSize;
-  if(pageLabel)pageLabel.textContent=\`PÁGINA \${currentPage} DE \${maxPage}\`;
+  if(pageLabel)pageLabel.textContent=`PÁGINA ${currentPage} DE ${maxPage}`;
   if(prev)prev.disabled=currentPage===1;
   if(next)next.disabled=currentPage===maxPage;
 };
