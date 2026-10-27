@@ -202,3 +202,108 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .intro { display:none!important; }
   .portfolio-card__art *, .btn, .pass-tile__visual { animation:none!important; transition:none!important; }
 }
+
+
+/* CAZAMI V10 — portfolio 3 × 3, responsive y paginado */
+.portfolio-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(22px,3vw,42px) clamp(10px,1.9vw,24px);
+  align-items:start;
+  scroll-margin-top:105px;
+}
+.portfolio-grid>.portfolio-card {min-width:0;width:100%;}
+.portfolio-card__art {aspect-ratio:3 / 3.75;}
+.portfolio-card__text h3 {font-size:clamp(24px,2.6vw,34px);overflow-wrap:anywhere;}
+.portfolio-pagination {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+  gap:clamp(8px,2vw,28px);
+  padding:clamp(25px,4vw,48px) 0 12px;
+  margin-top:clamp(15px,2.4vw,34px);
+  border-top:1px solid var(--line);
+}
+.portfolio-pagination[hidden] {display:none!important;}
+.portfolio-pagination__button {
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:9px;
+  min-height:46px;
+  padding:10px 15px;
+  border:1px solid #c9c1b2;
+  border-radius:2px;
+  background:transparent;
+  color:#33453b;
+  font:600 11px/1.1 var(--sans,inherit);
+  letter-spacing:.09em;
+  cursor:pointer;
+  transition:background .25s,color .25s,border-color .25s;
+  touch-action:manipulation;
+}
+.portfolio-pagination__button:first-child {justify-self:start;}
+.portfolio-pagination__button:first-child svg {transform:rotate(180deg);}
+.portfolio-pagination__button--next {justify-self:end;}
+.portfolio-pagination__button:hover:not(:disabled),
+.portfolio-pagination__button:focus-visible {background:#283a30;color:#fbf7ed;border-color:#283a30;}
+.portfolio-pagination__button:disabled {opacity:.36;cursor:not-allowed;}
+.portfolio-pagination__counter {
+  color:#6f7068;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.13em;
+  text-align:center;
+  white-space:nowrap;
+}
+@media (max-width:960px) {
+  .portfolio-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:30px 14px;}
+  .portfolio-card__art {aspect-ratio:3 / 4.1;}
+  .portfolio-card__text h3 {font-size:clamp(21px,2.7vw,29px);}
+}
+@media (max-width:767px) {
+  /* Tres miniaturas legibles por fila también en Safari iOS. */
+  .portfolio-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 10px;}
+  .portfolio-card__art {aspect-ratio:3 / 4.05;border-radius:2px;}
+  .portfolio-card__number {top:5px;left:5px;padding:5px;font-size:7px;letter-spacing:0;min-width:0;}
+  .portfolio-card__text {padding:9px 0 0;}
+  .portfolio-card__text .micro,.portfolio-card__text>p {display:none;}
+  .portfolio-card__text h3 {
+    font-size:clamp(14px,3.75vw,21px);
+    line-height:1.12;
+    margin:0 0 7px;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    line-clamp:2;
+    overflow:hidden;
+    min-height:2.24em;
+    overflow-wrap:anywhere;
+  }
+  .portfolio-card__actions {margin:0;padding:7px 0 0;justify-content:flex-start;min-height:27px;}
+  .portfolio-card__actions a:first-child {display:none;}
+  .portfolio-card__actions a:last-child {display:inline-flex;gap:4px;font-size:9px;font-weight:700;line-height:1.1;min-height:26px;align-items:center;}
+  .portfolio-card__actions a:last-child::before {content:'Ver demo';}
+  .portfolio-card__actions a:last-child svg {width:13px;height:13px;}
+  .preview__editorial {padding:14px 6px 10px;}
+  .preview__frame {inset:6px;}
+  .preview__frame::before,.preview__frame::after {width:9px;height:9px;}
+  .preview__frame::before {left:5px;top:5px;}
+  .preview__frame::after {right:5px;bottom:5px;}
+  .preview__overline {font-size:6px;letter-spacing:.02em;}
+  .preview__mark {font-size:38px;top:23%;}
+  .preview__rule {width:29px;margin:24px 0 11px;}
+  .preview__editorial strong {font-size:clamp(14px,3.6vw,23px);line-height:1;}
+  .preview__editorial em {font-size:10px;line-height:1.1;margin-top:7px;}
+  .preview__caption {display:none;}
+  .portfolio-pagination {margin-top:26px;padding-top:22px;gap:8px;}
+  .portfolio-pagination__button {padding:8px 9px;min-height:44px;font-size:10px;gap:5px;letter-spacing:.03em;}
+  .portfolio-pagination__counter {font-size:9px;letter-spacing:.03em;}
+}
+@media (max-width:390px) {
+  .portfolio-grid {gap:22px 7px;}
+  .portfolio-card__text h3 {font-size:clamp(13px,3.6vw,16px);}
+  .portfolio-card__actions a:last-child {font-size:8px;}
+  .portfolio-pagination__button {gap:3px;padding:7px 5px;}
+  .portfolio-pagination__button svg {width:14px;height:14px;}
+}
