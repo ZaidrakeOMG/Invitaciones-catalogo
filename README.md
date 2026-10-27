@@ -12,10 +12,13 @@ Esta versión sustituye el diseño anterior: portada premium, navegación móvil
 
 ## Vista previa de las 14 invitaciones
 
-- La captura real de Zaid & Camila está incluida.
-- Para los demás proyectos, las tarjetas usan fichas editoriales claramente identificadas hasta contar con capturas auténticas. **No usan las fotos de pases como portadas**.
-- Si tienes Chrome instalado y acceso a internet, `npm run capturar:vistas` genera imágenes auténticas desde las URL reales usando Playwright; luego sube las imágenes generadas en `public/previews-real` a GitHub.
-- La vista previa no usa iframes. Toda interacción ocurre únicamente al abrir el sitio original en otra pestaña.
+- **Portadas del inicio de la carta:** la galería de invitaciones muestra la primera pantalla de cada sitio, igual que Zaid y Camila. Nunca se utilizan las fotografías de los pases como miniaturas.
+- La captura verificada de **Zaid y Camila** se conserva en `/previews-real/zyc-invitacion.png`.
+- Las otras 13 capturas se guardan en `public/intro-previews/<slug>.webp`; si falta alguna, se muestra una ficha editorial (no la foto del pase).
+- La acción de GitHub **Actualizar portadas reales de invitaciones** genera esas imágenes al actualizar el capturador; también admite ejecución manual en Actions → Run workflow.
+- En Windows puedes ejecutar `CAPTURAR-VISTAS-PREVIAS.bat` o `npm run capturar:vistas -- --force`, revisar los resultados y subir la carpeta `public/intro-previews`.
+- La captura usa Playwright, abre la carta cuando hay un botón claramente marcado «Abrir invitación/carta/sobre» y evita los elementos de pase/modal conocidos. Conviene revisar visualmente las capturas de sitios externos.
+- Las vistas son imágenes estáticas y no usan iframes. Al pulsarlas se abre la demostración original.
 
 ## Servicios
 
