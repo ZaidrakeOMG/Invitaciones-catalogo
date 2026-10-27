@@ -79,6 +79,23 @@ for(const {slug,url} of demos){
       }
     }
 
+    // Abrir sobre o pantalla de bienvenida antes de fotografiar la carta.
+    // Coordenadas probadas sobre el viewport móvil 430 x 820.
+    const revealPoints={
+      'bernardo-xv':[215,400],
+      'boda-f-y-a':[215,400],
+      'dylan-bautizo-invitacion':[215,412],
+      'gael-confirmacion':[215,423],
+      'saida-invitacion-xv-year':[215,412],
+      'liamsantiagocumple':[215,490],
+      'invitacion-romina-xv':[215,595],
+    };
+    if(revealPoints[slug]){
+      const [x,y]=revealPoints[slug];
+      await page.mouse.click(x,y,{delay:95});
+      await page.waitForTimeout(2800);
+    }
+
     // Nunca mostrar pop-ups de pase o QR como portada.
     await page.addStyleTag({content:`
       .pase-overlay,.pase-modal,.pass-modal,.qr-modal,
