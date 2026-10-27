@@ -1,5 +1,4 @@
-/** 14 demostraciones externas. Solo Zaid & Camila dispone de una captura real de portada.
- Las fotos de pases viven exclusivamente en public/passes. */
+/** 14 demostraciones externas. Las portadas son capturas del inicio de cada carta.\n * Los pases digitales solo se muestran en la galería public/passes. */
 export type Category = 'Bodas' | 'XV años' | 'Celebraciones' | 'Sacramentos';
 export interface Invite {slug:string; name:string; category:Category; subtitle:string; description:string; mood:string; externalDemo:string; cover?:string}
 export const categories = ['Todas', 'Bodas', 'XV años', 'Celebraciones', 'Sacramentos'] as const;
