@@ -1,0 +1,15 @@
+---
+import {contactHref} from '../data/site';
+---
+<section class="nfc-section section-space" id="nfc" aria-labelledby="nfc-heading"><div class="wrap nfc-layout">
+  <div class="nfc-copy reveal"><span class="eyebrow">08 / INVITACIONES SEMIFÍSICAS</span><h2 class="display-title" id="nfc-heading">Un detalle que <em>puedes tocar.</em></h2><p class="lead">También creamos tarjetas NFC para entregar físicamente. Al acercarlas a un teléfono compatible, conectan con la invitación digital del evento.</p><div class="nfc-steps"><div><span>01</span><b>Entrega la tarjeta</b><p>Una presentación especial para tus invitados.</p></div><div><span>02</span><b>Acércala al celular</b><p>El teléfono compatible reconoce la tecnología NFC.</p></div><div><span>03</span><b>Abre la invitación</b><p>Acceso directo a la experiencia digital.</p></div></div><a class="button button--ink" href={contactHref('Hola, CAZAMI. Quiero una cotización para tarjetas NFC con invitación digital.')} target="_blank" rel="noopener noreferrer">Cotizar tarjetas NFC ↗</a><p class="fineprint">La experiencia NFC depende de la compatibilidad y los ajustes de cada teléfono.</p></div>
+  <div class="nfc-display reveal"><div class="nfc-display__top"><span>DEMO REAL / CAZAMI</span><span>REPRODUCCIÓN SIN AUDIO</span></div><div class="nfc-device"><video id="nfc-video" muted autoplay playsinline loop preload="metadata" poster="/media/nfc-poster.webp" aria-label="Video de demostración de tarjetas NFC, sin sonido"><source src="/media/nfc-demostracion-sin-audio.mp4" type="video/mp4" /></video><button type="button" id="nfc-toggle" class="nfc-toggle" aria-label="Pausar vídeo">PAUSAR <span aria-hidden="true">Ⅱ</span></button></div><p>Tarjetas NFC CAZAMI en uso — video original silencioso.</p></div>
+</div></section>
+<script>
+ const video=document.getElementById('nfc-video') as HTMLVideoElement|null;
+ const toggle=document.getElementById('nfc-toggle') as HTMLButtonElement|null;
+ let manuallyPaused=false;
+ const paint=()=>{if(!video||!toggle)return;toggle.innerHTML=video.paused?'REPRODUCIR <span aria-hidden="true">▶</span>':'PAUSAR <span aria-hidden="true">Ⅱ</span>';toggle.setAttribute('aria-label',video.paused?'Reproducir vídeo':'Pausar vídeo');};
+ toggle?.addEventListener('click',()=>{if(!video)return;if(video.paused){manuallyPaused=false;video.muted=true;void video.play().catch(()=>{}).finally(paint);}else{manuallyPaused=true;video.pause();paint();}});
+ if(video){video.muted=true;video.addEventListener('play',paint);video.addEventListener('pause',paint);if('IntersectionObserver' in window){const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting&&!manuallyPaused&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){void video.play().catch(()=>{});}else{video.pause();}}),{threshold:.2});io.observe(video);}paint();}
+</script>

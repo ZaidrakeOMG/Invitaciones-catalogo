@@ -1,0 +1,17 @@
+---
+import type {Invite} from '../data/catalog';
+import {existsSync} from 'node:fs';
+import {resolve} from 'node:path';
+interface Props {item:Invite; context?: 'card'|'detail'}
+const {item,context='card'} = Astro.props;
+// Nunca usar public/passes como portadas. Solo capturas de URL real.
+const hasCaptured=existsSync(resolve(process.cwd(),'public','previews-real',`${item.slug}.webp`));
+const cover=item.cover||(hasCaptured?`/previews-real/${item.slug}.webp`:undefined);
+---
+<div class:list={['web-preview',`web-preview--${context}`]} data-web-preview>
+  {cover ? <img class="web-preview__actual" src={cover} alt={`Captura auténtica de la portada de ${item.name}`} loading="lazy" /> : <>
+    <div class="web-preview__placeholder" aria-hidden="true"><span class="web-preview__placeholder-meta">CAZAMI · DEMOSTRACIÓN WEB</span><strong>{item.name}</strong><small>Vista del sitio original al cargar</small></div>
+    <iframe class="web-preview__iframe" title={`Vista no interactiva de ${item.name}`} data-src={item.externalDemo} sandbox="allow-scripts allow-same-origin" loading="lazy" tabindex="-1" aria-hidden="true" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </>}
+  <div class="web-preview__blocker" aria-hidden="true"></div>
+</div>
