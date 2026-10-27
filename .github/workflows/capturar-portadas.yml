@@ -27,7 +27,7 @@ jobs:
           node-version: '22'
           cache: npm
       - name: Instalar dependencias
-        run: npm ci
+        run: npm install --no-audit --no-fund
       - name: Instalar navegador
         run: npx playwright install --with-deps chromium
       - name: Capturar el inicio de las cartas
