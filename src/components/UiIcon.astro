@@ -1,0 +1,21 @@
+---
+interface Props {name?:'grid'|'image'|'ticket'|'link'|'lock'|'sparkles'|'arrow'|'chevron-left'|'chevron-right'|'check'|'camera'|'settings'|'plus'|'external'; size?:number; class?:string}
+const {name='grid',size=18,class:className=''}=Astro.props;
+const paths:Record<string,string>={
+ grid:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
+ image:'M3 3h18v18H3z M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M21 15l-5-5-8 8',
+ ticket:'M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a3 3 0 0 0 0 6v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4a3 3 0 0 0 0-6z M13 5v2 M13 11v2 M13 17v2',
+ link:'M10 13a5 5 0 0 0 7.1 0l3-3A5 5 0 0 0 13 2.9l-1.7 1.7 M14 11a5 5 0 0 0-7.1 0l-3 3A5 5 0 0 0 11 21.1l1.7-1.7',
+ lock:'M5 11h14v10H5z M8 11V7a4 4 0 0 1 8 0v4 M12 15v2',
+ sparkles:'M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z M20 17l.5 1.5L22 19l-1.5.5L20 21l-.5-1.5L18 19l1.5-.5L20 17z',
+ arrow:'M5 12h14 M13 6l6 6-6 6',
+ 'chevron-left':'M15 18l-6-6 6-6',
+ 'chevron-right':'M9 18l6-6-6-6',
+ check:'M20 6L9 17l-5-5',
+ camera:'M4 6h4l2-3h4l2 3h4v15H4z M12 10a4 4 0 1 0 0 8 4 4 0 0 0 0-8z',
+ settings:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M19.4 15a1.7 1.7 0 0 0 .4 1.9l.1.1-1.9 1.9-.1-.1a1.7 1.7 0 0 0-1.9-.4 1.7 1.7 0 0 0-1 1.6V21h-3v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.4l-.1.1-1.9-1.9.1-.1A1.7 1.7 0 0 0 7.6 15a1.7 1.7 0 0 0-1.6-1H5v-3h1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.4-1.9l-.1-.1 1.9-1.9.1.1A1.7 1.7 0 0 0 11 6.6a1.7 1.7 0 0 0 1-1.6V4h3v1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.4l.1-.1 1.9 1.9-.1.1a1.7 1.7 0 0 0-.4 1.9 1.7 1.7 0 0 0 1.6 1h1v3h-1a1.7 1.7 0 0 0-1.6 1z',
+ plus:'M12 5v14 M5 12h14',
+ external:'M14 4h6v6 M20 4l-9 9 M20 13v7H4V4h7'
+};
+---
+<svg class:list={['ui-icon',className]} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d={paths[name]}/></svg>
