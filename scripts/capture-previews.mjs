@@ -67,7 +67,7 @@ async function openInvitation(page){
       const imageBonus=el.querySelector('svg,img')?1:0;
       if(!textBonus&&!envelopeBonus)return null;
       return {index,score:button+textBonus+envelopeBonus+imageBonus+(box<innerWidth*innerHeight*.65?1:0),name:name.slice(0,180)};
-    }).filter(Boolean)));
+    }).filter(Boolean));
     choices.sort((a,b)=>b.score-a.score);
     let didClick=false;
     for(const option of choices.slice(0,12)){
