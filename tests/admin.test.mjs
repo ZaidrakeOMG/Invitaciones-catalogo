@@ -17,6 +17,7 @@ function req(method,body={},cookie='') {return {method,body,headers:{origin:'htt
 function res(){return {headers:{},code:200,setHeader(name,value){this.headers[name.toLowerCase()]=value;},status(v){this.code=v;return this;},json(data){this.data=data;return this;}};}
 async function call(handler,request){const response=res();await handler(request,response);return response;}
 let current={invitaciones:[],pases:[]},sha='1234',images=new Map();
+let lastAuthorization='';
 globalThis.fetch=async (url,options={})=>{
  const path=new URL(url).pathname;
  if(!options.method){return {ok:true,status:200,json:async()=>({sha,content:Buffer.from(JSON.stringify(current)).toString('base64')})};}
@@ -29,6 +30,7 @@ globalThis.fetch=async (url,options={})=>{
 // El administrador usa HTTPS nativo para evitar errores UND_ERR_INVALID_ARG de Undici.
 // Simular https.request en vez de hacer llamadas reales a GitHub durante las pruebas.
 https.request=(url,options,callback)=>{
+ lastAuthorization=options.headers?.Authorization||'';
  const request=new EventEmitter();
  let payload='';
  request.write=chunk=>{payload+=chunk.toString();return true;};
@@ -74,4 +76,28 @@ test('se sube solo la imagen de un pase, validada por firma',async()=>{
 test('el servidor rechaza el acceso desde otro origen',async()=>{
  const request=req('POST',{password:'2525'});request.headers.origin='https://evil.example';
  const response=await call(login,request);assert.equal(response.code,403);
+});
+
+test('recorta espacios y saltos de línea al final del token de GitHub',async()=>{
+ const previous=process.env.GITHUB_TOKEN;
+ process.env.GITHUB_TOKEN='test-token\r\n';
+ try{
+   const response=await call(login,req('POST',{password:'2525'}));
+   const cookie=response.headers['set-cookie'].split(';')[0];
+   const result=await call(items,req('GET',{},cookie));
+   assert.equal(result.code,200);
+   assert.equal(lastAuthorization,'Bearer test-token');
+ }finally{process.env.GITHUB_TOKEN=previous;}
+});
+test('detecta saltos de línea dentro del token sin exponer el secreto',async()=>{
+ const previous=process.env.GITHUB_TOKEN;
+ process.env.GITHUB_TOKEN='test-token\nsegunda-linea';
+ try{
+   const response=await call(login,req('POST',{password:'2525'}));
+   const cookie=response.headers['set-cookie'].split(';')[0];
+   const result=await call(items,req('GET',{},cookie));
+   assert.equal(result.code,503);
+   assert.match(result.data.error,/GITHUB_TOKEN.*caracteres no válidos/);
+   assert.ok(!result.data.error.includes('segunda-linea'));
+ }finally{process.env.GITHUB_TOKEN=previous;}
 });
