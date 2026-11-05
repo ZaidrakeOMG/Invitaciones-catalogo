@@ -72,3 +72,31 @@
 .invitation-preview__screenshot:not([hidden]){z-index:2}
 .invitation-preview>.web-preview__blocker{z-index:3}
 @media(max-width:700px){.invitation-preview__live--visible{display:block!important}}
+
+
+/* Corrección cabecera iPhone: "Hablemos" se oculta antes de que desborde. */
+.header__inner{min-width:0}
+@media(max-width:1150px){.header__quote{display:none!important}}
+@media(max-width:800px){
+ .header__inner{justify-content:space-between;gap:8px;width:100%;min-width:0}
+ .brand{min-width:0;flex:0 1 auto;gap:8px}
+ .brand>span{white-space:nowrap;font-size:clamp(16px,5vw,22px)}
+ .brand img{width:30px;height:30px;flex:none}
+ .header__admin{flex:none;margin-left:auto;padding:9px 12px}
+ .menu-toggle{display:flex!important;flex:none;margin-left:0;width:40px;height:40px}
+ .navigation{width:100%;max-width:100vw;left:0;right:0}
+ .navigation__admin{display:inline-flex;align-items:center;gap:8px}
+}
+@media(max-width:385px){
+ .header__inner{gap:6px}
+ .brand>span{font-size:17px}
+ .brand img{width:25px;height:25px}
+ .header__admin{padding:9px 10px;font-size:11px}
+ .header__admin span{font-size:11px}
+ .menu-toggle{width:36px;height:38px}
+}
+@media(max-width:330px){
+ .header__admin span{display:none}
+ .header__admin{width:37px;height:38px;padding:0}
+ .brand>span{font-size:15px}
+}
