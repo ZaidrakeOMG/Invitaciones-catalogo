@@ -119,8 +119,25 @@ for(const {slug,url} of invitations){
     await page.goto(url,{waitUntil:'domcontentloaded',timeout:35000});
     const opened=await openInvitation(page);
     console.log('  Interacciones de apertura:',opened);
+    const promptStillVisible=await page.evaluate(()=>{
+      const buttons=[...document.querySelectorAll('button,[role="button"],[data-open-envelope]')];
+      return buttons.some(el=>{
+        const rect=el.getBoundingClientRect(),sty=getComputedStyle(el);
+        return rect.width>15&&rect.height>15&&sty.visibility!=='hidden'&&sty.display!=='none'&&
+          /abrir (el )?sobre|abrir invitaci[oó]n|open envelope/i.test(el.textContent||el.getAttribute('aria-label')||'');
+      });
+    });
+    // No publicar como vista previa una captura que todavía esté esperando abrir el sobre.
+    if(!opened&&promptStillVisible)throw Error('El sobre sigue cerrado; se omite esta captura en vez de mostrar una vista incorrecta.');
     await page.waitForLoadState('networkidle',{timeout:6000}).catch(()=>{});
-    await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+    await page.evaluate(async()=>{
+      window.scrollTo({top:0,behavior:'instant'});
+      await document.fonts.ready.catch(()=>{});
+      await Promise.race([
+        Promise.all([...document.images].slice(0,18).map(img=>img.decode().catch(()=>{}))),
+        new Promise(resolve=>setTimeout(resolve,4500))
+      ]);
+    });
     await page.waitForTimeout(1700);
     await page.screenshot({path:filename,type:'webp',quality:78,animations:'disabled',timeout:20000});
     created++;
