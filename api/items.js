@@ -38,6 +38,7 @@ export default async function handler(req,res){
     return send(res,400,{error:'Tipo de trabajo no válido.'});
   }catch(e){
     const message=e instanceof Error?e.message:'Error inesperado.';
-    return send(res,e?.status===401?502: e?.status===403?502: e?.status===429?503:500,{error:message});
+    const status=e?.status===503||e?.status===429?503:[401,403,502].includes(e?.status)?502:500;
+    return send(res,status,{error:message});
   }
 }
