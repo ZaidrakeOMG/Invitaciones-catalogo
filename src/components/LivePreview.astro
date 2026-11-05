@@ -1,12 +1,18 @@
 ---
 import type {Invite} from '../data/catalog';
-import {existsSync} from 'node:fs';
-import {resolve} from 'node:path';
 interface Props {item:Invite; context?: 'card'|'detail'}
 const {item,context='card'} = Astro.props;
-// Nunca usar public/passes como portadas. Solo capturas de URL real.
-const hasCaptured=existsSync(resolve(process.cwd(),'public','previews-real',`${item.slug}.webp`));
-const cover=item.cover||(hasCaptured?`/previews-real/${item.slug}.webp`:undefined);
+// Capturas existentes en public/previews-real sin depender de módulos Node.
+const capturedSlugs=new Set([
+  'bernardo-xv',
+  'invitacion-boda-ayj',
+  'invitacion-romina-xv',
+  'invtiacion-xv-mayte',
+  'scarlett-invitacion-xv',
+  'valeria-xv-invitacion',
+  'zyc-invitacion'
+]);
+const cover=item.cover||(capturedSlugs.has(item.slug)?`/previews-real/${item.slug}.webp`:undefined);
 ---
 <div class:list={['web-preview',`web-preview--${context}`]} data-web-preview>
   {cover ? <img class="web-preview__actual" src={cover} alt={`Captura auténtica de la portada de ${item.name}`} loading="lazy" /> : <>
