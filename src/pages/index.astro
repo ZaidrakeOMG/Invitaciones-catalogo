@@ -8,21 +8,32 @@ import { contactHref } from '../data/site';
 <BaseLayout title="Catálogo de invitaciones y pases | CAZAMI STUDIO" description="Una selección de invitaciones digitales y pases personalizados que hemos creado en CAZAMI Studio.">
   <section class="catalog-hero" id="inicio">
     <div class="wrap catalog-hero__inner">
-      <span class="eyebrow">CAZAMI STUDIO · NUESTRO PORTAFOLIO</span>
-      <h1>Celebraciones que <em>inspiran.</em></h1>
-      <p>Un catálogo de algunos de nuestros trabajos de invitaciones y pases digitales.</p>
-      <div class="catalog-hero__actions"><a class="button button--cream" href="#coleccion">Ver invitaciones ↗</a><a class="catalog-hero__link" href="#pases">Ver pases ↗</a></div>
+      <div class="catalog-hero__copy">
+        <span class="catalog-hero__eyebrow">✦ CAZAMI STUDIO · PORTAFOLIO</span>
+        <h1>Detalles que<br />hacen <em>magia.</em></h1>
+        <p>Un vistazo a las invitaciones y pases que hemos creado para momentos inolvidables.</p>
+        <div class="catalog-hero__actions"><a class="button button--cream" href="#coleccion">Explorar invitaciones ↗</a><a class="catalog-hero__link" href="#pases">Ver nuestros pases ↘</a></div>
+        <div class="catalog-hero__notes"><span>✦ Invitaciones digitales</span><span>✦ Pases personalizados</span></div>
+      </div>
+      <div class="catalog-hero__art" aria-hidden="true">
+        <div class="hero-art__frame hero-art__frame--left"><img src="/previews-real/invitacion-romina-xv.webp" alt="" /></div>
+        <div class="hero-art__frame hero-art__frame--right"><img src="/previews-real/valeria-xv-invitacion.webp" alt="" /></div>
+        <div class="hero-art__frame hero-art__frame--center"><img src="/previews-real/invitacion-boda-ayj.webp" alt="" /></div>
+        <div class="hero-art__seal"><span>HECHO CON</span><strong>♥</strong><span>CAZAMI</span></div>
+      </div>
     </div>
+    <div class="catalog-hero__bottom wrap"><span>DISEÑAMOS HISTORIAS, NO SOLO INVITACIONES</span><span>DESLIZA PARA DESCUBRIR ↓</span></div>
   </section>
 
   <section class="portfolio section-space" id="coleccion" aria-labelledby="portfolio-title">
     <div class="wrap">
       <div class="section-bar"><span>01 / NUESTROS TRABAJOS</span><span>INVITACIONES DIGITALES</span></div>
-      <div class="catalog-heading"><h2 class="display-title" id="portfolio-title">Catálogo de <em>invitaciones.</em></h2><p>Conoce algunos diseños que hemos realizado. Abre el que más te guste para verlo completo.</p></div>
+      <div class="catalog-heading"><div><span class="catalog-heading__eyebrow">✦ ALGUNOS DE NUESTROS TRABAJOS</span><h2 class="display-title" id="portfolio-title">Invitaciones que <em>enamoran.</em></h2></div><p>Elige tu favorita y descubre cada detalle.</p></div>
       <div class="portfolio-controls"><div class="filterbar" aria-label="Filtrar invitaciones">{categories.map((cat,index)=><button type="button" class:list={['filterbtn',{'filterbtn--active':index===0}]} data-filter={cat} aria-pressed={index===0}>{cat}</button>)}</div><label class="portfolio-search"><span aria-hidden="true">⌕</span><input id="work-search" type="search" placeholder="Buscar invitación" aria-label="Buscar invitaciones" autocomplete="off" /></label></div>
       <p class="portfolio-count" id="portfolio-count">MOSTRANDO {catalog.length} INVITACIONES</p>
       <div class="works-grid" id="works-grid">{catalog.map((item,index)=><InvitationCard item={item} index={index} />)}</div>
-      <p class="portfolio-empty" id="portfolio-empty" hidden>No hay invitaciones con esa búsqueda.</p>
+      <p class="portfolio-empty" id="portfolio-empty" hidden>No encontramos invitaciones con esa búsqueda.</p>
+      <div class="portfolio-more" id="portfolio-more"><button type="button" id="load-more">Ver más invitaciones ↓</button></div>
     </div>
   </section>
 
@@ -39,20 +50,28 @@ import { contactHref } from '../data/site';
     const search=document.getElementById('work-search') as HTMLInputElement|null;
     const filterButtons=Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
     let category='Todas';
+    let visibleLimit=9;
+    const moreHolder=document.getElementById('portfolio-more');
+    const moreButton=document.getElementById('load-more') as HTMLButtonElement|null;
     function redraw(){
-      const q=(search?.value||'').trim().toLocaleLowerCase('es-MX');let visible=0;
+      const q=(search?.value||'').trim().toLocaleLowerCase('es-MX');let total=0;
       grid?.querySelectorAll<HTMLElement>('[data-work-card]').forEach(card=>{
-        const show=(category==='Todas'||category===card.dataset.category)&&(card.dataset.search||'').includes(q);
-        card.hidden=!show;if(show)visible++;
+        const matches=(category==='Todas'||category===card.dataset.category)&&(card.dataset.search||'').includes(q);
+        if(matches)total++;
+        card.hidden=!matches||total>visibleLimit;
       });
-      if(count)count.textContent=`MOSTRANDO ${visible} ${visible===1?'INVITACIÓN':'INVITACIONES'}`;
-      if(empty)empty.hidden=visible>0;
+      const shown=Math.min(total,visibleLimit);
+      if(count)count.textContent=`MOSTRANDO ${shown} DE ${total} ${total===1?'INVITACIÓN':'INVITACIONES'}`;
+      if(empty)empty.hidden=total>0;
+      if(moreHolder)moreHolder.hidden=total<=visibleLimit;
+      if(moreButton)moreButton.textContent=`Ver ${Math.min(9,Math.max(0,total-visibleLimit))} invitaciones más ↓`;
     }
     filterButtons.forEach(button=>button.addEventListener('click',()=>{
-      category=button.dataset.filter||'Todas';
+      category=button.dataset.filter||'Todas';visibleLimit=9;
       filterButtons.forEach(b=>{const active=b===button;b.classList.toggle('filterbtn--active',active);b.setAttribute('aria-pressed',String(active));});redraw();
     }));
-    search?.addEventListener('input',redraw);
+    search?.addEventListener('input',()=>{visibleLimit=9;redraw();});
+    moreButton?.addEventListener('click',()=>{visibleLimit+=9;redraw();});
     function addInvite(item:ExtraInvite,index:number){
       if(!grid||!/^https:\/\//i.test(item.url))return;
       const article=document.createElement('article');article.className='work-card reveal visible';article.dataset.workCard='';article.dataset.category=item.category;
@@ -83,7 +102,7 @@ import { contactHref } from '../data/site';
       const initial=grid?.querySelectorAll('[data-work-card]').length||0;
       (extra.invitaciones||[]).forEach((item,i)=>addInvite(item,initial+i));
       const rail=document.getElementById('passes-rail');
-      (extra.pases||[]).forEach((pass,index)=>{
+      (extra.pases||[]).forEach((pass)=>{
         if(!rail||!/^\/passes\/nuevos\/[a-z0-9-]+\.(?:png|jpe?g|webp)$/i.test(pass.image))return;
         const fig=document.createElement('figure');fig.className='pass-card';
         const button=document.createElement('button');button.type='button';button.className='pass-card__image';button.dataset.viewPass='';button.dataset.img=pass.image;button.dataset.name='Pase digital';button.setAttribute('aria-label','Ampliar pase digital');
