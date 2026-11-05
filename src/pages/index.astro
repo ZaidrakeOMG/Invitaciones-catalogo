@@ -29,6 +29,7 @@ import { contactHref } from '../data/site';
     <div class="wrap">
       <div class="section-bar"><span>01 / NUESTROS TRABAJOS</span><span>INVITACIONES DIGITALES</span></div>
       <div class="catalog-heading"><div><span class="catalog-heading__eyebrow">✦ ALGUNOS DE NUESTROS TRABAJOS</span><h2 class="display-title" id="portfolio-title">Invitaciones que <em>enamoran.</em></h2></div><p>Elige tu favorita y descubre cada detalle.</p></div>
+      <div class="catalog-management-row"><span>✦ PORTAFOLIO DE INVITACIONES</span><a class="catalog-manage-button" href="/admin/?seccion=invitaciones" rel="nofollow"><span aria-hidden="true">⚙</span> Agregar invitación <span aria-hidden="true">↗</span></a></div>
       <div class="portfolio-controls"><div class="filterbar" aria-label="Filtrar invitaciones">{categories.map((cat,index)=><button type="button" class:list={['filterbtn',{'filterbtn--active':index===0}]} data-filter={cat} aria-pressed={index===0}>{cat}</button>)}</div><label class="portfolio-search"><span aria-hidden="true">⌕</span><input id="work-search" type="search" placeholder="Buscar invitación" aria-label="Buscar invitaciones" autocomplete="off" /></label></div>
       <p class="portfolio-count" id="portfolio-count">MOSTRANDO {catalog.length} INVITACIONES</p>
       <div class="works-grid" id="works-grid">{catalog.map((item,index)=><InvitationCard item={item} index={index} />)}</div>
