@@ -7,6 +7,7 @@ const passes=[
 <section class="passes-section section-space" id="pases" aria-labelledby="passes-title"><div class="wrap">
   <div class="section-bar section-bar--inverse"><span>02 / NUESTROS TRABAJOS</span><span>PASES DIGITALES</span></div>
   <div class="passes-header passes-header--simple"><div><span class="passes-kicker">✦ PEQUEÑOS DETALLES, GRANDES MOMENTOS</span><h2 class="display-title" id="passes-title">Pases que <em>hemos hecho.</em></h2><p class="lead">Diseños únicos para cada celebración.</p></div></div>
+  <div class="catalog-management-row catalog-management-row--dark"><span>✦ GALERÍA DE PASES</span><a class="catalog-manage-button" href="/admin/?seccion=pases" rel="nofollow"><span aria-hidden="true">⚙</span> Subir un pase <span aria-hidden="true">↗</span></a></div>
   <div class="passes-grid" id="passes-rail" aria-label="Galería de pases digitales">
     {passes.map((img)=><figure class="pass-card"><button class="pass-card__image" type="button" data-view-pass data-img={img} data-name="Pase digital" aria-label="Ampliar pase digital"><span class="pass-card__mockup"><img src={img} loading="lazy" decoding="async" alt="Diseño de pase digital CAZAMI" /></span><span class="pass-card__zoom">VER COMPLETO ↗</span></button></figure>)}
   </div>
