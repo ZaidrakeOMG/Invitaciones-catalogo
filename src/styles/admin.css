@@ -26,3 +26,40 @@
 .admin-existing{margin-top:25px}.admin-list-item__name img{border-radius:7px}
 .admin-status:not(:empty){padding:13px 17px;border-radius:10px;background:#eaf5ee}.admin-status.is-error{background:#fbe9eb}
 @media(max-width:690px){.admin-nav{align-items:stretch}.admin-nav [role=tablist]{width:100%}.admin-logout{width:100%;text-align:right}.admin-tab{min-height:88px;padding:9px}.admin-tab strong{font-size:12px}.admin-tab small{font-size:10px}}
+
+/* Mobile-first: panel de altas visible, usable con una mano */
+.admin-login__features{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 10px}
+.admin-login__features span{padding:8px 12px;background:#f6e9e5;border:1px solid #ebd4d2;border-radius:100px;color:#764c60;font-size:11px;font-weight:700}
+.admin-heading h1,.admin-panel h2{overflow-wrap:break-word}
+.admin-wrap,.admin-panel,.admin-nav,.admin-workpanel{min-width:0}
+.admin-nav [role=tablist]{min-width:0}
+.admin-tab{min-width:0}
+.admin-tab strong,.admin-tab small{overflow-wrap:anywhere}
+.admin-fields input,.admin-fields select,.admin-login input{font-size:16px}
+.admin-file-input{position:absolute!important;width:1px!important;height:1px!important;min-height:1px!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden;opacity:0;clip-path:inset(50%)}
+.admin-dropzone:focus-within{outline:3px solid #c69eb0;outline-offset:3px}
+.admin-status{overflow-wrap:anywhere}
+@media(max-width:680px){
+ .admin-page{padding:44px 0 80px}
+ .admin-heading{padding:18px 0 5px}
+ .admin-heading h1{font-size:clamp(42px,9vw,60px)}
+ .admin-intro{font-size:14px}
+ .admin-top{flex-wrap:wrap;gap:10px;line-height:1.5}
+ .admin-top>span{font-size:9px}
+ .admin-panel{padding:23px 19px;margin-top:20px;border-radius:15px}
+ .admin-panel h2{font-size:clamp(27px,7vw,34px)}
+ .admin-nav{display:flex;flex-direction:column;align-items:stretch}
+ .admin-nav [role=tablist]{width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .admin-tab{display:flex;flex-direction:column;align-items:flex-start;min-height:115px;gap:5px;padding:11px}
+ .admin-tab>span{width:30px;height:30px;display:grid;place-items:center;flex:none;font-size:18px}
+ .admin-tab strong{font-size:13px}
+ .admin-tab small{font-size:11px;line-height:1.3}
+ .admin-logout{align-self:flex-end;padding:8px 2px}
+ .admin-workpanel{margin-top:16px}
+ .admin-fields{gap:9px}
+ .admin-fields input,.admin-fields select,.admin-login input{min-height:48px}
+ .admin-button{width:100%;justify-content:center;text-align:center}
+ .admin-list-item{gap:10px}
+ .admin-list-item__name{min-width:0;overflow-wrap:anywhere}
+ .admin-list-item>button{flex:none}
+}
