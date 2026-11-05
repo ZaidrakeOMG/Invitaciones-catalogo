@@ -1,40 +1,46 @@
 /**
- * Captura pantallas REALES de las URLs públicas del portafolio.
- * No requiere proyectos ZIP. Ejecución opcional: npm run capturar:vistas
- * Usa Chrome local si está instalado, o Playwright Chromium si se instaló.
+ * Captura real de portadas de sitios de invitaciones.
+ * No mezcla pases. Las capturas SOLO se guardan en public/invitation-previews/.
+ * Ejecutar npm run capturar:vistas (o con --force para actualizar todas).
  */
 import { chromium } from 'playwright';
 import { readFile, mkdir, access } from 'node:fs/promises';
-import {resolve} from 'node:path';
+import { resolve } from 'node:path';
 
-const projectRoot=process.cwd();
-const source=await readFile(resolve(projectRoot,'src/data/catalog.ts'),'utf8');
-const regex=/"slug":\s*"([^"]+)"[^\n]*?"externalDemo":\s*"(https:\/\/[^\"]+)"/g;
-const demos=Array.from(source.matchAll(regex),m=>({slug:m[1],url:m[2]}));
-if(demos.length<1){console.error('No se encontraron las invitaciones en src/data/catalog.ts');process.exit(1);}
-const out=resolve(projectRoot,'public/previews-real');
+const cwd=process.cwd();
+const catalog=await readFile(resolve(cwd,'src/data/catalog.ts'),'utf8');
+const pattern=/"slug":\s*"([^"]+)"[^\n]*?"externalDemo":\s*"(https:\/\/[^"]+)"/g;
+const demos=[...catalog.matchAll(pattern)].map(m=>({slug:m[1],url:m[2]}));
+try{
+ const extras=JSON.parse(await readFile(resolve(cwd,'public/data/catalogo-adicional.json'),'utf8'));
+ for(const invite of extras.invitaciones||[]){
+   if(/^[0-9a-f-]{36}$/i.test(invite.id)&&/^https:\/\//.test(invite.url))
+     demos.push({slug:`nuevo-${invite.id}`,url:invite.url});
+ }
+}catch{}
+if(!demos.length)throw Error('No se encontraron demos de invitaciones');
+const out=resolve(cwd,'public/invitation-previews');
 await mkdir(out,{recursive:true});
 let browser;
-try{browser=await chromium.launch({channel:'chrome',headless:true});}
-catch{try{browser=await chromium.launch({headless:true});}
-catch(error){console.error('No se encontró Chrome o Chromium. Ejecuta: npx playwright install chromium');console.error(error.message);process.exit(1);}}
-const context=await browser.newContext({viewport:{width:451,height:780},deviceScaleFactor:1,isMobile:true,hasTouch:true,locale:'es-MX', reducedMotion:'reduce'});
-let passed=0, failed=0;
+try{browser=await chromium.launch({headless:true});}
+catch{browser=await chromium.launch({channel:'chrome',headless:true});}
+const context=await browser.newContext({viewport:{width:430,height:760},deviceScaleFactor:1.3,isMobile:true,hasTouch:true,locale:'es-MX',reducedMotion:'reduce'});
+let passed=0, failed=0, skipped=0;
 for(const {slug,url} of demos){
-  const filename=resolve(out,`${slug}.webp`);
-  if(!process.argv.includes('--force')){
-    try{await access(filename);console.log(`Conservando captura existente: ${slug} (utiliza --force para reemplazarla)`);continue;}catch{}
-  }
-  const page=await context.newPage();
-  console.log(`Capturando: ${slug} — ${url}`);
-  try{
-    await page.goto(url,{waitUntil:'domcontentloaded',timeout:35000});
-    await page.waitForTimeout(2800);
-    await page.screenshot({path:filename,type:'webp',quality:86,animations:'disabled',timeout:15000});
-    passed++;
-  }catch(error){failed++;console.warn(`No fue posible capturar ${slug}: ${error.message}`);}
-  finally{await page.close();}
+ const filename=resolve(out,`${slug}.webp`);
+ if(!process.argv.includes('--force')){
+  try{await access(filename);skipped++;continue;}catch{}
+ }
+ const page=await context.newPage();
+ try{
+  console.log('Capturando invitación',slug,url);
+  await page.goto(url,{waitUntil:'domcontentloaded',timeout:35000});
+  await page.waitForTimeout(2600);
+  await page.screenshot({path:filename,type:'webp',quality:79,animations:'disabled',timeout:20000});
+  passed++;
+ }catch(e){failed++;console.warn('Captura no disponible:',slug,e.message);}
+ finally{await page.close();}
 }
 await browser.close();
-console.log(`Listo: ${passed} capturas reales, ${failed} fallos. Vuelve a publicar en Vercel si agregaste nuevas imágenes.`);
-if(!passed)process.exitCode=1;
+console.log(`Capturas nuevas: ${passed}; existentes: ${skipped}; fallidas: ${failed}`);
+if(failed===demos.length)process.exitCode=1;
