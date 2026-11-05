@@ -54,6 +54,15 @@ echo Abriendo sobres y generando vistas previas reales...
 node scripts\capture-previews.mjs --force
 if errorlevel 1 goto :error
 echo.
+echo Verificando que existan fotografias reales...
+set "COUNT=0"
+for /f %%G in ('dir /b /a-d "public\invitation-previews\*.jpg" 2^>nul ^| find /c /v ""') do set "COUNT=%%G"
+echo Se generaron %COUNT% fotos JPG de invitaciones.
+if "%COUNT%"=="0" (
+  echo ERROR: No se capturo ninguna invitacion. Revisa la apertura de sobres.
+  goto :error
+)
+echo.
 echo Preparando las nuevas fotografias...
 git add public/invitation-previews/
 if errorlevel 1 goto :error
