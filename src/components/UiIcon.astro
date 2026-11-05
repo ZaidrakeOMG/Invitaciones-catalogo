@@ -1,5 +1,5 @@
 ---
-interface Props {name?:'grid'|'image'|'ticket'|'link'|'lock'|'sparkles'|'arrow'|'chevron-left'|'chevron-right'|'check'|'camera'|'settings'|'plus'|'external'; size?:number; class?:string}
+interface Props {name?:'grid'|'image'|'ticket'|'link'|'lock'|'sparkles'|'arrow'|'chevron-left'|'chevron-right'|'check'|'camera'|'settings'|'plus'|'external'|'search'|'arrow-up'|'arrow-down'|'arrow-left'|'arrow-right'|'x'|'upload'; size?:number; class?:string}
 const {name='grid',size=18,class:className=''}=Astro.props;
 const paths:Record<string,string>={
  grid:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
@@ -15,7 +15,14 @@ const paths:Record<string,string>={
  camera:'M4 6h4l2-3h4l2 3h4v15H4z M12 10a4 4 0 1 0 0 8 4 4 0 0 0 0-8z',
  settings:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M19.4 15a1.7 1.7 0 0 0 .4 1.9l.1.1-1.9 1.9-.1-.1a1.7 1.7 0 0 0-1.9-.4 1.7 1.7 0 0 0-1 1.6V21h-3v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.4l-.1.1-1.9-1.9.1-.1A1.7 1.7 0 0 0 7.6 15a1.7 1.7 0 0 0-1.6-1H5v-3h1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.4-1.9l-.1-.1 1.9-1.9.1.1A1.7 1.7 0 0 0 11 6.6a1.7 1.7 0 0 0 1-1.6V4h3v1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.4l.1-.1 1.9 1.9-.1.1a1.7 1.7 0 0 0-.4 1.9 1.7 1.7 0 0 0 1.6 1h1v3h-1a1.7 1.7 0 0 0-1.6 1z',
  plus:'M12 5v14 M5 12h14',
- external:'M14 4h6v6 M20 4l-9 9 M20 13v7H4V4h7'
+ external:'M14 4h6v6 M20 4l-9 9 M20 13v7H4V4h7',
+ search:'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.3-4.3',
+ 'arrow-up':'M12 19V5 M6 11l6-6 6 6',
+ 'arrow-down':'M12 5v14 M6 13l6 6 6-6',
+ 'arrow-left':'M19 12H5 M11 18l-6-6 6-6',
+ 'arrow-right':'M5 12h14 M13 6l6 6-6 6',
+ x:'M18 6L6 18 M6 6l12 12',
+ upload:'M12 16V3 M7 8l5-5 5 5 M4 16v5h16v-5'
 };
 ---
 <svg class:list={['ui-icon',className]} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d={paths[name]}/></svg>
