@@ -53,3 +53,95 @@
 .catalog-contact{background:#f2dacc}.catalog-contact .button{border-radius:100px}
 @media(max-width:900px){.catalog-hero__inner{grid-template-columns:1fr}.catalog-hero__copy{padding-bottom:0}.catalog-hero__art{width:min(100%,520px);height:410px;margin:0 auto}.catalog-hero__bottom{margin-top:28px}.works-grid,.passes-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}}
 @media(max-width:590px){.catalog-hero{padding:58px 0 23px}.catalog-hero h1{font-size:clamp(55px,12vw,79px)}.catalog-hero__art{height:320px}.hero-art__frame{border-width:4px}.hero-art__seal{height:83px;width:83px}.hero-art__seal span{font-size:7px}.catalog-hero__bottom span:last-child{display:none}.catalog-hero__notes{gap:12px}.catalog-heading .display-title{font-size:45px}.portfolio-search{width:100%}.portfolio-search input{width:100%}.works-grid,.passes-grid{grid-template-columns:1fr;gap:23px}.work-card__cover{aspect-ratio:1.08}.passes-grid .pass-card__image{aspect-ratio:1.2}}
+
+/* Navegación y acciones de administración visibles en todo el catálogo */
+.header__inner{gap:clamp(10px,1.5vw,24px)}
+.header__admin{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:none;white-space:nowrap;border:1px solid #e5b9cd80;border-radius:100px;padding:10px 16px;background:#f3ddd0;color:#392735;font-size:12px;font-weight:800;line-height:1.2;transition:transform .2s,background .2s}
+.header__admin:hover{background:#fff0e4;transform:translateY(-2px)}
+.header__admin span:first-child{font-size:17px;line-height:1}
+.navigation__admin{display:none}
+.catalog-management-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:-8px 0 24px}
+.catalog-management-row>span{font-size:10px;font-weight:800;letter-spacing:.12em;color:#94717d}
+.catalog-manage-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border:1px solid #c6a1ae;border-radius:100px;padding:10px 18px;background:#fffaf7;color:#653d52;white-space:nowrap;font-size:12px;font-weight:800;box-shadow:0 8px 20px #6e445018;transition:background .2s,transform .2s}
+.catalog-manage-button:hover{background:#f6e2e0;transform:translateY(-2px)}
+.catalog-manage-button span:first-child{font-size:17px}
+.catalog-management-row--dark{margin:-6px 0 27px}
+.catalog-management-row--dark>span{color:#dfbcc8}
+.catalog-management-row--dark .catalog-manage-button{background:#f0dbd3;border-color:#dcb8b4;color:#4e3343}
+/* 3 columnas en escritorio, 2 en tableta, 1 en celular */
+.works-grid,.passes-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.works-grid>* ,.passes-grid>*{min-width:0}
+.work-card,.pass-card{max-width:100%}
+.work-card__info h3{overflow-wrap:anywhere}
+.pass-card__mockup img{max-width:100%;height:100%;object-fit:contain}
+.portfolio-more[hidden],.passes-more[hidden]{display:none!important}
+@media (max-width:1030px){
+ .works-grid,.passes-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+ .header__admin{padding:9px 13px}
+}
+@media (max-width:800px){
+ .header__admin{margin-left:auto}
+ .menu-toggle{margin-left:0;flex-shrink:0}
+ .navigation__admin{display:block;color:#f5d8e1!important;font-weight:800!important}
+ .navigation{overscroll-behavior:contain}
+ .catalog-hero__inner{min-height:0}
+ .catalog-hero__art{max-width:520px}
+ .catalog-heading{align-items:start}
+ .catalog-management-row{margin-top:0}
+}
+@media (max-width:620px){
+ .works-grid,.passes-grid{grid-template-columns:minmax(0,1fr);gap:24px}
+ .catalog-hero{padding:48px 0 22px}
+ .catalog-hero__inner{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+ .catalog-hero__copy{padding:0}
+ .catalog-hero__eyebrow{font-size:9px;letter-spacing:.08em}
+ .catalog-hero h1{font-size:clamp(45px,12vw,68px);line-height:1.05;letter-spacing:-.065em;overflow-wrap:break-word}
+ .catalog-hero p{font-size:15px;line-height:1.65}
+ .catalog-hero__actions{flex-direction:column;align-items:stretch;gap:18px}
+ .catalog-hero__actions .button{justify-content:center;width:100%}
+ .catalog-hero__link{text-align:center;align-self:center}
+ .catalog-hero__notes{margin-top:25px;font-size:11px}
+ .catalog-hero__art{width:min(100%,390px);height:clamp(235px,76vw,315px);margin:12px auto 0}
+ .hero-art__seal{right:2%;bottom:0}
+ .catalog-hero__bottom{font-size:8px;line-height:1.5}
+ .catalog-heading{margin:35px 0 23px;gap:15px}
+ .catalog-heading .display-title{font-size:clamp(39px,10vw,52px)}
+ .catalog-heading p{font-size:13px;padding:12px 14px}
+ .catalog-management-row{align-items:stretch}
+ .catalog-management-row>span{align-self:center}
+ .catalog-manage-button{width:100%;font-size:13px;min-height:48px}
+ .portfolio-controls{padding:13px;gap:13px}
+ .filterbar{display:flex;flex-wrap:nowrap;width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding:0 0 4px}
+ .filterbar::-webkit-scrollbar{display:none}
+ .filterbtn{flex:none;white-space:nowrap}
+ .portfolio-search{width:100%;min-width:0}
+ .portfolio-search input{width:100%;min-width:0;font-size:14px}
+ .work-card__cover{aspect-ratio:1.1}
+ .work-card__cover::after{bottom:12px;right:12px;font-size:9px}
+ .work-card__info{padding:17px 19px 20px}
+ .work-card__info h3{font-size:clamp(23px,7vw,30px)}
+ .passes-header--simple{margin:35px 0 27px}
+ .passes-grid .pass-card{padding:10px}
+ .passes-grid .pass-card__image{aspect-ratio:1.1;min-height:0}
+ .passes-grid .pass-card__zoom{right:12px;bottom:12px}
+ .portfolio-more button,.passes-more button{width:100%;min-height:50px}
+ .catalog-contact .button{width:100%;justify-content:center}
+}
+@media (max-width:420px){
+ .header__inner{gap:10px}
+ .brand{gap:8px}
+ .brand img{width:28px;height:28px}
+ .brand>span{font-size:20px}
+ .brand small{font-size:8px}
+ .header__admin{padding:9px 11px;font-size:11px;gap:5px}
+ .header__admin span:first-child{font-size:14px}
+ .menu-toggle{width:40px;height:40px}
+ .catalog-hero h1{font-size:clamp(41px,11.8vw,52px)}
+ .catalog-hero__eyebrow{font-size:8px}
+ .hero-art__frame{border-width:4px}
+}
+@media (max-width:355px){
+ .header__admin span:last-child{display:none}
+ .header__admin{width:40px;height:40px;padding:0}
+ .catalog-hero__eyebrow{padding:9px}
+}
