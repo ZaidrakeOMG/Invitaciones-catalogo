@@ -25,7 +25,7 @@ El catálogo estático se conserva y el administrador utiliza **Vercel Functions
    O en Windows usa `GENERAR-CLAVES-ADMIN.bat`.
 3. Copia **ADMIN_PASSWORD_SCRYPT** y **ADMIN_SESSION_SECRET** de la terminal a **Vercel → Proyecto → Settings → Environment Variables**. No las agregues al repositorio.
 4. En GitHub crea un **Fine-grained personal access token** limitado a este repositorio, con permiso **Contents: Read and write**. Guárdalo en Vercel como **GITHUB_TOKEN**.
-5. Configura además **GITHUB_REPO** en Vercel con `usuario/repositorio` (por ejemplo `ZaidrakeOMG/cazami-catalogo` si ese es tu repo real) y **GITHUB_BRANCH** con `main` o tu rama de producción.
+5. Configura además **GITHUB_REPO** en Vercel con ``ZaidrakeOMG/Invitaciones-catalogo` y **GITHUB_BRANCH** con `main` o tu rama de producción.
 6. Vuelve a desplegar el proyecto desde Vercel para activar esas variables.
 7. Abre `https://tu-dominio/admin/`, ingresa **2525** y agrega trabajos.
 
