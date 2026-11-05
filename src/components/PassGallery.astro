@@ -16,9 +16,16 @@ const passes=[
 </section>
 <script>
  const rail=document.getElementById('passes-rail');
- function move(direction:number){const width=rail?.querySelector('.pass-card')?.getBoundingClientRect().width||320;rail?.scrollBy({left:direction*(width+20),behavior:'smooth'});}
- document.getElementById('passes-prev')?.addEventListener('click',()=>move(-1));
- document.getElementById('passes-next')?.addEventListener('click',()=>move(1));
+ let shown=9;
+ const moreHolder=document.getElementById('passes-more');
+ const moreButton=document.getElementById('passes-load-more');
+ const redraw=()=>{
+  const cards=Array.from(rail?.querySelectorAll<HTMLElement>('.pass-card')||[]);
+  cards.forEach((card,index)=>{card.hidden=index>=shown;});
+  if(moreHolder)moreHolder.hidden=cards.length<=shown;
+ };
+ moreButton?.addEventListener('click',()=>{shown+=9;redraw();});
+ if(rail){new MutationObserver(redraw).observe(rail,{childList:true});redraw();}
  const dialog=document.getElementById('pass-dialog') as HTMLDialogElement|null;
  const image=document.getElementById('pass-dialog-image') as HTMLImageElement|null;
  // Delegación: también funciona con nuevos pases cargados desde el administrador.
