@@ -35,6 +35,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Mantener sincronizado el proyecto: las capturas no deben sobrescribir cambios recientes.
+          git pull --ff-only origin main
           git add public/invitation-previews/
           if ! git diff --cached --quiet; then
             git commit -m "CAZAMI: actualizar capturas reales de invitaciones"
