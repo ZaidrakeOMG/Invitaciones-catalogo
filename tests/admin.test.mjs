@@ -97,7 +97,20 @@ test('detecta saltos de línea dentro del token sin exponer el secreto',async()=
    const cookie=response.headers['set-cookie'].split(';')[0];
    const result=await call(items,req('GET',{},cookie));
    assert.equal(result.code,503);
-   assert.match(result.data.error,/GITHUB_TOKEN.*caracteres no válidos/);
+   assert.match(result.data.error,/GITHUB_TOKEN.*no contiene un token válido/);
    assert.ok(!result.data.error.includes('segunda-linea'));
  }finally{process.env.GITHUB_TOKEN=previous;}
+});
+
+test('acepta un token PAT nuevo rodeado de texto copiado accidentalmente',async()=>{
+ const prev=process.env.GITHUB_TOKEN;
+ const fake='github_pat_'+ 'A'.repeat(54);
+ process.env.GITHUB_TOKEN='GITHUB_TOKEN="'+fake+'"\n';
+ try{
+   const response=await call(login,req('POST',{password:'2525'}));
+   const cookie=response.headers['set-cookie'].split(';')[0];
+   const result=await call(items,req('GET',{},cookie));
+   assert.equal(result.code,200);
+   assert.equal(lastAuthorization,'Bearer '+fake);
+ }finally{process.env.GITHUB_TOKEN=prev;}
 });
