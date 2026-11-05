@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {scryptSync,randomBytes} from 'node:crypto';
+import https from 'node:https';
+import {EventEmitter} from 'node:events';
 import login from '../api/login.js';
 import session from '../api/session.js';
 import items from '../api/items.js';
@@ -23,6 +25,26 @@ globalThis.fetch=async (url,options={})=>{
  if(obj.sha!==sha)return {ok:false,status:409,json:async()=>({message:'Conflict'})};
  current=JSON.parse(Buffer.from(obj.content,'base64').toString('utf8'));sha+=1;
  return {ok:true,status:200,json:async()=>({content:{sha}})};
+};
+// El administrador usa HTTPS nativo para evitar errores UND_ERR_INVALID_ARG de Undici.
+// Simular https.request en vez de hacer llamadas reales a GitHub durante las pruebas.
+https.request=(url,options,callback)=>{
+ const request=new EventEmitter();
+ let payload='';
+ request.write=chunk=>{payload+=chunk.toString();return true;};
+ request.end=()=>{
+   Promise.resolve().then(async()=>{
+     const fetchOptions=options.method==='GET'?{}:{method:options.method,body:payload};
+     const fake=await globalThis.fetch(url,fetchOptions);
+     const response=new EventEmitter();
+     response.statusCode=fake.status;
+     callback(response);
+     response.emit('data',Buffer.from(JSON.stringify(await fake.json())));
+     response.emit('end');
+   }).catch(error=>request.emit('error',error));
+ };
+ request.destroy=error=>request.emit('error',error);
+ return request;
 };
 test('scrypt valida el código y no acepta otro',()=>{assert.equal(verifyPassword('2525'),true);assert.equal(verifyPassword('1111'),false);});
 test('el acceso rechaza contraseña incorrecta y el servidor firma la sesión',async()=>{
