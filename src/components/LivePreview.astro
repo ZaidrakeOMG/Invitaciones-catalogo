@@ -3,7 +3,8 @@ import type {Invite} from '../data/catalog';
 interface Props {item:Invite; context?: 'card'|'detail'}
 const {item,context='card'}=Astro.props;
 // SOLO vistas de invitaciones. Las fotos /passes/ nunca se utilizan como portadas.
-const cover=item.cover||`/invitation-previews/${item.slug}.webp`;
+const cover=`/invitation-previews/${item.slug}.webp`;
+const originalCover=item.cover?.startsWith('/previews-real/zyc-')?item.cover:undefined;
 const decorative=`/previews/${item.slug}.svg`;
 ---
 <div class:list={['web-preview','invitation-preview',`web-preview--${context}`]} data-web-preview>
@@ -13,7 +14,7 @@ const decorative=`/previews/${item.slug}.svg`;
     <strong>{item.name}</strong>
     <span class="invitation-preview__cta">Toca para ver la invitación</span>
   </div>
-  <img class="web-preview__actual invitation-preview__screenshot" src={cover} loading="lazy" decoding="async" alt={`Vista de la invitación digital de ${item.name}`} />
+  <img class="web-preview__actual invitation-preview__screenshot" src={cover} data-fallback={originalCover} loading="lazy" decoding="async" alt={`Vista de la invitación digital de ${item.name}`} />
   <iframe class="web-preview__iframe invitation-preview__live" title={`Vista de la página de invitación ${item.name}`} data-src={item.externalDemo} loading="lazy" sandbox="allow-scripts" referrerpolicy="no-referrer" tabindex="-1" aria-hidden="true"></iframe>
   <div class="web-preview__blocker" aria-hidden="true"></div>
 </div>
@@ -35,7 +36,12 @@ const decorative=`/previews/${item.slug}.svg`;
         observer.observe(host);
       }else load();
     };
-    image.addEventListener('error',activate,{once:true});
+    image.addEventListener('error',()=>{
+      if(image.dataset.fallback&&image.dataset.fallbackUsed!=='1'){
+        image.dataset.fallbackUsed='1';
+        image.src=image.dataset.fallback;
+      }else activate();
+    });
     if(image.complete&&image.naturalWidth===0)activate();
   });
 </script>
