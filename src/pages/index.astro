@@ -97,7 +97,15 @@ import { contactHref } from '../data/site';
       const name=document.createElement('strong');name.textContent=item.name;
       const hint=document.createElement('span');hint.className='invitation-preview__cta';hint.textContent='Toca para ver la invitación';
       placeholder.append(eyebrow,name,hint);
-      const image=document.createElement('img');image.className='web-preview__actual invitation-preview__screenshot';image.alt=`Vista de la invitación digital ${item.name}`;image.loading='lazy';image.decoding='async';image.src=`/invitation-previews/nuevo-${item.id}.webp`;image.onerror=()=>{image.hidden=true;};
+      const image=document.createElement('img');image.className='web-preview__actual invitation-preview__screenshot';image.alt=`Vista de la invitación digital ${item.name}`;image.loading='lazy';image.decoding='async';image.src=`/invitation-previews/nuevo-${item.id}.webp`;image.onerror=()=>{
+        image.hidden=true;
+        const frame=document.createElement('iframe');frame.className='web-preview__iframe invitation-preview__live invitation-preview__live--visible';
+        frame.title=`Vista de la página de invitación ${item.name}`;frame.tabIndex=-1;frame.loading='lazy';
+        frame.setAttribute('sandbox','allow-scripts');frame.setAttribute('aria-hidden','true');frame.referrerPolicy='no-referrer';
+        frame.style.transform=`scale(${preview.clientWidth/390})`;frame.src=item.url;
+        preview.insertBefore(frame,blocker);
+        if('ResizeObserver' in window)new ResizeObserver(()=>{frame.style.transform=`scale(${preview.clientWidth/390})`;}).observe(preview);
+      };
       const blocker=document.createElement('div');blocker.className='web-preview__blocker';preview.append(placeholder,image,blocker);
       const ordinal=document.createElement('span');ordinal.className='work-card__ordinal';ordinal.textContent=String(index+1).padStart(2,'0');link.append(preview,ordinal);
       const info=document.createElement('div');info.className='work-card__info';
