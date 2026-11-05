@@ -27,3 +27,29 @@
 .hero-art__seal{position:absolute;z-index:3;right:0;bottom:8%;height:113px;width:113px;background:#f2c8b4;border:5px double #a46f79;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(13deg);box-shadow:0 13px 25px #170c1d61;color:#4f3040}
 .hero-art__seal span{font-size:9px;letter-spacing:.13em;font-weight:800}.hero-art__seal strong{font-size:32px;line-height:1.25}
 .catalog-hero__bottom{position:relative;display:flex;justify-content:space-between;gap:10px;border-top:1px solid #cfabb44f;padding-top:18px;color:#dfc1cd;font-size:9px;letter-spacing:.16em}
+
+.portfolio{background:linear-gradient(#faf5ef,#f1e6e0 65%,#f8f2eb)}.catalog-heading{margin:50px 0 35px}
+.catalog-heading__eyebrow,.passes-kicker{display:block;color:#976375;font-size:10px;letter-spacing:.16em;font-weight:800;margin-bottom:17px}.catalog-heading .display-title{font-size:clamp(44px,5.3vw,80px)}
+.catalog-heading p{background:#fffaf5;padding:15px 23px;border-left:3px solid #aa7381;border-radius:3px;color:#805c6b;font-size:14px}
+.portfolio-controls{border:none;background:#fffaf6;border-radius:15px;padding:15px;box-shadow:0 12px 35px #55344516}
+.filterbtn{border-color:#e1d4ce;padding:10px 16px;font-weight:700;transition:background .2s}
+.filterbtn--active,.filterbtn:hover{background:#62384b;border-color:#62384b;color:#fff}.portfolio-search{background:#f7eeeb;border:1px solid #ebd8d8;border-radius:100px;padding:8px 16px}
+.portfolio-count{color:#926b78;font-weight:800}.works-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.work-card{background:#fffaf6;border:1px solid #eadbd5;overflow:hidden;border-radius:15px;box-shadow:0 12px 34px #57384b16;transition:transform .3s,box-shadow .3s}
+.work-card:hover{transform:translateY(-6px);box-shadow:0 23px 44px #57384b30}
+.work-card__cover{border:0;aspect-ratio:1.03;background:#e0c8cb;padding:18px 23px 0}
+.work-card__cover::after{content:'VER INVITACIÓN  ↗';position:absolute;right:15px;bottom:16px;z-index:3;border-radius:100px;background:#fff6ee;color:#65364d;padding:9px 13px;font-size:10px;font-weight:800;letter-spacing:.05em}
+.work-card__cover .web-preview{border-radius:6px 6px 0 0}.work-card__ordinal{border-radius:100px;top:30px;left:34px;background:#452535e8}
+.work-card__info{padding:22px 24px 24px}.work-card__info h3{font-size:clamp(23px,2.1vw,30px);margin:6px 0 18px;color:#382630}.work-card__links{border-color:#e8d8d2}
+.work-card__links a{color:#703c54}.portfolio-more,.passes-more{display:flex;justify-content:center;margin-top:40px}
+.portfolio-more button,.passes-more button{border:0;border-radius:100px;padding:16px 31px;background:#693f55;color:white;font-size:13px;font-weight:700;box-shadow:0 12px 25px #4b283b32;transition:transform .2s}
+.portfolio-more button:hover,.passes-more button:hover{transform:translateY(-3px)}
+.passes-section{background:radial-gradient(ellipse at 85% 15%,#5a3449 0%,#2b1f2e 66%,#201b28 100%)}
+.passes-header--simple{margin:48px 0 37px}.passes-kicker{color:#e1b4c4}.passes-header .lead{font-size:16px}
+.passes-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px}
+.passes-grid .pass-card{min-width:0;width:100%;overflow:hidden;border-radius:15px;padding:11px;background:#f6ebe6;box-shadow:0 18px 35px #0c091364;transition:transform .3s}
+.passes-grid .pass-card:hover{transform:translateY(-6px)}.passes-grid .pass-card__image{height:auto;aspect-ratio:1.07;border-radius:8px;background:linear-gradient(135deg,#f0ddda,#e5d2d0)}
+.passes-grid .pass-card__zoom{border-radius:100px}.passes-more button{background:#f6dbc9;color:#3d2836}
+.catalog-contact{background:#f2dacc}.catalog-contact .button{border-radius:100px}
+@media(max-width:900px){.catalog-hero__inner{grid-template-columns:1fr}.catalog-hero__copy{padding-bottom:0}.catalog-hero__art{width:min(100%,520px);height:410px;margin:0 auto}.catalog-hero__bottom{margin-top:28px}.works-grid,.passes-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}}
+@media(max-width:590px){.catalog-hero{padding:58px 0 23px}.catalog-hero h1{font-size:clamp(55px,12vw,79px)}.catalog-hero__art{height:320px}.hero-art__frame{border-width:4px}.hero-art__seal{height:83px;width:83px}.hero-art__seal span{font-size:7px}.catalog-hero__bottom span:last-child{display:none}.catalog-hero__notes{gap:12px}.catalog-heading .display-title{font-size:45px}.portfolio-search{width:100%}.portfolio-search input{width:100%}.works-grid,.passes-grid{grid-template-columns:1fr;gap:23px}.work-card__cover{aspect-ratio:1.08}.passes-grid .pass-card__image{aspect-ratio:1.2}}
