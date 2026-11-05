@@ -38,7 +38,7 @@
 .work-card{background:#fffaf6;border:1px solid #eadbd5;overflow:hidden;border-radius:15px;box-shadow:0 12px 34px #57384b16;transition:transform .3s,box-shadow .3s}
 .work-card:hover{transform:translateY(-6px);box-shadow:0 23px 44px #57384b30}
 .work-card__cover{border:0;aspect-ratio:1.03;background:#e0c8cb;padding:18px 23px 0}
-.work-card__cover::after{content:'VER INVITACIÓN  ↗';position:absolute;right:15px;bottom:16px;z-index:3;border-radius:100px;background:#fff6ee;color:#65364d;padding:9px 13px;font-size:10px;font-weight:800;letter-spacing:.05em}
+.work-card__cover::after{content:'VER INVITACIÓN';position:absolute;right:15px;bottom:16px;z-index:3;border-radius:100px;background:#fff6ee;color:#65364d;padding:9px 13px;font-size:10px;font-weight:800;letter-spacing:.05em}
 .work-card__cover .web-preview{border-radius:6px 6px 0 0}.work-card__ordinal{border-radius:100px;top:30px;left:34px;background:#452535e8}
 .work-card__info{padding:22px 24px 24px}.work-card__info h3{font-size:clamp(23px,2.1vw,30px);margin:6px 0 18px;color:#382630}.work-card__links{border-color:#e8d8d2}
 .work-card__links a{color:#703c54}.portfolio-more,.passes-more{display:flex;justify-content:center;margin-top:40px}
