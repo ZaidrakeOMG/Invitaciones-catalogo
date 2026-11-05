@@ -63,3 +63,12 @@
  .admin-list-item__name{min-width:0;overflow-wrap:anywhere}
  .admin-list-item>button{flex:none}
 }
+
+/* Iconos vectoriales y legibilidad del panel */
+.admin-label,.admin-welcome>span,.admin-login__features span{display:inline-flex;align-items:center;gap:8px}
+.admin-lock>.ui-icon{width:28px;height:28px}
+.admin-tab>.ui-icon{display:grid;place-items:center;grid-row:span 2;width:37px;height:40px;background:#f2e2dd;color:#8d516a;padding:8px;border-radius:10px;flex:none}
+.admin-tab.is-active>.ui-icon{background:#f9dfce;color:#6b4056}
+.admin-dropzone__icon>.ui-icon{color:#fff}
+.admin-login__features>.ui-icon{width:14px;height:14px}
+@media(max-width:680px){.admin-tab>.ui-icon{width:30px;height:30px;padding:5px}}
