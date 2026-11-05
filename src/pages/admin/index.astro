@@ -10,7 +10,7 @@ import UiIcon from '../../components/UiIcon.astro';
 
     <div id="admin-login" class="admin-panel admin-login"><span class="admin-lock" aria-hidden="true"><UiIcon name="lock" size={28}/></span><span class="admin-label">ACCESO PRIVADO · CAZAMI STUDIO</span><h2>Bienvenido de nuevo.</h2><p>Ingresa tu contraseña para administrar tus diseños.</p><div class="admin-login__features"><span><UiIcon name="link" size={14}/> Añadir invitaciones por URL</span><span><UiIcon name="image" size={14}/> Subir imágenes de pases</span></div>
       <form id="login-form"><label for="admin-pin">Contraseña</label><input id="admin-pin" type="password" name="password" required inputmode="numeric" autocomplete="off" maxlength="100" placeholder="Código de acceso" /><button type="submit" class="admin-button">Entrar <UiIcon name="arrow-right" size={16}/></button></form>
-      <div id="admin-setup-notice" class="admin-setup-notice" hidden role="alert"><strong>Falta activar el administrador en Vercel</strong><p>En tu proyecto abre <b>Settings → Environment Variables</b> y configura <code>ADMIN_PASSWORD_SCRYPT</code>, <code>ADMIN_SESSION_SECRET</code>, <code>GITHUB_TOKEN</code> y <code>GITHUB_REPO</code>. Luego publica de nuevo.</p></div>
+      <div id="admin-setup-notice" class="admin-setup-notice" hidden role="alert"><strong>Falta activar el administrador en Vercel</strong><p>En tu proyecto abre <b>Settings / Environment Variables</b> y configura <code>ADMIN_PASSWORD_SCRYPT</code>, <code>ADMIN_SESSION_SECRET</code>, <code>GITHUB_TOKEN</code> y <code>GITHUB_REPO</code>. Luego publica de nuevo.</p></div>
     </div>
 
     <div id="admin-content" hidden>
