@@ -81,16 +81,43 @@ function repoParts(){
 }
 const base=()=>`https://api.github.com/repos/${repoParts()}/contents/`;
 const branch=()=>process.env.GITHUB_BRANCH||'main';
+const wait=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
 async function github(path,options={}){
-  const response=await fetch(base()+path+(options.method?'':`?ref=${encodeURIComponent(branch())}`),{
-    ...options,
-    headers:{'Accept':'application/vnd.github+json','Authorization':`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28',...(options.headers||{})},
-    signal:AbortSignal.timeout(12000)
-  });
-  if(response.status===404&&!options.method)return null;
-  const result=await response.json().catch(()=>({}));
-  if(!response.ok){const error=new Error(`GitHub: ${result.message||response.status}`);error.status=response.status;throw error;}
-  return result;
+  const read=!options.method;
+  const url=base()+path+(read?`?ref=${encodeURIComponent(branch())}`:'');
+  // No reintentar escrituras a ciegas: si GitHub alcanzó a guardar, repetir un PUT
+  // podría generar conflictos o una confirmación engañosa.
+  const attempts=read?3:1;
+  for(let attempt=0;attempt<attempts;attempt++){
+    let response;
+    try{
+      response=await fetch(url,{
+        ...options,
+        headers:{'Accept':'application/vnd.github+json','Authorization':`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28',...(options.headers||{})},
+        signal:AbortSignal.timeout(25000)
+      });
+    }catch(cause){
+      if(read&&attempt<attempts-1){await wait(500*(attempt+1));continue;}
+      const code=String(cause?.cause?.code||cause?.code||cause?.name||'RED');
+      const error=new Error(`No se pudo conectar con GitHub (${code}). No se confirmó el guardado. Revisa que Vercel pueda comunicarse con api.github.com e inténtalo de nuevo.`);
+      error.status=503;
+      throw error;
+    }
+    if(read&&[429,500,502,503,504].includes(response.status)&&attempt<attempts-1){
+      await wait(500*(attempt+1));continue;
+    }
+    if(response.status===404&&read)return null;
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok){
+      let message=result.message||`HTTP ${response.status}`;
+      if(response.status===401)message='Token de GitHub inválido o vencido (GITHUB_TOKEN).';
+      if(response.status===403)message='GitHub no permite escribir: revisa el permiso Contents: Read and write del token.';
+      if(response.status===404)message='No se encontró el repositorio en GitHub. Revisa GITHUB_REPO y el acceso del token.';
+      if(response.status===409)message='Otro cambio modificó el catálogo al mismo tiempo. Vuelve a intentar.';
+      const error=new Error(`GitHub: ${message}`);error.status=response.status;throw error;
+    }
+    return result;
+  }
 }
 export async function getCatalog(){
   const file=await github('public/data/catalogo-adicional.json');
