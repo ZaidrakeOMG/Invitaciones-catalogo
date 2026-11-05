@@ -20,9 +20,9 @@ import '../../styles/admin.css';
           <button type="submit" class="admin-button">Guardar invitación ↗</button></form>
       </div>
       <div id="tab-pases" class="admin-panel admin-workpanel" role="tabpanel" hidden><span class="admin-label">02 / PASES DIGITALES</span><h2>Publicar un pase ✦</h2><p>Solo sube la imagen; se mostrará en tu galería.</p>
-        <form id="pass-form" class="admin-fields"><label for="pass-image">Imagen del pase <span>*</span></label><input id="pass-image" type="file" accept="image/png,image/jpeg,image/webp" required /><img id="pass-preview" alt="Vista previa del pase" hidden /><span class="admin-hint">JPG, PNG o WEBP. Se optimiza antes de guardarse.</span><button type="submit" class="admin-button">Subir pase ↗</button></form>
+        <form id="pass-form" class="admin-fields"><label for="pass-image">Imagen del pase <span>*</span></label><label class="admin-dropzone" for="pass-image"><span class="admin-dropzone__icon" aria-hidden="true">↑</span><strong id="pass-file-label">Elige una imagen de tu computadora</strong><small>JPG, PNG o WEBP · se optimiza automáticamente</small></label><input id="pass-image" type="file" accept="image/png,image/jpeg,image/webp" required class="admin-file-input" /><img id="pass-preview" alt="Vista previa del pase" hidden /><span class="admin-hint">Solo se publica la imagen, sin nombres ni otros datos.</span><button type="submit" class="admin-button">Subir pase ↗</button></form>
       </div>
-      <div class="admin-panel admin-existing"><h2>Trabajos agregados</h2><p>Los elementos originales del sitio permanecen intactos.</p><div id="admin-list" class="admin-list"></div></div>
+      <div class="admin-panel admin-existing"><span class="admin-label">TU HISTORIAL</span><h2>Trabajos publicados</h2><p>Administra las nuevas publicaciones de tu catálogo.</p><div id="admin-list" class="admin-list"></div></div>
       <p class="admin-publication">Los cambios se guardan en GitHub y aparecen en el catálogo público después de la publicación automática de Vercel.</p>
     </div>
     <div id="admin-status" class="admin-status" role="status" aria-live="polite"></div>
@@ -96,14 +96,14 @@ import '../../styles/admin.css';
       img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('No se pudo abrir la imagen.'));};img.src=url;
     });}
     imageInput.addEventListener('change',()=>{
-      const file=imageInput.files?.[0];preview.hidden=!file;
+      const file=imageInput.files?.[0];preview.hidden=!file;const fileLabel=document.getElementById('pass-file-label');if(fileLabel)fileLabel.textContent=file?.name||'Elige una imagen de tu computadora';
       if(file){preview.src=URL.createObjectURL(file);preview.onload=()=>URL.revokeObjectURL(preview.src);}
     });
     document.getElementById('pass-form')?.addEventListener('submit',async e=>{
       e.preventDefault();const file=imageInput.files?.[0];if(!file)return;
       if(!['image/jpeg','image/png','image/webp'].includes(file.type)){say('Elige una imagen JPG, PNG o WEBP.',true);return;}
       const form=e.currentTarget as HTMLFormElement,button=form.querySelector('button')!;button.disabled=true;say('Preparando imagen…');
-      try{const image=await canvasDataURL(file);say('Subiendo pase…');await request('/api/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'pase',image})});form.reset();preview.hidden=true;await load();say('Pase guardado. Aparecerá en el sitio al terminar el despliegue de Vercel.');}
+      try{const image=await canvasDataURL(file);say('Subiendo pase…');await request('/api/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'pase',image})});form.reset();preview.hidden=true;const fileLabel=document.getElementById('pass-file-label');if(fileLabel)fileLabel.textContent='Elige una imagen de tu computadora';await load();say('Pase guardado. Aparecerá en el sitio al terminar el despliegue de Vercel.');}
       catch(err){say((err as Error).message,true);}finally{button.disabled=false;}
     });
     list.addEventListener('click',async e=>{
