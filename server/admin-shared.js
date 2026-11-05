@@ -1,5 +1,6 @@
 /** Solo código de servidor. Nunca importar en src/pages o componentes Astro. */
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
+import https from 'node:https';
 
 const COOKIE='cazami_admin';
 const SESSION_SECONDS=8*60*60;
@@ -82,39 +83,81 @@ function repoParts(){
 const base=()=>`https://api.github.com/repos/${repoParts()}/contents/`;
 const branch=()=>process.env.GITHUB_BRANCH||'main';
 const wait=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
+// Vercel/Undici devolvía UND_ERR_INVALID_ARG antes de llegar a GitHub.
+// Utilizar HTTPS nativo de Node elimina esa dependencia del fetch global.
+function githubRequest(url,options={}){
+  const method=options.method||'GET';
+  const payload=options.body==null?undefined:Buffer.from(String(options.body),'utf8');
+  const headers={
+    'User-Agent':'CAZAMI-Studio-Admin/1.0',
+    'Accept':'application/vnd.github+json',
+    'Authorization':`Bearer ${process.env.GITHUB_TOKEN}`,
+    'X-GitHub-Api-Version':'2022-11-28',
+    ...(payload?{'Content-Length':String(payload.length)}:{}),
+    ...(options.headers||{})
+  };
+  return new Promise((resolve,reject)=>{
+    const request=https.request(url,{method,headers,timeout:25000},response=>{
+      const chunks=[];
+      let size=0;
+      response.on('data',chunk=>{
+        size+=chunk.length;
+        if(size>7_000_000){
+          request.destroy(Object.assign(new Error('Respuesta de GitHub demasiado grande.'),{code:'RESPONSE_LIMIT'}));
+          return;
+        }
+        chunks.push(chunk);
+      });
+      response.on('error',reject);
+      response.on('end',()=>{
+        const raw=Buffer.concat(chunks).toString('utf8');
+        let data={};
+        try{if(raw)data=JSON.parse(raw);}catch{
+          const error=new Error('GitHub respondió con datos que no son JSON.');
+          error.status=502;
+          reject(error);return;
+        }
+        resolve({status:response.statusCode||502,data});
+      });
+    });
+    request.on('timeout',()=>request.destroy(Object.assign(new Error('GitHub excedió el tiempo de espera.'),{code:'ETIMEDOUT'})));
+    request.on('error',reject);
+    if(payload)request.write(payload);
+    request.end();
+  });
+}
 async function github(path,options={}){
   const read=!options.method;
   const url=base()+path+(read?`?ref=${encodeURIComponent(branch())}`:'');
-  // No reintentar escrituras a ciegas: si GitHub alcanzó a guardar, repetir un PUT
-  // podría generar conflictos o una confirmación engañosa.
+  // Reintentar únicamente lecturas. Las escrituras podrían haber llegado a GitHub
+  // aunque la conexión se haya interrumpido antes de recibir su respuesta.
   const attempts=read?3:1;
   for(let attempt=0;attempt<attempts;attempt++){
     let response;
     try{
-      response=await fetch(url,{
-        ...options,
-        headers:{'Accept':'application/vnd.github+json','Authorization':`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28',...(options.headers||{})},
-        signal:AbortSignal.timeout(25000)
-      });
+      response=await githubRequest(url,options);
     }catch(cause){
-      if(read&&attempt<attempts-1){await wait(500*(attempt+1));continue;}
-      const code=String(cause?.cause?.code||cause?.code||cause?.name||'RED');
-      const error=new Error(`No se pudo conectar con GitHub (${code}). No se confirmó el guardado. Revisa que Vercel pueda comunicarse con api.github.com e inténtalo de nuevo.`);
+      if(read&&attempt<attempts-1){await wait(600*(attempt+1));continue;}
+      const code=String(cause?.code||'NETWORK_ERROR').slice(0,45);
+      const error=new Error(`Error de conexión con GitHub (${code}). Comprueba el acceso a api.github.com desde Vercel y vuelve a intentarlo.`);
       error.status=503;
       throw error;
     }
     if(read&&[429,500,502,503,504].includes(response.status)&&attempt<attempts-1){
-      await wait(500*(attempt+1));continue;
+      await wait(600*(attempt+1));continue;
     }
     if(response.status===404&&read)return null;
-    const result=await response.json().catch(()=>({}));
-    if(!response.ok){
+    const result=response.data;
+    if(response.status<200||response.status>=300){
       let message=result.message||`HTTP ${response.status}`;
       if(response.status===401)message='Token de GitHub inválido o vencido (GITHUB_TOKEN).';
-      if(response.status===403)message='GitHub no permite escribir: revisa el permiso Contents: Read and write del token.';
-      if(response.status===404)message='No se encontró el repositorio en GitHub. Revisa GITHUB_REPO y el acceso del token.';
-      if(response.status===409)message='Otro cambio modificó el catálogo al mismo tiempo. Vuelve a intentar.';
-      const error=new Error(`GitHub: ${message}`);error.status=response.status;throw error;
+      if(response.status===403)message='GitHub rechazó el permiso. Revisa Contents: Read and write del token.';
+      if(response.status===404)message='No se encontró el repositorio o archivo: comprueba GITHUB_REPO y el acceso del token.';
+      if(response.status===409)message='El catálogo cambió durante el guardado. Vuelve a intentarlo.';
+      if(response.status===422)message='GitHub rechazó los datos o la rama configurada.';
+      const error=new Error(`GitHub: ${message}`);
+      error.status=response.status;
+      throw error;
     }
     return result;
   }
