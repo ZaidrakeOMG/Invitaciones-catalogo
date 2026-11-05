@@ -83,20 +83,26 @@ function repoParts(){
 const base=()=>`https://api.github.com/repos/${repoParts()}/contents/`;
 const branch=()=>(process.env.GITHUB_BRANCH||'main').trim();
 function githubToken(){
-  // Vercel puede guardar un salto de linea al pegar el PAT desde un archivo.
-  // Nunca registrar ni devolver el valor del token.
-  const token=String(process.env.GITHUB_TOKEN||'').trim();
-  if(!token) {
-    const error=new Error('Falta configurar GITHUB_TOKEN en Environment Variables de Vercel.');
-    error.code='CONFIG_GITHUB_TOKEN';
-    error.status=503;
-    throw error;
+  // GitHub PAT puede haberse pegado con etiqueta, comillas, saltos de línea
+  // o texto adjunto. Buscar exactamente un token reconocible sin exponerlo.
+  const raw=String(process.env.GITHUB_TOKEN||'')
+    .replace(/[\u200B-\u200D\uFEFF]/g,'');
+  if(!raw.trim()){
+    const error=new Error('Falta configurar GITHUB_TOKEN en Vercel.');
+    error.code='CONFIG_GITHUB_TOKEN';error.status=503;throw error;
   }
+  const matches=raw.match(/github_pat_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9]{20,}/g)||[];
+  if(matches.length===1)return matches[0];
+  if(matches.length>1){
+    const error=new Error('GITHUB_TOKEN contiene más de un token. Deja solo el token NUEVO en Vercel.');
+    error.code='CONFIG_GITHUB_TOKEN';error.status=503;throw error;
+  }
+  // Compatibilidad para tokens de prueba antiguos, sin aceptar encabezados HTTP.
+  const token=raw.trim().replace(/^GITHUB_TOKEN\s*=\s*/i,'')
+    .replace(/^Bearer\s+/i,'').replace(/^["'`]|["'`]$/g,'').trim();
   if(!/^[A-Za-z0-9_-]+$/.test(token)){
-    const error=new Error('GITHUB_TOKEN contiene caracteres no válidos. En Vercel pega solamente el token, en una sola línea, sin comillas ni la palabra Bearer.');
-    error.code='CONFIG_GITHUB_TOKEN';
-    error.status=503;
-    throw error;
+    const error=new Error('GITHUB_TOKEN no contiene un token válido. Pega el token nuevo completo, sin textos adicionales, y vuelve a publicar Vercel.');
+    error.code='CONFIG_GITHUB_TOKEN';error.status=503;throw error;
   }
   return token;
 }
