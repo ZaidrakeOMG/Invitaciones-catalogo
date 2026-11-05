@@ -17,8 +17,8 @@ import { contactHref } from '../data/site';
         <div class="catalog-hero__notes"><span><UiIcon name="link" size={14}/> Invitaciones digitales</span><span><UiIcon name="ticket" size={14}/> Pases personalizados</span></div>
       </div>
       <div class="catalog-hero__art" aria-hidden="true">
-        <div class="hero-art__frame hero-art__frame--left" style="background-image:url('/previews/invitacion-romina-xv.svg')"><img src="/invitation-previews/invitacion-romina-xv.webp" alt="" onerror="this.hidden=true" /><span class="hero-art__name">Romina</span></div>
-        <div class="hero-art__frame hero-art__frame--right" style="background-image:url('/previews/inv-minecraft.svg')"><img src="/invitation-previews/inv-minecraft.webp" alt="" onerror="this.hidden=true" /><span class="hero-art__name">Minecraft</span></div>
+        <div class="hero-art__frame hero-art__frame--left" style="background-image:url('/previews/invitacion-romina-xv.svg')"><img src="/invitation-previews/invitacion-romina-xv.jpg" alt="" onerror="this.hidden=true" /><span class="hero-art__name">Romina</span></div>
+        <div class="hero-art__frame hero-art__frame--right" style="background-image:url('/previews/inv-minecraft.svg')"><img src="/invitation-previews/inv-minecraft.jpg" alt="" onerror="this.hidden=true" /><span class="hero-art__name">Minecraft</span></div>
         <div class="hero-art__frame hero-art__frame--center"><img src="/previews-real/zyc-invitacion.webp" alt="" /><span class="hero-art__name">Zaid & Camila</span></div>
         <div class="hero-art__seal"><span>CREADO POR</span><UiIcon name="sparkles" size={30}/><span>CAZAMI</span></div>
       </div>
@@ -97,7 +97,7 @@ import { contactHref } from '../data/site';
       const name=document.createElement('strong');name.textContent=item.name;
       const hint=document.createElement('span');hint.className='invitation-preview__cta';hint.textContent='Toca para ver la invitación';
       placeholder.append(eyebrow,name,hint);
-      const image=document.createElement('img');image.className='web-preview__actual invitation-preview__screenshot';image.alt=`Vista de la invitación digital ${item.name}`;image.loading='lazy';image.decoding='async';image.src=`/invitation-previews/nuevo-${item.id}.webp`;image.onerror=()=>{image.hidden=true;};
+      const image=document.createElement('img');image.className='web-preview__actual invitation-preview__screenshot';image.alt=`Vista de la invitación digital ${item.name}`;image.loading='lazy';image.decoding='async';image.src=`/invitation-previews/nuevo-${item.id}.jpg`;image.onerror=()=>{image.hidden=true;};
       const blocker=document.createElement('div');blocker.className='web-preview__blocker';preview.append(placeholder,image,blocker);
       const ordinal=document.createElement('span');ordinal.className='work-card__ordinal';ordinal.textContent=String(index+1).padStart(2,'0');link.append(preview,ordinal);
       const info=document.createElement('div');info.className='work-card__info';
