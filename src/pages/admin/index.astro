@@ -7,7 +7,7 @@ import '../../styles/admin.css';
     <div class="admin-top"><a href="/" class="admin-back">← Volver al catálogo</a><span>ÁREA DE ADMINISTRACIÓN</span></div>
     <div class="admin-heading"><span class="admin-label">✦ TU ESPACIO CREATIVO</span><h1>Tu estudio, <em>tu catálogo.</em></h1><p class="admin-intro">Agrega trabajos en segundos, sin tocar el código.</p></div>
 
-    <div id="admin-login" class="admin-panel admin-login"><span class="admin-lock" aria-hidden="true">✦</span><span class="admin-label">ACCESO PRIVADO · CAZAMI STUDIO</span><h2>Bienvenido de nuevo.</h2><p>Ingresa tu contraseña para administrar tus diseños.</p>
+    <div id="admin-login" class="admin-panel admin-login"><span class="admin-lock" aria-hidden="true">✦</span><span class="admin-label">ACCESO PRIVADO · CAZAMI STUDIO</span><h2>Bienvenido de nuevo.</h2><p>Ingresa tu contraseña para administrar tus diseños.</p><div class="admin-login__features"><span>↗ Añadir invitaciones por URL</span><span>▧ Subir imágenes de pases</span></div>
       <form id="login-form"><label for="admin-pin">Contraseña</label><input id="admin-pin" type="password" name="password" required inputmode="numeric" autocomplete="off" maxlength="100" placeholder="Código de acceso" /><button type="submit" class="admin-button">Entrar ↗</button></form>
     </div>
 
@@ -112,6 +112,8 @@ import '../../styles/admin.css';
       try{await request('/api/items',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:active,id:button.dataset.deleteId})});await load();say('Trabajo retirado de la lista. Vercel actualizará el catálogo.');}
       catch(err){say((err as Error).message,true);button.disabled=false;}
     });
+    const requestedSection=new URLSearchParams(window.location.search).get('seccion');
+    if(requestedSection==='invitaciones'||requestedSection==='pases')selected(requestedSection);
     request('/api/session').then(data=>showAdmin(Boolean(data.authenticated))).catch(()=>showAdmin(false));
   </script>
 </BaseLayout>
