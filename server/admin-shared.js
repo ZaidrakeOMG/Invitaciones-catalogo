@@ -81,7 +81,25 @@ function repoParts(){
   return repo;
 }
 const base=()=>`https://api.github.com/repos/${repoParts()}/contents/`;
-const branch=()=>process.env.GITHUB_BRANCH||'main';
+const branch=()=>(process.env.GITHUB_BRANCH||'main').trim();
+function githubToken(){
+  // Vercel puede guardar un salto de linea al pegar el PAT desde un archivo.
+  // Nunca registrar ni devolver el valor del token.
+  const token=String(process.env.GITHUB_TOKEN||'').trim();
+  if(!token) {
+    const error=new Error('Falta configurar GITHUB_TOKEN en Environment Variables de Vercel.');
+    error.code='CONFIG_GITHUB_TOKEN';
+    error.status=503;
+    throw error;
+  }
+  if(!/^[A-Za-z0-9_-]+$/.test(token)){
+    const error=new Error('GITHUB_TOKEN contiene caracteres no válidos. En Vercel pega solamente el token, en una sola línea, sin comillas ni la palabra Bearer.');
+    error.code='CONFIG_GITHUB_TOKEN';
+    error.status=503;
+    throw error;
+  }
+  return token;
+}
 const wait=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
 // Vercel/Undici devolvía UND_ERR_INVALID_ARG antes de llegar a GitHub.
 // Utilizar HTTPS nativo de Node elimina esa dependencia del fetch global.
@@ -91,7 +109,7 @@ function githubRequest(url,options={}){
   const headers={
     'User-Agent':'CAZAMI-Studio-Admin/1.0',
     'Accept':'application/vnd.github+json',
-    'Authorization':`Bearer ${process.env.GITHUB_TOKEN}`,
+    'Authorization':`Bearer ${githubToken()}`,
     'X-GitHub-Api-Version':'2022-11-28',
     ...(payload?{'Content-Length':String(payload.length)}:{}),
     ...(options.headers||{})
@@ -137,9 +155,15 @@ async function github(path,options={}){
     try{
       response=await githubRequest(url,options);
     }catch(cause){
+      if(cause?.code==='CONFIG_GITHUB_TOKEN')throw cause;
+      if(cause?.code==='ERR_INVALID_CHAR'){
+        const error=new Error('Vercel está enviando un carácter no permitido en una cabecera de GitHub. Revisa que GITHUB_TOKEN tenga solamente el token en una línea, sin comillas ni Bearer.');
+        error.status=503;
+        throw error;
+      }
       if(read&&attempt<attempts-1){await wait(600*(attempt+1));continue;}
       const code=String(cause?.code||'NETWORK_ERROR').slice(0,45);
-      const error=new Error(`Error de conexión con GitHub (${code}). Comprueba el acceso a api.github.com desde Vercel y vuelve a intentarlo.`);
+      const error=new Error(`Error de conexión con GitHub (${code}). Revisa api.github.com desde Vercel.`);
       error.status=503;
       throw error;
     }
