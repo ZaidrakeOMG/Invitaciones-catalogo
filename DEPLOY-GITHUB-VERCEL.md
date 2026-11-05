@@ -1,21 +1,12 @@
-# Publicar CAZAMI V8 sobre el repositorio existente
+# Publicar CAZAMI con administrador
 
-Repositorio: https://github.com/ZaidrakeOMG/Invitaciones-catalogo
+1. En tu proyecto de GitHub sube los archivos de esta carpeta (sin `node_modules/`, sin `.env`).
+2. En Vercel importa el repositorio o conserva tu proyecto ya conectado a GitHub. Configura Framework: **Astro**, Build: `npm run build`, Output: `dist`.
+3. Ejecuta `GENERAR-CLAVES-ADMIN.bat` en Windows o `node scripts/generar-claves-admin.mjs 2525`.
+4. En Vercel → Settings → Environment Variables crea las variables `ADMIN_PASSWORD_SCRYPT` y `ADMIN_SESSION_SECRET` con los dos valores generados.
+5. En GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens crea un token limitado al repo CAZAMI con permiso **Contents: Read and write**.
+6. En Vercel crea `GITHUB_TOKEN` con ese token, `GITHUB_REPO` con el repo correcto (`usuario/repo`) y `GITHUB_BRANCH=main` (ajusta si usas otra rama).
+7. Aplica las variables al entorno Production y vuelve a desplegar. Abre `https://tu-sitio/admin/` e inicia con **2525**.
+8. Al añadir una invitación o subir una imagen se hace un commit en GitHub; Vercel reconstruye el catálogo automáticamente.
 
-**Opción recomendada para Windows:** descomprime el proyecto y ejecuta `SUBIR-A-GITHUB.bat`. Este script **clona el repositorio existente** en una carpeta temporal y sobreescribe los archivos de CAZAMI, crea el commit y lo envía a `main` sin reescribir el historial remoto.
-
-Puedes hacerlo a mano si ya tienes el repositorio clonado:
-
-```bat
-cd C:\ruta\a\Invitaciones-catalogo
-REM Copia aquí las carpetas src, public, scripts y archivos del ZIP.
-npm install
-npm run build
-git add .
-git commit -m "CAZAMI V8 - rediseno editorial"
-git push origin main
-```
-
-Vercel: Astro, Root Directory `./`, Build Command `npm run build`, Output Directory `dist`, Install Command `npm install`, variables de entorno vacías.
-
-Después de enviar el commit: en Vercel > Deployments comprueba el estado **Ready**.
+La contraseña no aparece en el navegador: el backend verifica un hash scrypt y firma la sesión. **2525 es un PIN muy sencillo**: para mayor seguridad cambia a una clave larga al exponer el sitio en público y agrega límites de acceso en Vercel.

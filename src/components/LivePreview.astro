@@ -2,26 +2,16 @@
 import type {Invite} from '../data/catalog';
 import {existsSync} from 'node:fs';
 import {resolve} from 'node:path';
-import Icon from './Icon.astro';
-
-interface Props {item:Invite; context?:'card'|'detail'}
-const {item,context='card'}=Astro.props;
-
-// Portadas = inicio real de cada invitación. No utilizar las fotos de pases
-// ni las antiguas capturas que pudieran mostrar el pase digital.
-const intro=resolve(process.cwd(),'public','intro-previews',`${item.slug}.webp`);
-const cover=item.cover||(existsSync(intro)?`/intro-previews/${item.slug}.webp`:undefined);
-const initials=item.name.split(/\s+|&/).filter(s=>s.length>1).slice(0,2).map(s=>s[0]).join('');
+interface Props {item:Invite; context?: 'card'|'detail'}
+const {item,context='card'} = Astro.props;
+// Nunca usar public/passes como portadas. Solo capturas de URL real.
+const hasCaptured=existsSync(resolve(process.cwd(),'public','previews-real',`${item.slug}.webp`));
+const cover=item.cover||(hasCaptured?`/previews-real/${item.slug}.webp`:undefined);
 ---
-<div class:list={['preview',`preview--${context}`,`preview--${item.category==='Bodas'?'boda':item.category==='XV años'?'xv':item.category==='Sacramentos'?'sacramento':'fiesta'}`]}>
- {cover ? <img class="preview__screenshot" src={cover} alt={`Inicio de la invitación de ${item.name}`} loading={context==='card'?'lazy':'eager'} decoding="async"/> :
-  <div class="preview__editorial" aria-label="Vista editorial del proyecto, mientras se prepara la captura de la invitación.">
-   <div class="preview__frame" aria-hidden="true"></div>
-   <span class="preview__overline">CAZAMI STUDIO <span> / </span> {item.category}</span>
-   <div class="preview__mark" aria-hidden="true">{initials||'CZ'}</div>
-   <span class="preview__rule"></span>
-   <strong>{item.name}</strong><em>{item.subtitle}</em>
-   <span class="preview__caption">VISTA DEL PROYECTO</span>
-  </div>}
- <div class="preview__float"><Icon name="arrowUp" size={17}/><span>Ver invitación</span></div>
+<div class:list={['web-preview',`web-preview--${context}`]} data-web-preview>
+  {cover ? <img class="web-preview__actual" src={cover} alt={`Captura auténtica de la portada de ${item.name}`} loading="lazy" /> : <>
+    <div class="web-preview__placeholder" aria-hidden="true"><span class="web-preview__placeholder-meta">CAZAMI · DEMOSTRACIÓN WEB</span><strong>{item.name}</strong><small>Vista del sitio original al cargar</small></div>
+    <iframe class="web-preview__iframe" title={`Vista no interactiva de ${item.name}`} data-src={item.externalDemo} sandbox="allow-scripts allow-same-origin" loading="lazy" tabindex="-1" aria-hidden="true" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </>}
+  <div class="web-preview__blocker" aria-hidden="true"></div>
 </div>

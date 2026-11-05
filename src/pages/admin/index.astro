@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/admin.css';
+---
+<BaseLayout title="Administración | CAZAMI STUDIO" description="Administración privada del catálogo CAZAMI." noindex={true}>
+  <section class="admin-page"><div class="wrap admin-wrap">
+    <div class="admin-top"><a href="/" class="admin-back">← Volver al catálogo</a><span>ÁREA DE ADMINISTRACIÓN</span></div>
+    <h1>Administrar <em>catálogo.</em></h1>
+    <p class="admin-intro">Agrega nuevas invitaciones con su enlace o sube imágenes de pases.</p>
+
+    <div id="admin-login" class="admin-panel admin-login"><span class="admin-label">ACCESO PRIVADO</span><h2>Ingresa tu código</h2>
+      <form id="login-form"><label for="admin-pin">Contraseña</label><input id="admin-pin" type="password" name="password" required inputmode="numeric" autocomplete="off" maxlength="100" placeholder="Código de acceso" /><button type="submit" class="admin-button">Entrar ↗</button></form>
+    </div>
+
+    <div id="admin-content" hidden>
+      <div class="admin-nav"><div role="tablist" aria-label="Administrar trabajos"><button type="button" data-tab="invitaciones" class="admin-tab is-active" role="tab" aria-selected="true">Invitaciones</button><button type="button" data-tab="pases" class="admin-tab" role="tab" aria-selected="false">Pases digitales</button></div><button type="button" id="logout" class="admin-logout">Cerrar sesión</button></div>
+      <div id="tab-invitaciones" role="tabpanel" class="admin-panel admin-workpanel"><span class="admin-label">INVITACIONES DIGITALES</span><h2>Agregar invitación</h2><p>Solo necesitas el enlace. El nombre y la categoría te permiten organizarla.</p>
+        <form id="invitation-form" class="admin-fields"><label for="invite-url">URL de la invitación <span>*</span></label><input id="invite-url" type="url" required placeholder="https://mi-invitacion.netlify.app/" pattern="https://.*" />
+          <label for="invite-name">Nombre (opcional)</label><input id="invite-name" type="text" maxlength="90" placeholder="Ej. XV años Valentina" />
+          <label for="invite-category">Categoría</label><select id="invite-category"><option>Bodas</option><option>XV años</option><option>Celebraciones</option><option>Sacramentos</option></select>
+          <button type="submit" class="admin-button">Guardar invitación ↗</button></form>
+      </div>
+      <div id="tab-pases" class="admin-panel admin-workpanel" role="tabpanel" hidden><span class="admin-label">PASES DIGITALES</span><h2>Subir pase</h2><p>Solo selecciona la imagen del pase. No necesitas escribir ningún dato.</p>
+        <form id="pass-form" class="admin-fields"><label for="pass-image">Imagen del pase <span>*</span></label><input id="pass-image" type="file" accept="image/png,image/jpeg,image/webp" required /><img id="pass-preview" alt="Vista previa del pase" hidden /><span class="admin-hint">JPG, PNG o WEBP. Se optimiza antes de guardarse.</span><button type="submit" class="admin-button">Subir pase ↗</button></form>
+      </div>
+      <div class="admin-panel admin-existing"><h2>Trabajos agregados</h2><p>Los elementos originales del sitio permanecen intactos.</p><div id="admin-list" class="admin-list"></div></div>
+      <p class="admin-publication">Los cambios se guardan en GitHub y aparecen en el catálogo público después de la publicación automática de Vercel.</p>
+    </div>
+    <div id="admin-status" class="admin-status" role="status" aria-live="polite"></div>
+  </div></section>
+  <script>
+    type Item={id:string;name?:string;category?:string;url?:string;image?:string};
+    type Catalog={invitaciones:Item[];pases:Item[]};
+    const loginPanel=document.getElementById('admin-login')!;
+    const content=document.getElementById('admin-content')!;
+    const status=document.getElementById('admin-status')!;
+    const list=document.getElementById('admin-list')!;
+    const imageInput=document.getElementById('pass-image') as HTMLInputElement;
+    const preview=document.getElementById('pass-preview') as HTMLImageElement;
+    let active:'invitaciones'|'pases'='invitaciones';
+    let catalog:Catalog={invitaciones:[],pases:[]};
+    const say=(message:string,error=false)=>{status.textContent=message;status.classList.toggle('is-error',error);};
+    async function request(url:string,options:RequestInit={}){
+      const response=await fetch(url,{credentials:'same-origin',cache:'no-store',...options});
+      const data=await response.json().catch(()=>({error:'No se recibió respuesta del servidor.'}));
+      if(!response.ok)throw new Error(data.error||'No se pudo completar la solicitud.');
+      return data;
+    }
+    function showAdmin(authenticated:boolean){loginPanel.hidden=authenticated;content.hidden=!authenticated; if(authenticated)void load();}
+    function selected(name:'invitaciones'|'pases'){
+      active=name;
+      document.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(button=>{const is=button.dataset.tab===name;button.classList.toggle('is-active',is);button.setAttribute('aria-selected',String(is));});
+      document.getElementById('tab-invitaciones')!.hidden=name!=='invitaciones';document.getElementById('tab-pases')!.hidden=name!=='pases';render();
+    }
+    async function load(){
+      try{catalog=await request('/api/items');render();}catch(e){say((e as Error).message,true);}
+    }
+    function render(){
+      list.replaceChildren();const items=catalog[active];
+      if(items.length===0){const empty=document.createElement('p');empty.className='admin-muted';empty.textContent='Todavía no hay nuevos trabajos en esta sección.';list.append(empty);return;}
+      items.forEach(item=>{
+        const row=document.createElement('div');row.className='admin-list-item';
+        const label=document.createElement('div');label.className='admin-list-item__name';
+        if(active==='pases'&&item.image){const img=document.createElement('img');img.src=item.image;img.alt='Imagen de pase';label.append(img);}
+        else{const heading=document.createElement('strong');heading.textContent=item.name||'Invitación';label.append(heading);const sub=document.createElement('small');sub.textContent=item.category||'';label.append(sub);}
+        const del=document.createElement('button');del.type='button';del.dataset.deleteId=item.id;del.textContent='Eliminar';del.setAttribute('aria-label','Eliminar trabajo');row.append(label,del);list.append(row);
+      });
+    }
+    document.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>selected(btn.dataset.tab as 'invitaciones'|'pases')));
+    document.getElementById('login-form')?.addEventListener('submit',async e=>{
+      e.preventDefault();const form=e.currentTarget as HTMLFormElement;const button=form.querySelector('button')!;button.disabled=true;say('');
+      try{await request('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:(document.getElementById('admin-pin') as HTMLInputElement).value})});form.reset();showAdmin(true);say('Acceso autorizado.');}
+      catch(err){say((err as Error).message,true);}finally{button.disabled=false;}
+    });
+    document.getElementById('logout')?.addEventListener('click',async()=>{
+      try{await request('/api/logout',{method:'POST'});}finally{showAdmin(false);say('Sesión cerrada.');}
+    });
+    document.getElementById('invitation-form')?.addEventListener('submit',async e=>{
+      e.preventDefault();const form=e.currentTarget as HTMLFormElement;const button=form.querySelector('button')!;button.disabled=true;say('Guardando invitación…');
+      try{
+        await request('/api/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'invitacion',url:(document.getElementById('invite-url') as HTMLInputElement).value,name:(document.getElementById('invite-name') as HTMLInputElement).value,category:(document.getElementById('invite-category') as HTMLSelectElement).value})});
+        form.reset();await load();say('Invitación guardada. Aparecerá en el sitio al terminar el despliegue de Vercel.');
+      }catch(err){say((err as Error).message,true);}finally{button.disabled=false;}
+    });
+    function canvasDataURL(file:File):Promise<string>{return new Promise((resolve,reject)=>{
+      const url=URL.createObjectURL(file),img=new Image();
+      img.onload=()=>{
+        URL.revokeObjectURL(url);
+        try{const limit=1800,scale=Math.min(1,limit/Math.max(img.naturalWidth,img.naturalHeight));
+          const canvas=document.createElement('canvas');canvas.width=Math.round(img.naturalWidth*scale);canvas.height=Math.round(img.naturalHeight*scale);
+          if(!canvas.width||!canvas.height||canvas.width*canvas.height>16_000_000)throw new Error('Imagen demasiado grande.');
+          const ctx=canvas.getContext('2d');if(!ctx)throw new Error('No se puede procesar la imagen.');ctx.drawImage(img,0,0,canvas.width,canvas.height);
+          let quality=.87,result='';for(let i=0;i<6;i++){result=canvas.toDataURL('image/webp',quality);if(result.length<3_300_000)break;quality-=.12;}
+          if(!result.startsWith('data:image/webp;base64,')||result.length>3_300_000)throw new Error('La imagen sigue siendo muy pesada. Usa un archivo más pequeño.');resolve(result);
+        }catch(err){reject(err);}
+      };
+      img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('No se pudo abrir la imagen.'));};img.src=url;
+    });}
+    imageInput.addEventListener('change',()=>{
+      const file=imageInput.files?.[0];preview.hidden=!file;
+      if(file){preview.src=URL.createObjectURL(file);preview.onload=()=>URL.revokeObjectURL(preview.src);}
+    });
+    document.getElementById('pass-form')?.addEventListener('submit',async e=>{
+      e.preventDefault();const file=imageInput.files?.[0];if(!file)return;
+      if(!['image/jpeg','image/png','image/webp'].includes(file.type)){say('Elige una imagen JPG, PNG o WEBP.',true);return;}
+      const form=e.currentTarget as HTMLFormElement,button=form.querySelector('button')!;button.disabled=true;say('Preparando imagen…');
+      try{const image=await canvasDataURL(file);say('Subiendo pase…');await request('/api/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'pase',image})});form.reset();preview.hidden=true;await load();say('Pase guardado. Aparecerá en el sitio al terminar el despliegue de Vercel.');}
+      catch(err){say((err as Error).message,true);}finally{button.disabled=false;}
+    });
+    list.addEventListener('click',async e=>{
+      const button=(e.target as HTMLElement).closest<HTMLButtonElement>('button[data-delete-id]');if(!button||!confirm('¿Eliminar este trabajo del catálogo?'))return;
+      button.disabled=true;
+      try{await request('/api/items',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:active,id:button.dataset.deleteId})});await load();say('Trabajo retirado de la lista. Vercel actualizará el catálogo.');}
+      catch(err){say((err as Error).message,true);button.disabled=false;}
+    });
+    request('/api/session').then(data=>showAdmin(Boolean(data.authenticated))).catch(()=>showAdmin(false));
+  </script>
+</BaseLayout>

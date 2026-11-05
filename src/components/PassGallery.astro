@@ -1,28 +1,28 @@
 ---
-import Icon from './Icon.astro';
-import {contactHref} from '../data/site';
 const passes=[
- {name:'Aislinn & José',kind:'Boda',img:'/passes/aislinn-jose.webp'},
- {name:'Scarlett Marisol',kind:'XV años',img:'/passes/scarlett-marisol.webp'},
- {name:'Romina Manola',kind:'XV años',img:'/passes/romina-manola.webp'},
- {name:'Bernardo',kind:'XV años · QR',img:'/passes/bernardo.webp'},
- {name:'Mayte',kind:'XV años',img:'/passes/mayte.webp'},
- {name:'Valeria Elizabeth',kind:'XV años',img:'/passes/valeria-elizabeth.webp'},
+ '/passes/aislinn-jose.webp','/passes/scarlett-marisol.webp','/passes/romina-manola.webp',
+ '/passes/bernardo.webp','/passes/mayte.webp','/passes/valeria-elizabeth.webp',
 ];
 ---
-<section class="passes-block section" id="pases" aria-labelledby="passes-heading"><div class="shell">
- <div class="section-meta section-meta--on-dark"><span>05 / PASES DIGITALES</span><span>DISEÑO REAL · EJEMPLOS DEL ESTUDIO</span></div>
- <div class="passes-block__heading"><div class="rise"><p class="kicker kicker--light">Una pieza para cada invitado</p><h2 class="display display--light" id="passes-heading">El detalle está <em>en su nombre.</em></h2></div><div class="passes-block__description rise"><p>Diseñamos pases digitales personalizados con la información que cada evento necesita: destinatario, personas autorizadas y detalles de acceso.</p><p class="passes-block__disclaimer"><Icon name="shield" size={18}/> Estas son imágenes de <strong>pases digitales</strong>, no portadas de invitaciones web.</p></div></div>
- <div class="pass-grid" id="pass-grid">{passes.map((pass,index)=><figure class="pass-tile rise"><button type="button" class="pass-tile__visual" data-pass-image={pass.img} data-pass-name={pass.name} aria-label={`Ver pase digital completo de ${pass.name}`}><div class="pass-tile__phone"><div class="pass-tile__notch" aria-hidden="true"></div><img src={pass.img} alt={`Ejemplo original de pase digital personalizado: ${pass.name}`} loading="lazy" decoding="async"/><span class="pass-tile__zoom"><Icon name="gallery" size={16}/> Ampliar pase</span></div></button><figcaption><span>{String(index+1).padStart(2,'0')} / {pass.kind}</span><strong>{pass.name}</strong><small>EJEMPLO DE PASE DIGITAL</small></figcaption></figure>)}</div>
- <div class="passes-block__end"><p>Los diseños se muestran sin alterar sus elementos principales. Las imágenes son demostrativas de pases personalizados.</p><a class="text-link text-link--light" href={contactHref('Hola, CAZAMI. Quiero cotizar pases digitales personalizados.')} target="_blank" rel="noopener noreferrer">Cotizar pases digitales <Icon name="arrowUp" size={18}/></a></div>
+<section class="passes-section section-space" id="pases" aria-labelledby="passes-title"><div class="wrap">
+  <div class="section-bar section-bar--inverse"><span>02 / NUESTROS TRABAJOS</span><span>PASES DIGITALES</span></div>
+  <div class="passes-header passes-header--simple"><div><h2 class="display-title" id="passes-title">Pases que <em>hemos hecho.</em></h2><p class="lead">Algunos diseños de pases digitales realizados para nuestros eventos.</p></div></div>
+  <div class="passes-carousel passes-carousel--simple"><div class="passes-rail" id="passes-rail" tabindex="0" aria-label="Galería de pases digitales">
+    {passes.map((img)=><figure class="pass-card"><button class="pass-card__image" type="button" data-view-pass data-img={img} data-name="Pase digital" aria-label="Ampliar pase digital"><span class="pass-card__mockup"><img src={img} loading="lazy" decoding="async" alt="Diseño de pase digital CAZAMI" /></span><span class="pass-card__zoom">VER COMPLETO ↗</span></button></figure>)}
+  </div></div>
+  <div class="passes-tail"><span>Desliza para ver más diseños.</span><div><button type="button" id="passes-prev" aria-label="Pase anterior">←</button><button type="button" id="passes-next" aria-label="Pase siguiente">→</button></div></div>
 </div>
-<dialog class="pass-modal" id="pass-modal" aria-label="Vista ampliada de un pase digital"><div class="pass-modal__bar"><span id="pass-modal-title">Pase digital CAZAMI</span><button type="button" id="pass-modal-close" aria-label="Cerrar vista"><Icon name="close" size={21}/></button></div><img id="pass-modal-img" alt=""/></dialog>
+<dialog class="pass-dialog" id="pass-dialog" aria-label="Pase digital ampliado"><button type="button" id="pass-dialog-close" aria-label="Cerrar pase">Cerrar ×</button><img id="pass-dialog-image" alt="Pase digital CAZAMI" /></dialog>
 </section>
 <script>
- const modal=document.getElementById('pass-modal') as HTMLDialogElement|null;
- const modalImg=document.getElementById('pass-modal-img') as HTMLImageElement|null;
- const modalTitle=document.getElementById('pass-modal-title');
- document.querySelectorAll<HTMLButtonElement>('[data-pass-image]').forEach(btn=>btn.addEventListener('click',()=>{if(!modal||!modalImg)return;modalImg.src=btn.dataset.passImage||'';modalImg.alt=`Pase digital original de ${btn.dataset.passName||''}`;if(modalTitle)modalTitle.textContent=btn.dataset.passName||'Pase digital';modal.showModal();}));
- document.getElementById('pass-modal-close')?.addEventListener('click',()=>modal?.close());
- modal?.addEventListener('click',event=>{if(event.target===modal)modal.close();});
+ const rail=document.getElementById('passes-rail');
+ function move(direction:number){const width=rail?.querySelector('.pass-card')?.getBoundingClientRect().width||320;rail?.scrollBy({left:direction*(width+20),behavior:'smooth'});}
+ document.getElementById('passes-prev')?.addEventListener('click',()=>move(-1));
+ document.getElementById('passes-next')?.addEventListener('click',()=>move(1));
+ const dialog=document.getElementById('pass-dialog') as HTMLDialogElement|null;
+ const image=document.getElementById('pass-dialog-image') as HTMLImageElement|null;
+ // Delegación: también funciona con nuevos pases cargados desde el administrador.
+ rail?.addEventListener('click',(event)=>{const button=(event.target as HTMLElement).closest<HTMLButtonElement>('[data-view-pass]');if(!button||!dialog||!image)return;image.src=button.dataset.img||'';dialog.showModal();});
+ document.getElementById('pass-dialog-close')?.addEventListener('click',()=>dialog?.close());
+ dialog?.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
 </script>
