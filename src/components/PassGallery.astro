@@ -12,12 +12,12 @@ const passes=[
     {passes.map((img)=><figure class="pass-card"><button class="pass-card__image" type="button" data-view-pass data-img={img} data-name="Pase digital" aria-label="Ampliar pase digital"><span class="pass-card__mockup"><img src={img} loading="lazy" decoding="async" alt="Diseño de pase digital CAZAMI" /></span><span class="pass-card__zoom"><UiIcon name="external" size={14}/></span></button></figure>)}
   </div>
   <nav class="catalog-pagination catalog-pagination--dark" id="passes-pagination" aria-label="Páginas de pases">
-    <button type="button" id="passes-prev" class="catalog-pagination__button" disabled>← Anterior</button>
+    <button type="button" id="passes-prev" class="catalog-pagination__button" disabled><UiIcon name="arrow-left" size={15}/> Anterior</button>
     <span id="passes-page-label" class="catalog-pagination__label" role="status" aria-live="polite">Página 1 de 1</span>
-    <button type="button" id="passes-next" class="catalog-pagination__button" disabled>Siguiente →</button>
+    <button type="button" id="passes-next" class="catalog-pagination__button" disabled>Siguiente <UiIcon name="arrow-right" size={15}/></button>
   </nav>
 </div>
-<dialog class="pass-dialog" id="pass-dialog" aria-label="Pase digital ampliado"><button type="button" id="pass-dialog-close" aria-label="Cerrar pase">Cerrar <UiIcon name="check" size={14}/></button><img id="pass-dialog-image" alt="Pase digital CAZAMI" /></dialog>
+<dialog class="pass-dialog" id="pass-dialog" aria-label="Pase digital ampliado"><button type="button" id="pass-dialog-close" aria-label="Cerrar pase">Cerrar <UiIcon name="x" size={14}/></button><img id="pass-dialog-image" alt="Pase digital CAZAMI" /></dialog>
 </section>
 <script>
  const rail=document.getElementById('passes-rail');
