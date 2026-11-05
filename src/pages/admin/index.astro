@@ -9,6 +9,7 @@ import '../../styles/admin.css';
 
     <div id="admin-login" class="admin-panel admin-login"><span class="admin-lock" aria-hidden="true">✦</span><span class="admin-label">ACCESO PRIVADO · CAZAMI STUDIO</span><h2>Bienvenido de nuevo.</h2><p>Ingresa tu contraseña para administrar tus diseños.</p><div class="admin-login__features"><span>↗ Añadir invitaciones por URL</span><span>▧ Subir imágenes de pases</span></div>
       <form id="login-form"><label for="admin-pin">Contraseña</label><input id="admin-pin" type="password" name="password" required inputmode="numeric" autocomplete="off" maxlength="100" placeholder="Código de acceso" /><button type="submit" class="admin-button">Entrar ↗</button></form>
+      <div id="admin-setup-notice" class="admin-setup-notice" hidden role="alert"><strong>Falta activar el administrador en Vercel</strong><p>En tu proyecto abre <b>Settings → Environment Variables</b> y configura <code>ADMIN_PASSWORD_SCRYPT</code>, <code>ADMIN_SESSION_SECRET</code>, <code>GITHUB_TOKEN</code> y <code>GITHUB_REPO</code>. Luego publica de nuevo.</p></div>
     </div>
 
     <div id="admin-content" hidden>
@@ -114,6 +115,10 @@ import '../../styles/admin.css';
     });
     const requestedSection=new URLSearchParams(window.location.search).get('seccion');
     if(requestedSection==='invitaciones'||requestedSection==='pases')selected(requestedSection);
-    request('/api/session').then(data=>showAdmin(Boolean(data.authenticated))).catch(()=>showAdmin(false));
+    request('/api/session').then(data=>{
+      const notice=document.getElementById('admin-setup-notice');
+      if(notice)notice.hidden=!data.configurationRequired;
+      showAdmin(Boolean(data.authenticated));
+    }).catch(()=>showAdmin(false));
   </script>
 </BaseLayout>
