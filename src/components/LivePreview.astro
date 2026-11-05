@@ -2,46 +2,35 @@
 import type {Invite} from '../data/catalog';
 interface Props {item:Invite; context?: 'card'|'detail'}
 const {item,context='card'}=Astro.props;
-// SOLO vistas de invitaciones. Las fotos /passes/ nunca se utilizan como portadas.
+// Portada real capturada DESPUÉS de abrir el sobre.
+// Si falta, se muestra una tarjeta elegante en vez del sobre cerrado o de un pase.
 const cover=`/invitation-previews/${item.slug}.webp`;
 const originalCover=item.cover?.startsWith('/previews-real/zyc-')?item.cover:undefined;
 const decorative=`/previews/${item.slug}.svg`;
 ---
-<div class:list={['web-preview','invitation-preview',`web-preview--${context}`]} data-web-preview>
+<div class:list={['web-preview','invitation-preview',`web-preview--${context}`]}>
   <div class="invitation-preview__fallback" style={`background-image:url("${decorative}")`}>
     <span class="invitation-preview__brand">CAZAMI STUDIO</span>
     <span class="invitation-preview__kind">INVITACIÓN DIGITAL</span>
     <strong>{item.name}</strong>
-    <span class="invitation-preview__cta">Toca para ver la invitación</span>
+    <span class="invitation-preview__cta">Ver invitación completa</span>
   </div>
-  <img class="web-preview__actual invitation-preview__screenshot" src={cover} data-fallback={originalCover} loading="lazy" decoding="async" alt={`Vista de la invitación digital de ${item.name}`} />
-  <iframe class="web-preview__iframe invitation-preview__live" title={`Vista de la página de invitación ${item.name}`} data-src={item.externalDemo} loading="lazy" sandbox="allow-scripts" referrerpolicy="no-referrer" tabindex="-1" aria-hidden="true"></iframe>
+  <img class="web-preview__actual invitation-preview__screenshot" src={cover} data-fallback={originalCover} loading="lazy" decoding="async" alt={`Vista de la invitación abierta de ${item.name}`}/>
   <div class="web-preview__blocker" aria-hidden="true"></div>
 </div>
 <script>
-  // Si falta la captura, se intenta la vista REAL de la web externa. Nunca se usa un pase.
+  // Los sitios externos a menudo bloquean iframes, y un iframe empieza con el sobre cerrado.
+  // NO usar iframe: la captura debe ser posterior a la apertura o usar fallback sin falsificarla.
   document.querySelectorAll<HTMLElement>('.invitation-preview').forEach(host=>{
     const image=host.querySelector<HTMLImageElement>('.invitation-preview__screenshot');
-    const frame=host.querySelector<HTMLIFrameElement>('.invitation-preview__live');
-    if(!image||!frame)return;
-    const activate=()=>{
-      image.hidden=true;
-      frame.classList.add('invitation-preview__live--visible');
-      const update=()=>{frame.style.transform=`scale(${host.clientWidth/390})`;};
-      update();
-      if('ResizeObserver' in window)new ResizeObserver(update).observe(host);
-      const load=()=>{frame.src=frame.dataset.src||'';};
-      if('IntersectionObserver' in window){
-        const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){load();observer.disconnect();}},{rootMargin:'120px'});
-        observer.observe(host);
-      }else load();
-    };
-    image.addEventListener('error',()=>{
+    if(!image)return;
+    const failed=()=>{
       if(image.dataset.fallback&&image.dataset.fallbackUsed!=='1'){
         image.dataset.fallbackUsed='1';
         image.src=image.dataset.fallback;
-      }else activate();
-    });
-    if(image.complete&&image.naturalWidth===0)activate();
+      }else image.hidden=true;
+    };
+    image.addEventListener('error',failed);
+    if(image.complete&&image.naturalWidth===0)failed();
   });
 </script>
