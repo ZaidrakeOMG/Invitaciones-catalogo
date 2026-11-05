@@ -1,7 +1,7 @@
 /**
  * Capturas de invitaciones DESPUÉS de abrir su sobre o pantalla de bienvenida.
  * Cada fotografía viene de su URL HTTPS, nunca de /passes/.
- * Node 22 + Playwright Chromium. Se ejecuta desde GitHub Actions.
+ * Node 22 + Playwright Chromium 1.64.1. Se ejecuta mediante .BAT o GitHub Actions.
  */
 import { chromium } from 'playwright';
 import { readFile, mkdir, access } from 'node:fs/promises';
@@ -109,7 +109,7 @@ const context=await browser.newContext({
 });
 let created=0,failed=0,skipped=0;
 for(const {slug,url} of invitations){
-  const filename=resolve(folder,slug+'.webp');
+  const filename=resolve(folder,slug+'.jpg');
   if(!process.argv.includes('--force')){
     try {await access(filename);skipped++;continue;}catch {}
   }
@@ -139,7 +139,7 @@ for(const {slug,url} of invitations){
       ]);
     });
     await page.waitForTimeout(1700);
-    await page.screenshot({path:filename,type:'webp',quality:78,animations:'disabled',timeout:20000});
+    await page.screenshot({path:filename,type:'jpeg',quality:82,animations:'disabled',timeout:20000});
     created++;
     console.log('  Vista posterior al sobre guardada:',slug);
   } catch(error) {
