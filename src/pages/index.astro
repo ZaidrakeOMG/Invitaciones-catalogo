@@ -13,7 +13,7 @@ import { contactHref } from '../data/site';
         <span class="catalog-hero__eyebrow"><UiIcon name="sparkles" size={14}/> CAZAMI STUDIO · PORTAFOLIO</span>
         <h1>Detalles que<br />hacen <em>magia.</em></h1>
         <p>Un vistazo a las invitaciones y pases que hemos creado para momentos inolvidables.</p>
-        <div class="catalog-hero__actions"><a class="button button--cream" href="#coleccion">Explorar invitaciones <UiIcon name="arrow" size={17}/></a><a class="catalog-hero__link" href="#pases">Ver nuestros pases <UiIcon name="arrow" size={16}/></a></div>
+        <div class="catalog-hero__actions"><a class="button button--cream" href="#coleccion">Explorar invitaciones <UiIcon name="arrow" size={17}/></a><a class="catalog-hero__link" href="#pases">Ver nuestros pases <UiIcon name="arrow-down" size={16}/></a></div>
         <div class="catalog-hero__notes"><span><UiIcon name="link" size={14}/> Invitaciones digitales</span><span><UiIcon name="ticket" size={14}/> Pases personalizados</span></div>
       </div>
       <div class="catalog-hero__art" aria-hidden="true">
@@ -23,21 +23,21 @@ import { contactHref } from '../data/site';
         <div class="hero-art__seal"><span>CREADO POR</span><UiIcon name="sparkles" size={30}/><span>CAZAMI</span></div>
       </div>
     </div>
-    <div class="catalog-hero__bottom wrap"><span>DISEÑAMOS HISTORIAS, NO SOLO INVITACIONES</span><span>DESLIZA PARA DESCUBRIR ↓</span></div>
+    <div class="catalog-hero__bottom wrap"><span>DISEÑAMOS HISTORIAS, NO SOLO INVITACIONES</span><span>DESLIZA PARA DESCUBRIR <UiIcon name="arrow-down" size={14}/></span></div>
   </section>
 
   <section class="portfolio section-space" id="coleccion" aria-labelledby="portfolio-title">
     <div class="wrap">
       <div class="section-bar"><span>01 / NUESTROS TRABAJOS</span><span>INVITACIONES DIGITALES</span></div>
       <div class="catalog-heading"><div><span class="catalog-heading__eyebrow"><UiIcon name="grid" size={14}/> ALGUNOS DE NUESTROS TRABAJOS</span><h2 class="display-title" id="portfolio-title">Invitaciones que <em>enamoran.</em></h2></div><p>Elige tu favorita y descubre cada detalle.</p></div>
-      <div class="portfolio-controls"><div class="filterbar" aria-label="Filtrar invitaciones">{categories.map((cat,index)=><button type="button" class:list={['filterbtn',{'filterbtn--active':index===0}]} data-filter={cat} aria-pressed={index===0}>{cat}</button>)}</div><label class="portfolio-search"><UiIcon name="grid" size={16}/><input id="work-search" type="search" placeholder="Buscar invitación" aria-label="Buscar invitaciones" autocomplete="off" /></label></div>
+      <div class="portfolio-controls"><div class="filterbar" aria-label="Filtrar invitaciones">{categories.map((cat,index)=><button type="button" class:list={['filterbtn',{'filterbtn--active':index===0}]} data-filter={cat} aria-pressed={index===0}>{cat}</button>)}</div><label class="portfolio-search"><UiIcon name="search" size={16}/><input id="work-search" type="search" placeholder="Buscar invitación" aria-label="Buscar invitaciones" autocomplete="off" /></label></div>
       <p class="portfolio-count" id="portfolio-count">MOSTRANDO {catalog.length} INVITACIONES</p>
       <div class="works-grid" id="works-grid">{catalog.map((item,index)=><InvitationCard item={item} index={index} />)}</div>
       <p class="portfolio-empty" id="portfolio-empty" hidden>No encontramos invitaciones con esa búsqueda.</p>
       <nav class="catalog-pagination" id="portfolio-pagination" aria-label="Páginas de invitaciones">
-        <button type="button" id="invite-prev" class="catalog-pagination__button" disabled>← Anterior</button>
+        <button type="button" id="invite-prev" class="catalog-pagination__button" disabled><UiIcon name="arrow-left" size={15}/> Anterior</button>
         <span id="invite-page-label" class="catalog-pagination__label" role="status" aria-live="polite">Página 1 de {Math.max(1,Math.ceil(catalog.length/9))}</span>
-        <button type="button" id="invite-next" class="catalog-pagination__button">Siguiente →</button>
+        <button type="button" id="invite-next" class="catalog-pagination__button">Siguiente <UiIcon name="arrow-right" size={15}/></button>
       </nav>
     </div>
   </section>
@@ -112,7 +112,7 @@ import { contactHref } from '../data/site';
       const type=document.createElement('p');type.className='eyebrow';type.textContent=item.category;
       const title=document.createElement('h3');title.textContent=item.name;
       const actions=document.createElement('div');actions.className='work-card__links';
-      const open=document.createElement('a');open.href=item.url;open.target='_blank';open.rel='noopener noreferrer';open.textContent='Abrir invitación ↗';
+      const open=document.createElement('a');open.href=item.url;open.target='_blank';open.rel='noopener noreferrer';open.textContent='Abrir invitación';
       actions.append(open);info.append(type,title,actions);article.append(link,info);grid.append(article);
 
     }
