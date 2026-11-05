@@ -1,23 +1,18 @@
 ---
 import type {Invite} from '../data/catalog';
 interface Props {item:Invite; context?: 'card'|'detail'}
-const {item,context='card'} = Astro.props;
-// Capturas existentes en public/previews-real sin depender de módulos Node.
-const capturedSlugs=new Set([
-  'bernardo-xv',
-  'invitacion-boda-ayj',
-  'invitacion-romina-xv',
-  'invtiacion-xv-mayte',
-  'scarlett-invitacion-xv',
-  'valeria-xv-invitacion',
-  'zyc-invitacion'
-]);
-const cover=item.cover||(capturedSlugs.has(item.slug)?`/previews-real/${item.slug}.webp`:undefined);
+const {item,context='card'}=Astro.props;
+// SOLO vistas de invitaciones. Las fotos /passes/ nunca se utilizan como portadas.
+const cover=item.cover||`/invitation-previews/${item.slug}.webp`;
+const decorative=`/previews/${item.slug}.svg`;
 ---
-<div class:list={['web-preview',`web-preview--${context}`]} data-web-preview>
-  {cover ? <img class="web-preview__actual" src={cover} alt={`Captura auténtica de la portada de ${item.name}`} loading="lazy" /> : <>
-    <div class="web-preview__placeholder" aria-hidden="true"><span class="web-preview__placeholder-meta">CAZAMI · DEMOSTRACIÓN WEB</span><strong>{item.name}</strong><small>Vista del sitio original al cargar</small></div>
-    <iframe class="web-preview__iframe" title={`Vista no interactiva de ${item.name}`} data-src={item.externalDemo} sandbox="allow-scripts allow-same-origin" loading="lazy" tabindex="-1" aria-hidden="true" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-  </>}
+<div class:list={['web-preview','invitation-preview',`web-preview--${context}`]} data-web-preview>
+  <div class="invitation-preview__fallback" style={`background-image:url("${decorative}")`}>
+    <span class="invitation-preview__brand">CAZAMI STUDIO</span>
+    <span class="invitation-preview__kind">INVITACIÓN DIGITAL</span>
+    <strong>{item.name}</strong>
+    <span class="invitation-preview__cta">Toca para ver la invitación</span>
+  </div>
+  <img class="web-preview__actual invitation-preview__screenshot" src={cover} loading="lazy" decoding="async" alt={`Vista de la invitación digital de ${item.name}`} onerror="this.hidden=true" />
   <div class="web-preview__blocker" aria-hidden="true"></div>
 </div>
