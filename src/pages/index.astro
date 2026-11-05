@@ -127,7 +127,7 @@ import { contactHref } from '../data/site';
         const fig=document.createElement('figure');fig.className='pass-card';
         const button=document.createElement('button');button.type='button';button.className='pass-card__image';button.dataset.viewPass='';button.dataset.img=pass.image;button.dataset.name='Pase digital';button.setAttribute('aria-label','Ampliar pase digital');
         const mockup=document.createElement('span');mockup.className='pass-card__mockup';const img=document.createElement('img');img.src=pass.image;img.loading='lazy';img.alt='Pase digital realizado por CAZAMI';mockup.append(img);
-        const zoom=document.createElement('span');zoom.className='pass-card__zoom';zoom.textContent='VER COMPLETO ↗';button.append(mockup,zoom);fig.append(button);rail.append(fig);
+        const zoom=document.createElement('span');zoom.className='pass-card__zoom';zoom.textContent='Ver pase';button.append(mockup,zoom);fig.append(button);rail.append(fig);
       });redraw();
     }).catch(()=>{/* Las muestras originales continúan visibles sin conexión. */});
     redraw();
