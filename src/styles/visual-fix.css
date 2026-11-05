@@ -1,0 +1,67 @@
+/* CAZAMI: corrección visual definitiva. Iconografía SVG, imágenes y responsive. */
+.ui-icon{display:inline-block;vertical-align:middle;flex:none;stroke:currentColor}
+.catalog-hero__eyebrow,.catalog-heading__eyebrow,.passes-kicker,
+.catalog-hero__notes>span{display:inline-flex;align-items:center;gap:8px}
+.catalog-hero__notes{display:flex;gap:18px;flex-wrap:wrap}
+.header__admin,.navigation__admin{display:inline-flex;align-items:center;gap:8px}
+.header__admin>.ui-icon{width:17px;height:17px}
+.header__quote{display:inline-flex;align-items:center;gap:8px}
+.header__quote>.ui-icon{width:14px;height:14px}
+.hero-art__frame{background-color:#392832;background-position:center;background-size:cover}
+.hero-art__frame img{position:relative;z-index:1;height:100%;width:100%;object-fit:cover;object-position:center top}
+.hero-art__name{position:absolute;inset:auto 9px 9px;z-index:2;border-radius:6px;padding:7px 9px;background:#301f2bd9;color:#fff8f2;font:600 clamp(11px,1.35vw,17px)/1.3 var(--serif);text-align:center;letter-spacing:.02em;pointer-events:none}
+.hero-art__seal>.ui-icon{width:28px;height:28px;color:#6f3d58;margin:5px 0}
+/* Invitaciones: una captura de su URL, nunca imágenes /passes/ */
+.invitation-preview{position:relative;height:100%;width:100%;overflow:hidden;isolation:isolate;background:#392b3e}
+.invitation-preview__fallback{position:absolute;inset:0;background-size:cover;background-position:center;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 12px;gap:10px;text-align:center;color:#fff;box-shadow:inset 0 0 0 1px #ffffff2d}
+.invitation-preview__fallback::before{content:"";position:absolute;inset:0;background:linear-gradient(165deg,#211a25a6,#3624357a 40%,#211526c9);z-index:-1}
+.invitation-preview__brand{font-size:clamp(8px,.8vw,11px);letter-spacing:.2em;font-weight:800}
+.invitation-preview__kind{font-size:clamp(8px,.8vw,10px);letter-spacing:.13em;font-weight:700;opacity:.9}
+.invitation-preview__fallback strong{font:400 clamp(21px,2.5vw,42px)/1.09 var(--serif);letter-spacing:-.04em;text-shadow:0 2px 14px #0008;overflow-wrap:anywhere}
+.invitation-preview__cta{font-size:clamp(9px,.9vw,11px);font-weight:600;border:1px solid #ffffff84;border-radius:100px;padding:7px 10px;background:#fff1}
+.invitation-preview__screenshot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;z-index:1}
+.invitation-preview__screenshot[hidden]{display:none!important}
+.invitation-preview>.web-preview__blocker{z-index:2}
+.work-card__cover{cursor:pointer}
+.work-card__cover:hover .invitation-preview__screenshot{filter:saturate(1.08)}
+/* Pases: seis fotografías originales, sin mosaicos abstractos ni capturas de invitaciones */
+#passes-rail.passes-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,2vw,26px);align-items:stretch}
+#passes-rail .pass-card{display:block;min-width:0;width:100%;max-width:none;flex:none;overflow:hidden;padding:9px;background:#fff3ec;border:1px solid #e9d6d0;border-radius:14px;box-shadow:0 14px 28px #120b173b}
+#passes-rail .pass-card[hidden]{display:none!important}
+#passes-rail .pass-card__image{display:block;width:100%;height:auto;aspect-ratio:3/4;min-height:0;padding:7px;border:0;border-radius:8px;background:#f5e9e3;overflow:hidden}
+#passes-rail .pass-card__mockup{height:100%;width:100%;display:flex;align-items:center;justify-content:center;background:#f6eee8}
+#passes-rail .pass-card__mockup img{height:100%;width:100%;display:block;object-fit:contain;object-position:center}
+#passes-rail .pass-card__zoom{right:12px;bottom:12px;border-radius:100px;display:flex;align-items:center;justify-content:center;padding:8px;letter-spacing:0;background:#4a2c3de3}
+.pass-card__zoom>.ui-icon{width:17px;height:17px}
+#passes-rail .pass-card__image:focus-visible{outline:3px solid #d6a0b0;outline-offset:2px}
+@media(max-width:940px){
+  #passes-rail.passes-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  #works-grid.works-grid,#passes-rail.passes-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;align-items:start}
+  #works-grid .work-card{height:100%;min-width:0;border-radius:9px;box-shadow:0 5px 11px #43263424}
+  #works-grid .work-card__cover{aspect-ratio:3/4;padding:4px 4px 0}
+  #works-grid .work-card__cover::after{display:none}
+  #works-grid .work-card__info{padding:8px 6px 10px}
+  #works-grid .work-card__info .eyebrow{font-size:8px;letter-spacing:0}
+  #works-grid .work-card__info h3{font:600 clamp(10px,2.7vw,14px)/1.28 var(--sans);letter-spacing:0;min-height:2.56em;margin-top:3px}
+  #works-grid .work-card__links{display:none}
+  .invitation-preview__fallback{gap:6px;padding:8px 5px}
+  .invitation-preview__brand{font-size:6px}
+  .invitation-preview__kind{font-size:7px}
+  .invitation-preview__fallback strong{font:600 clamp(11px,3vw,18px)/1.12 var(--serif)}
+  .invitation-preview__cta{font-size:6.5px;line-height:1.3;padding:4px 6px}
+  #passes-rail .pass-card{padding:4px;border-radius:8px}
+  #passes-rail .pass-card__image{padding:2px;border-radius:5px}
+  #passes-rail .pass-card__zoom{bottom:6px;right:6px;padding:4px}
+  #passes-rail .pass-card__zoom>.ui-icon{width:12px;height:12px}
+  .hero-art__name{font-size:10px;padding:5px}
+  .hero-art__seal>.ui-icon{width:23px;height:23px}
+}
+@media(max-width:380px){
+  #works-grid.works-grid,#passes-rail.passes-grid{gap:6px}
+  #works-grid .work-card__info{padding:6px 4px 8px}
+  #works-grid .work-card__info h3{font-size:10px}
+  .invitation-preview__fallback strong{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.work-card,.pass-card{transition:none!important}}
