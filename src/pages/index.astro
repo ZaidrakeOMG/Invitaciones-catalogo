@@ -13,7 +13,7 @@ import { contactHref } from '../data/site';
         <span class="catalog-hero__eyebrow"><UiIcon name="sparkles" size={14}/> CAZAMI STUDIO · PORTAFOLIO</span>
         <h1>Detalles que<br />hacen <em>magia.</em></h1>
         <p>Un vistazo a las invitaciones y pases que hemos creado para momentos inolvidables.</p>
-        <div class="catalog-hero__actions"><a class="button button--cream" href="#coleccion">Explorar invitaciones ↗</a><a class="catalog-hero__link" href="#pases">Ver nuestros pases ↘</a></div>
+        <div class="catalog-hero__actions"><a class="button button--cream" href="#coleccion">Explorar invitaciones <UiIcon name="arrow" size={17}/></a><a class="catalog-hero__link" href="#pases">Ver nuestros pases <UiIcon name="arrow" size={16}/></a></div>
         <div class="catalog-hero__notes"><span><UiIcon name="link" size={14}/> Invitaciones digitales</span><span><UiIcon name="ticket" size={14}/> Pases personalizados</span></div>
       </div>
       <div class="catalog-hero__art" aria-hidden="true">
@@ -30,7 +30,7 @@ import { contactHref } from '../data/site';
     <div class="wrap">
       <div class="section-bar"><span>01 / NUESTROS TRABAJOS</span><span>INVITACIONES DIGITALES</span></div>
       <div class="catalog-heading"><div><span class="catalog-heading__eyebrow"><UiIcon name="grid" size={14}/> ALGUNOS DE NUESTROS TRABAJOS</span><h2 class="display-title" id="portfolio-title">Invitaciones que <em>enamoran.</em></h2></div><p>Elige tu favorita y descubre cada detalle.</p></div>
-      <div class="portfolio-controls"><div class="filterbar" aria-label="Filtrar invitaciones">{categories.map((cat,index)=><button type="button" class:list={['filterbtn',{'filterbtn--active':index===0}]} data-filter={cat} aria-pressed={index===0}>{cat}</button>)}</div><label class="portfolio-search"><span aria-hidden="true">⌕</span><input id="work-search" type="search" placeholder="Buscar invitación" aria-label="Buscar invitaciones" autocomplete="off" /></label></div>
+      <div class="portfolio-controls"><div class="filterbar" aria-label="Filtrar invitaciones">{categories.map((cat,index)=><button type="button" class:list={['filterbtn',{'filterbtn--active':index===0}]} data-filter={cat} aria-pressed={index===0}>{cat}</button>)}</div><label class="portfolio-search"><UiIcon name="grid" size={16}/><input id="work-search" type="search" placeholder="Buscar invitación" aria-label="Buscar invitaciones" autocomplete="off" /></label></div>
       <p class="portfolio-count" id="portfolio-count">MOSTRANDO {catalog.length} INVITACIONES</p>
       <div class="works-grid" id="works-grid">{catalog.map((item,index)=><InvitationCard item={item} index={index} />)}</div>
       <p class="portfolio-empty" id="portfolio-empty" hidden>No encontramos invitaciones con esa búsqueda.</p>
@@ -44,7 +44,7 @@ import { contactHref } from '../data/site';
 
   <PassGallery />
 
-  <section class="catalog-contact" id="cotizacion"><div class="wrap catalog-contact__inner"><div><span class="eyebrow">TU EVENTO, TU ESTILO</span><h2>¿Creamos el tuyo?</h2><p>Invitaciones y pases digitales personalizados para tu celebración.</p></div><a class="button button--cream" href={contactHref('Hola, CAZAMI. Vi su catálogo de trabajos y quiero cotizar una invitación o pases digitales.')} target="_blank" rel="noopener noreferrer">Cotizar por WhatsApp ↗</a></div></section>
+  <section class="catalog-contact" id="cotizacion"><div class="wrap catalog-contact__inner"><div><span class="eyebrow">TU EVENTO, TU ESTILO</span><h2>¿Creamos el tuyo?</h2><p>Invitaciones y pases digitales personalizados para tu celebración.</p></div><a class="button button--cream" href={contactHref('Hola, CAZAMI. Vi su catálogo de trabajos y quiero cotizar una invitación o pases digitales.')} target="_blank" rel="noopener noreferrer">Cotizar por WhatsApp <UiIcon name="external" size={17}/></a></div></section>
 
   <script>
     type ExtraInvite = {id:string;name:string;category:string;url:string};
