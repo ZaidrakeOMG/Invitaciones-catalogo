@@ -28,6 +28,14 @@ git clone --depth 1 --branch main https://github.com/ZaidrakeOMG/Invitaciones-ca
 if errorlevel 1 goto :error
 cd /d "%WORK%"
 echo.
+echo Comprobando sintaxis del capturador...
+node --check "scripts\capture-previews.mjs"
+if errorlevel 1 (
+  echo ERROR: GitHub tiene un archivo JS con error. No se instalara nada mas.
+  goto :error
+)
+echo Sintaxis comprobada.
+echo.
 echo Instalando Playwright 1.64.1 en carpeta aislada...
 echo Esto evita el error ETARGET de playwright-core 1.65.0.
 pushd scripts
