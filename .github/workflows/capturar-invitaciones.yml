@@ -1,0 +1,42 @@
+name: Capturar portadas reales de invitaciones
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/data/catalog.ts'
+      - 'public/data/catalogo-adicional.json'
+      - 'scripts/capture-previews.mjs'
+      - '.github/workflows/capturar-invitaciones.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  capturar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Dependencias
+        run: npm ci
+      - name: Navegador Chromium
+        run: npx playwright install chromium --with-deps
+      - name: Capturar sitios de invitaciones (no pases)
+        run: node scripts/capture-previews.mjs --force
+      - name: Guardar capturas en el repositorio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/invitation-previews/
+          if ! git diff --cached --quiet; then
+            git commit -m "CAZAMI: actualizar capturas reales de invitaciones"
+            git push
+          fi
