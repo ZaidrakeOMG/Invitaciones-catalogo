@@ -13,6 +13,29 @@ const decorative=`/previews/${item.slug}.svg`;
     <strong>{item.name}</strong>
     <span class="invitation-preview__cta">Toca para ver la invitación</span>
   </div>
-  <img class="web-preview__actual invitation-preview__screenshot" src={cover} loading="lazy" decoding="async" alt={`Vista de la invitación digital de ${item.name}`} onerror="this.hidden=true" />
+  <img class="web-preview__actual invitation-preview__screenshot" src={cover} loading="lazy" decoding="async" alt={`Vista de la invitación digital de ${item.name}`} />
+  <iframe class="web-preview__iframe invitation-preview__live" title={`Vista de la página de invitación ${item.name}`} data-src={item.externalDemo} loading="lazy" sandbox="allow-scripts" referrerpolicy="no-referrer" tabindex="-1" aria-hidden="true"></iframe>
   <div class="web-preview__blocker" aria-hidden="true"></div>
 </div>
+<script>
+  // Si falta la captura, se intenta la vista REAL de la web externa. Nunca se usa un pase.
+  document.querySelectorAll<HTMLElement>('.invitation-preview').forEach(host=>{
+    const image=host.querySelector<HTMLImageElement>('.invitation-preview__screenshot');
+    const frame=host.querySelector<HTMLIFrameElement>('.invitation-preview__live');
+    if(!image||!frame)return;
+    const activate=()=>{
+      image.hidden=true;
+      frame.classList.add('invitation-preview__live--visible');
+      const update=()=>{frame.style.transform=`scale(${host.clientWidth/390})`;};
+      update();
+      if('ResizeObserver' in window)new ResizeObserver(update).observe(host);
+      const load=()=>{frame.src=frame.dataset.src||'';};
+      if('IntersectionObserver' in window){
+        const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){load();observer.disconnect();}},{rootMargin:'120px'});
+        observer.observe(host);
+      }else load();
+    };
+    image.addEventListener('error',activate,{once:true});
+    if(image.complete&&image.naturalWidth===0)activate();
+  });
+</script>
