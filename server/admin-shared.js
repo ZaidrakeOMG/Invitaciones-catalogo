@@ -212,6 +212,13 @@ export async function updateCatalog(fn){
     catch(e){if(e.status!==409||attempt===2)throw e;}
   }
 }
+export async function uploadInvitationCover(id,buffer,ext){
+  if(!/^[0-9a-f-]{36}$/i.test(id))throw new Error('Identificador de invitación inválido.');
+  if(buffer.length>2_500_000)throw new Error('La portada supera 2.5 MB.');
+  const path='public/invitation-previews/nuevo-'+id+'.'+ext;
+  await put(path,buffer,'CAZAMI: subir portada de invitación');
+  return '/invitation-previews/nuevo-'+id+'.'+ext;
+}
 export async function uploadPass(id,buffer,ext){
   if(buffer.length>2_500_000)throw new Error('La imagen supera 2.5 MB. Comprímela e intenta de nuevo.');
   const path=`public/passes/nuevos/${id}.${ext}`;
