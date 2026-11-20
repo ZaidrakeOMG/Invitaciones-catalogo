@@ -80,7 +80,7 @@ import UiIcon from '../../components/UiIcon.astro';
       e.preventDefault();const form=e.currentTarget as HTMLFormElement;const button=form.querySelector('button')!;button.disabled=true;say('Guardando invitación…');
       try{
         await request('/api/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'invitacion',url:(document.getElementById('invite-url') as HTMLInputElement).value,name:(document.getElementById('invite-name') as HTMLInputElement).value,category:(document.getElementById('invite-category') as HTMLSelectElement).value})});
-        form.reset();await load();say('Invitación guardada. Aparecerá en el sitio al terminar el despliegue de Vercel.');
+        form.reset();await load();say('Invitación guardada. Aparecerá primero en el catálogo. GitHub generará su portada real y Vercel publicará la actualización.');
       }catch(err){say((err as Error).message,true);}finally{button.disabled=false;}
     });
     function canvasDataURL(file:File):Promise<string>{return new Promise((resolve,reject)=>{
