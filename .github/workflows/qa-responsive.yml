@@ -1,0 +1,43 @@
+name: QA responsive CAZAMI
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/pages/index.astro'
+      - 'src/layouts/BaseLayout.astro'
+      - 'src/styles/cazami-mobile-luxe.css'
+      - 'scripts/qa-mobile.mjs'
+      - '.github/workflows/qa-responsive.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cazami-responsive-main
+  cancel-in-progress: true
+jobs:
+  responsive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Compilar el catálogo
+        run: npm run build
+      - name: Instalar Playwright para probar tamaños reales
+        run: |
+          cd scripts
+          npm init -y >/dev/null
+          npm install --no-save --package-lock=false --no-audit --no-fund playwright@1.64.1
+          ./node_modules/.bin/playwright install chromium --with-deps
+      - name: Comprobar pantallas de 320px hasta escritorio
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/cazami-preview.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4321/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/qa-mobile.mjs
