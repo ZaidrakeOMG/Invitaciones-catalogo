@@ -5,7 +5,7 @@ const {item,context='card'}=Astro.props;
 // Portada real capturada DESPUÉS de abrir el sobre.
 // Si falta, se muestra una tarjeta elegante en vez del sobre cerrado o de un pase.
 const cover=`/invitation-previews/${item.slug}.jpg`;
-const originalCover=item.cover?.startsWith('/previews-real/zyc-')?item.cover:undefined;
+const originalCover=item.cover?.startsWith('/previews-real/')?item.cover:undefined;
 const decorative=`/previews/${item.slug}.svg`;
 ---
 <div class:list={['web-preview','invitation-preview',`web-preview--${context}`]}>
