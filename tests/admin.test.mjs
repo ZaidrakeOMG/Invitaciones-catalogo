@@ -62,6 +62,7 @@ test('se agrega una invitación y se puede retirar',async()=>{
  const bad=await call(items,req('POST',{type:'invitacion',url:'javascript:alert(1)',category:'Bodas'},cookie));assert.equal(bad.code,400);
  const good=await call(items,req('POST',{type:'invitacion',url:'https://muestra.netlify.app/',name:'Ejemplo',category:'XV años'},cookie));assert.equal(good.code,201);
  assert.equal(current.invitaciones[0].name,'Ejemplo');
+ assert.match(current.invitaciones[0].createdAt,/^\d{4}-\d{2}-\d{2}T/);
  const deleted=await call(items,req('DELETE',{type:'invitaciones',id:good.data.item.id},cookie));assert.equal(deleted.code,200);
  assert.equal(current.invitaciones.length,0);
 });
