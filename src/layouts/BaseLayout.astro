@@ -4,6 +4,7 @@ import '../styles/catalog-extra.css';
 import '../styles/visual-fix.css';
 import '../styles/portfolio-refresh.css';
 import '../styles/studio-redesign.css';
+import '../styles/cazami-mobile-luxe.css';
 import {site,contactHref} from '../data/site';
 import UiIcon from '../components/UiIcon.astro';
 interface Props {title?:string;description?:string;image?:string;noindex?:boolean}
@@ -13,12 +14,12 @@ const canonical=origin?new URL(Astro.url.pathname,origin).toString():undefined;
 const og=origin?new URL(image,origin).toString():undefined;
 ---
 <!doctype html><html lang="es"><head>
-<meta charset="utf-8"/>{noindex && <meta name="robots" content="noindex,nofollow"/>}<meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#261f22"/><meta name="description" content={description}/>
+<meta charset="utf-8"/>{noindex && <meta name="robots" content="noindex,nofollow"/>}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/><meta name="theme-color" content="#261f22"/><meta name="description" content={description}/>
 <meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/>
 {og && <meta property="og:image" content={og}/>}{canonical && <><meta property="og:url" content={canonical}/><link rel="canonical" href={canonical}/></>}
 <link rel="icon" type="image/png" href="/favicon.png"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet"/><title>{title}</title></head>
-<body>
+<body class={Astro.url.pathname === '/' ? 'cazami-home' : 'cazami-inner'}>
 <div id="reading-progress" class="reading-progress" aria-hidden="true"></div>
 <div class="topline"><div class="wrap"><span>CAZAMI STUDIO · CATÁLOGO DE TRABAJOS</span><span>INVITACIONES Y PASES</span></div></div>
 <header class="header" id="header"><div class="wrap header__inner">
@@ -26,6 +27,7 @@ const og=origin?new URL(image,origin).toString():undefined;
 <nav class="navigation" id="navigation" aria-label="Navegación principal"><a href="/#coleccion">Invitaciones</a><a href="/#pases">Pases</a><a href="/#cotizacion">Cotizar</a><a class="navigation__admin" href="/admin/" rel="nofollow"><UiIcon name="lock" size={16}/> Administrar catálogo</a></nav>
 <a class="header__admin" href="/admin/" rel="nofollow" aria-label="Abrir administrador de invitaciones y pases"><UiIcon name="lock" size={16}/><span>Admin</span></a><a class="header__quote" href={contactHref()} target="_blank" rel="noopener noreferrer">Hablemos <UiIcon name="external" size={14}/></a><button id="menu-toggle" type="button" class="menu-toggle" aria-controls="navigation" aria-expanded="false" aria-label="Abrir menú"><span></span><span></span></button>
 </div></header><main><slot/></main>
+{Astro.url.pathname === '/' && <nav class="mobile-dock" aria-label="Menú rápido del catálogo"><a href="#inicio"><UiIcon name="sparkles" size={19}/><span>Inicio</span></a><a href="#novedades"><UiIcon name="image" size={19}/><span>Nuevos</span></a><a href="#coleccion"><UiIcon name="grid" size={19}/><span>Catálogo</span></a><a class="mobile-dock__cta" href={contactHref('Hola, CAZAMI. Quiero cotizar una invitación digital.')} target="_blank" rel="noopener noreferrer"><UiIcon name="arrow" size={19}/><span>Cotizar</span></a></nav>}
 <footer class="footer"><div class="wrap"><div class="footer__top"><div><a href="/" class="footer__brand">CAZAMI<span>®</span></a><p>Diseño digital para momentos que merecen ser recordados.</p></div><a href="#" class="footer__up">Volver arriba <UiIcon name="arrow-up" size={15}/></a></div><div class="footer__line"></div><div class="footer__bottom"><span>© {new Date().getFullYear()} CAZAMI STUDIO</span><div><a href={contactHref()} target="_blank" rel="noopener noreferrer">WhatsApp <UiIcon name="external" size={13}/></a><a href={site.tiktok} target="_blank" rel="noopener noreferrer">TikTok <UiIcon name="external" size={13}/></a><a href={site.facebook} target="_blank" rel="noopener noreferrer">Facebook <UiIcon name="external" size={13}/></a><a href="/admin/" rel="nofollow">Admin</a></div></div></div></footer>
 <script>
  const header=document.getElementById('header');const toggle=document.getElementById('menu-toggle');const menu=document.getElementById('navigation');

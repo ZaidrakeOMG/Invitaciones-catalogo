@@ -55,6 +55,43 @@ import { contactHref } from '../data/site';
     </div>
   </section>
 
+
+  <section class="featured-edition" id="novedades" aria-labelledby="featured-title">
+    <div class="wrap">
+      <div class="featured-edition__intro">
+        <div>
+          <span class="featured-edition__eyebrow"><UiIcon name="sparkles" size={15}/> LO MÁS RECIENTE EN CAZAMI</span>
+          <h2 id="featured-title">Nuestra última <em>inspiración.</em></h2>
+        </div>
+        <div class="featured-edition__aside">
+          <p>Experiencias digitales creadas para contar historias que merecen celebrarse.</p>
+          <a href="#coleccion">Ver toda la colección <UiIcon name="arrow-right" size={16}/></a>
+        </div>
+      </div>
+      <div class="featured-edition__grid" id="featured-edition-grid" aria-label="Invitaciones recientes">
+        <a class="featured-piece featured-piece--hero" data-feature="0" href="https://inv-boda-ayi-c13.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Explorar la invitación Amor Eterno">
+          <img data-feature-img src="/invitation-previews/nuevo-133b68a6-6874-4f32-aceb-303a317ebbe5.jpg" alt="Portada de la invitación Amor Eterno" loading="lazy" decoding="async"/>
+          <span class="featured-piece__shade"></span>
+          <span class="featured-piece__index">01 / EDICIÓN RECIENTE</span>
+          <span class="featured-piece__detail"><span data-feature-category>BODAS</span><strong data-feature-name>Amor Eterno</strong><span class="featured-piece__view">Descubrir invitación <UiIcon name="arrow-right" size={17}/></span></span>
+        </a>
+        <a class="featured-piece featured-piece--secondary" data-feature="1" href="https://inv-xv-zoe-c12.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Explorar la invitación Destellos de Ensueño">
+          <img data-feature-img src="/invitation-previews/nuevo-3acbe3b2-951a-4cd4-a16e-9d5669f21591.jpg" alt="Portada de la invitación Destellos de Ensueño" loading="lazy" decoding="async"/>
+          <span class="featured-piece__shade"></span>
+          <span class="featured-piece__index">02 / EDICIÓN RECIENTE</span>
+          <span class="featured-piece__detail"><span data-feature-category>XV AÑOS</span><strong data-feature-name>Destellos de Ensueño</strong><span class="featured-piece__view">Descubrir invitación <UiIcon name="arrow-right" size={17}/></span></span>
+        </a>
+        <a class="featured-piece featured-piece--secondary" data-feature="2" href="https://inv-fatima-xv-c10.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Explorar la invitación El Sueño de Fátima">
+          <img data-feature-img src="/invitation-previews/nuevo-c09cbc5a-33da-4b28-83ae-9415f25b9ca9.jpg" alt="Portada de la invitación El Sueño de Fátima" loading="lazy" decoding="async"/>
+          <span class="featured-piece__shade"></span>
+          <span class="featured-piece__index">03 / EDICIÓN RECIENTE</span>
+          <span class="featured-piece__detail"><span data-feature-category>XV AÑOS</span><strong data-feature-name>El Sueño de Fátima</strong><span class="featured-piece__view">Descubrir invitación <UiIcon name="arrow-right" size={17}/></span></span>
+        </a>
+      </div>
+      <p class="featured-edition__swipe"><UiIcon name="arrow-right" size={15}/> Desliza para descubrir más diseños</p>
+    </div>
+  </section>
+
   <section class="portfolio section-space" id="coleccion" aria-labelledby="portfolio-title">
     <div class="wrap">
       <div class="section-bar"><span>01 / NUESTROS TRABAJOS</span><span>INVITACIONES DIGITALES</span></div>
@@ -208,6 +245,28 @@ import { contactHref } from '../data/site';
         return ta&&tb?ta-tb:a.i-b.i;
       });
       ordered.forEach(({item},i)=>addInvite(item,initial+i));
+      // Actualizar las piezas editoriales con las tres publicaciones más recientes.
+      ordered.slice().reverse().slice(0,3).forEach(({item},i)=>{
+        if(!/^[0-9a-f-]{36}$/i.test(item.id))return;
+        const featured=document.querySelector<HTMLAnchorElement>('[data-feature="'+i+'"]');
+        const picture=featured?.querySelector<HTMLImageElement>('[data-feature-img]');
+        const name=featured?.querySelector<HTMLElement>('[data-feature-name]');
+        const categoryLabel=featured?.querySelector<HTMLElement>('[data-feature-category]');
+        if(!featured||!picture||!name||!categoryLabel||!item.url.startsWith('https://'))return;
+        const prefix='/invitation-previews/nuevo-'+item.id+'.';
+        const source=typeof item.cover==='string'&&['jpg','webp','png'].some(ext=>item.cover===prefix+ext)
+          ?item.cover:prefix+'jpg';
+        const probe=new Image();
+        probe.onload=()=>{
+          picture.src=source;
+          picture.alt='Vista previa de '+item.name;
+          featured.href=item.url;
+          featured.setAttribute('aria-label','Explorar la invitación '+item.name);
+          name.textContent=item.name;
+          categoryLabel.textContent=item.category;
+        };
+        probe.src=source;
+      });
       // Mostrar los diseños recientes en la portada sin arriesgar las imágenes de respaldo.
       const heroSlots=['center','left','right'];
       ordered.slice().reverse().slice(0,3).forEach(({item},i)=>{
