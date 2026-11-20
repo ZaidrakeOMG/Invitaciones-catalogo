@@ -105,14 +105,20 @@ import { contactHref } from '../data/site';
       const title=document.createElement('h3');title.textContent=item.name;
       const actions=document.createElement('div');actions.className='work-card__links';
       const open=document.createElement('a');open.href=item.url;open.target='_blank';open.rel='noopener noreferrer';open.textContent='Abrir invitación';
-      actions.append(open);info.append(type,title,actions);article.append(link,info);grid.append(article);
+      actions.append(open);info.append(type,title,actions);article.append(link,info);grid.prepend(article);
 
     }
     fetch('/data/catalogo-adicional.json',{cache:'no-store'}).then(async response=>{
       if(!response.ok)return;
       const extra=await response.json() as {invitaciones?:ExtraInvite[];pases?:ExtraPass[]};
       const initial=grid?.querySelectorAll('[data-work-card]').length||0;
+      // El JSON conserva el orden de alta: cada invitación se añade al inicio
+      // para que la última publicada aparezca antes de las anteriores.
       (extra.invitaciones||[]).forEach((item,i)=>addInvite(item,initial+i));
+      grid?.querySelectorAll<HTMLElement>('[data-work-card]').forEach((card,i)=>{
+        const ordinal=card.querySelector<HTMLElement>('.work-card__ordinal');
+        if(ordinal)ordinal.textContent=String(i+1).padStart(2,'0');
+      });
       const rail=document.getElementById('passes-rail');
       (extra.pases||[]).forEach((pass)=>{
         if(!rail||!/^\/passes\/nuevos\/[a-z0-9-]+\.(?:png|jpe?g|webp)$/i.test(pass.image))return;
