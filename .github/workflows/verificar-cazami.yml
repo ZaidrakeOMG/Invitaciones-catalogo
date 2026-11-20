@@ -1,0 +1,32 @@
+name: Verificar CAZAMI
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'api/**'
+      - 'server/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/verificar-cazami.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cazami-build-main
+  cancel-in-progress: true
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Compilar web y comprobar TypeScript
+        run: npm run build
+      - name: Probar funcionamiento del administrador
+        run: npm run test:admin

@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/catalog-extra.css';
 import '../styles/visual-fix.css';
 import '../styles/portfolio-refresh.css';
+import '../styles/studio-redesign.css';
 import {site,contactHref} from '../data/site';
 import UiIcon from '../components/UiIcon.astro';
 interface Props {title?:string;description?:string;image?:string;noindex?:boolean}
@@ -16,7 +17,7 @@ const og=origin?new URL(image,origin).toString():undefined;
 <meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/>
 {og && <meta property="og:image" content={og}/>}{canonical && <><meta property="og:url" content={canonical}/><link rel="canonical" href={canonical}/></>}
 <link rel="icon" type="image/png" href="/favicon.png"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet"/><title>{title}</title></head>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet"/><title>{title}</title></head>
 <body>
 <div id="reading-progress" class="reading-progress" aria-hidden="true"></div>
 <div class="topline"><div class="wrap"><span>CAZAMI STUDIO · CATÁLOGO DE TRABAJOS</span><span>INVITACIONES Y PASES</span></div></div>

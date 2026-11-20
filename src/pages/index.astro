@@ -10,27 +10,56 @@ import { contactHref } from '../data/site';
   <section class="catalog-hero" id="inicio">
     <div class="wrap catalog-hero__inner">
       <div class="catalog-hero__copy">
-        <span class="catalog-hero__eyebrow"><UiIcon name="sparkles" size={14}/> CAZAMI STUDIO · PORTAFOLIO</span>
-        <h1>Detalles que<br />hacen <em>magia.</em></h1>
-        <p>Un vistazo a las invitaciones y pases que hemos creado para momentos inolvidables.</p>
-        <div class="catalog-hero__actions"><a class="button button--cream" href="#coleccion">Explorar invitaciones <UiIcon name="arrow" size={17}/></a><a class="catalog-hero__link" href="#pases">Ver nuestros pases <UiIcon name="arrow-down" size={16}/></a></div>
-        <div class="catalog-hero__notes"><span><UiIcon name="link" size={14}/> Invitaciones digitales</span><span><UiIcon name="ticket" size={14}/> Pases personalizados</span></div>
+        <span class="catalog-hero__eyebrow"><UiIcon name="sparkles" size={15}/> INVITACIONES DIGITALES DE AUTOR</span>
+        <h1>El arte de<br /><em>invitar.</em></h1>
+        <p class="catalog-hero__lead">Tu celebración empieza mucho antes del gran día. Creamos invitaciones digitales que despiertan emociones desde el primer instante.</p>
+        <div class="catalog-hero__actions">
+          <a class="button button--cream" href="#coleccion">Explorar la colección <UiIcon name="arrow" size={18}/></a>
+          <a class="catalog-hero__link" href={contactHref('Hola, CAZAMI. Me gustaría crear una invitación digital personalizada para mi evento.')} target="_blank" rel="noopener noreferrer">Diseñemos la tuya <UiIcon name="external" size={16}/></a>
+        </div>
+        <div class="catalog-hero__notes">
+          <span><UiIcon name="sparkles" size={14}/> Diseños a tu estilo</span>
+          <span><UiIcon name="link" size={14}/> Experiencias interactivas</span>
+          <span><UiIcon name="ticket" size={14}/> Pases personalizados</span>
+        </div>
       </div>
-      <div class="catalog-hero__art" aria-hidden="true">
-        <div class="hero-art__frame hero-art__frame--left" style="background-image:url('/previews/invitacion-romina-xv.svg')"><img src="/invitation-previews/invitacion-romina-xv.jpg" alt="" onerror="this.hidden=true" /><span class="hero-art__name">Romina</span></div>
-        <div class="hero-art__frame hero-art__frame--right" style="background-image:url('/previews/inv-minecraft.svg')"><img src="/invitation-previews/inv-minecraft.jpg" alt="" onerror="this.hidden=true" /><span class="hero-art__name">Minecraft</span></div>
-        <div class="hero-art__frame hero-art__frame--center"><img src="/previews-real/zyc-invitacion.webp" alt="" /><span class="hero-art__name">Zaid & Camila</span></div>
-        <div class="hero-art__seal"><span>CREADO POR</span><UiIcon name="sparkles" size={30}/><span>CAZAMI</span></div>
+      <div class="catalog-hero__art" aria-label="Muestra de invitaciones reales de CAZAMI">
+        <div class="hero-art__frame hero-art__frame--left" data-hero-preview="left">
+          <img src="/invitation-previews/nuevo-db1f0763-9436-4f5a-afe5-67de3c2394a6.jpg" alt="Ejemplo de invitación Baby Shower de Fresitas" loading="eager" />
+          <span class="hero-art__name">Baby Shower</span>
+        </div>
+        <div class="hero-art__frame hero-art__frame--right" data-hero-preview="right">
+          <img src="/invitation-previews/nuevo-3acbe3b2-951a-4cd4-a16e-9d5669f21591.jpg" alt="Ejemplo de invitación Zoe" loading="eager" />
+          <span class="hero-art__name">XV años</span>
+        </div>
+        <div class="hero-art__frame hero-art__frame--center" data-hero-preview="center">
+          <img src="/invitation-previews/nuevo-133b68a6-6874-4f32-aceb-303a317ebbe5.jpg" alt="Ejemplo de invitación de boda Amor Eterno" loading="eager" />
+          <span class="hero-art__name">Bodas</span>
+        </div>
+        <div class="hero-art__seal" aria-hidden="true"><span>ESTUDIO</span><UiIcon name="sparkles" size={28}/><span>CAZAMI</span></div>
+        <span class="hero-art__caption" aria-hidden="true">PORTAFOLIO DE EXPERIENCIAS</span>
       </div>
     </div>
     <div class="catalog-hero__bottom wrap"><span>DISEÑAMOS HISTORIAS, NO SOLO INVITACIONES</span><span>DESLIZA PARA DESCUBRIR <UiIcon name="arrow-down" size={14}/></span></div>
   </section>
 
+  <div class="studio-intro-ribbon" aria-hidden="true">
+    <div class="wrap studio-intro-ribbon__inner"><span>EL ARTE DE CELEBRAR</span><span>DETALLES QUE EMOCIONAN</span><span>HECHO PARA TU HISTORIA</span></div>
+  </div>
+
+  <section class="studio-values" aria-label="Así diseñamos en CAZAMI">
+    <div class="wrap studio-values__inner">
+      <div class="studio-value"><span class="studio-value__number">01</span><div><strong>Con personalidad</strong><p>Cada invitación refleja el estilo de tu evento.</p></div></div>
+      <div class="studio-value"><span class="studio-value__number">02</span><div><strong>Para sentirla</strong><p>Más que una tarjeta: una experiencia interactiva.</p></div></div>
+      <div class="studio-value"><span class="studio-value__number">03</span><div><strong>Para compartirla</strong><p>Un detalle especial que llega a quienes más quieres.</p></div></div>
+    </div>
+  </section>
+
   <section class="portfolio section-space" id="coleccion" aria-labelledby="portfolio-title">
     <div class="wrap">
       <div class="section-bar"><span>01 / NUESTROS TRABAJOS</span><span>INVITACIONES DIGITALES</span></div>
-      <div class="catalog-heading"><div><span class="catalog-heading__eyebrow"><UiIcon name="grid" size={14}/> ALGUNOS DE NUESTROS TRABAJOS</span><h2 class="display-title" id="portfolio-title">Invitaciones que <em>enamoran.</em></h2></div><p>Elige tu favorita y descubre cada detalle.</p></div>
-      <div class="portfolio-controls"><div class="filterbar" aria-label="Filtrar invitaciones">{categories.map((cat,index)=><button type="button" class:list={['filterbtn',{'filterbtn--active':index===0}]} data-filter={cat} aria-pressed={index===0}>{cat}</button>)}</div><label class="portfolio-search"><UiIcon name="search" size={16}/><input id="work-search" type="search" placeholder="Buscar invitación" aria-label="Buscar invitaciones" autocomplete="off" /></label></div>
+      <div class="catalog-heading"><div><span class="catalog-heading__eyebrow"><UiIcon name="grid" size={14}/> NUESTRA COLECCIÓN</span><h2 class="display-title" id="portfolio-title">Momentos que <em>inspiran.</em></h2></div><p>Explora invitaciones reales, descubre cada detalle y encuentra ese diseño que conecta contigo.</p></div>
+      <div class="portfolio-controls"><div class="filterbar" aria-label="Filtrar invitaciones">{categories.map((cat,index)=><button type="button" class:list={['filterbtn',{'filterbtn--active':index===0}]} data-filter={cat} aria-pressed={index===0}>{cat}</button>)}</div><label class="portfolio-search"><UiIcon name="search" size={16}/><input id="work-search" type="search" placeholder="Busca por nombre o evento" aria-label="Buscar invitaciones" autocomplete="off" /></label></div>
       <p class="portfolio-count" id="portfolio-count">MOSTRANDO {catalog.length} INVITACIONES</p>
       <div class="works-grid" id="works-grid">{catalog.map((item,index)=><InvitationCard item={item} index={index} />)}</div>
       <p class="portfolio-empty" id="portfolio-empty" hidden>No encontramos invitaciones con esa búsqueda.</p>
@@ -44,7 +73,26 @@ import { contactHref } from '../data/site';
 
   <PassGallery />
 
-  <section class="catalog-contact" id="cotizacion"><div class="wrap catalog-contact__inner"><div><span class="eyebrow">TU EVENTO, TU ESTILO</span><h2>¿Creamos el tuyo?</h2><p>Invitaciones y pases digitales personalizados para tu celebración.</p></div><a class="button button--cream" href={contactHref('Hola, CAZAMI. Vi su catálogo de trabajos y quiero cotizar una invitación o pases digitales.')} target="_blank" rel="noopener noreferrer">Cotizar por WhatsApp <UiIcon name="external" size={17}/></a></div></section>
+  <section class="studio-process" id="proceso" aria-labelledby="process-title">
+    <div class="wrap">
+      <div class="studio-process__top">
+        <div><span class="eyebrow">ASÍ NACE TU INVITACIÓN</span><h2 id="process-title">De una idea a <em>un recuerdo.</em></h2></div>
+        <p>Nos encargamos de transformar la esencia de tu celebración en una invitación que da gusto abrir y compartir.</p>
+      </div>
+      <div class="studio-process__grid">
+        <div class="studio-process__step"><span>01</span><h3>Cuéntanos tu idea</h3><p>Nos compartes tu evento, los colores y el estilo que te gustaría transmitir.</p></div>
+        <div class="studio-process__step"><span>02</span><h3>Lo hacemos especial</h3><p>Damos vida a una experiencia digital cuidando los detalles que hacen la diferencia.</p></div>
+        <div class="studio-process__step"><span>03</span><h3>Comparte la emoción</h3><p>Comparte tu invitación con las personas que quieres tener a tu lado.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="catalog-contact" id="cotizacion">
+    <div class="wrap catalog-contact__inner">
+      <div><span class="eyebrow">TU HISTORIA MERECE ALGO ÚNICO</span><h2>Hagámosla <em>inolvidable.</em></h2><p>Una fecha especial merece una primera impresión igual de especial. Cuéntanos qué estás imaginando.</p></div>
+      <div class="catalog-contact__cta"><a class="button button--cream" href={contactHref('Hola, CAZAMI. Vi su catálogo y quiero cotizar una invitación digital personalizada.')} target="_blank" rel="noopener noreferrer">Cotizar mi invitación <UiIcon name="external" size={17}/></a><small>Atención personalizada por WhatsApp</small></div>
+    </div>
+  </section>
 
   <script>
     type ExtraInvite = {id:string;name:string;category:string;url:string;cover?:string;createdAt?:string};
@@ -160,6 +208,22 @@ import { contactHref } from '../data/site';
         return ta&&tb?ta-tb:a.i-b.i;
       });
       ordered.forEach(({item},i)=>addInvite(item,initial+i));
+      // Mostrar los diseños recientes en la portada sin arriesgar las imágenes de respaldo.
+      const heroSlots=['center','left','right'];
+      ordered.slice().reverse().slice(0,3).forEach(({item},i)=>{
+        if(!/^[0-9a-f-]{36}$/i.test(item.id))return;
+        const frame=document.querySelector<HTMLElement>('[data-hero-preview="'+heroSlots[i]+'"]');
+        const target=frame?.querySelector<HTMLImageElement>('img');
+        const label=frame?.querySelector<HTMLElement>('.hero-art__name');
+        if(!target||!label)return;
+        const prefix='/invitation-previews/nuevo-'+item.id+'.';
+        const path=typeof item.cover==='string'&&['jpg','png','webp'].some(ext=>item.cover===prefix+ext)
+          ?item.cover:prefix+'jpg';
+        const probe=new Image();
+        probe.onload=()=>{target.src=path;target.alt='Vista real de '+item.name;label.textContent=item.name;};
+        probe.src=path;
+      });
+
       grid?.querySelectorAll<HTMLElement>('[data-work-card]').forEach((card,i)=>{
         const ordinal=card.querySelector<HTMLElement>('.work-card__ordinal');
         if(ordinal)ordinal.textContent=String(i+1).padStart(2,'0');
