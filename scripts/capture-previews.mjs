@@ -15,7 +15,7 @@ try {
   const additional=JSON.parse(await readFile(resolve(root,'public/data/catalogo-adicional.json'),'utf8'));
   for(const item of additional.invitaciones||[]){
     if(/^[\da-f-]{36}$/i.test(item.id)&&/^https:\/\//.test(item.url)){
-      invitations.push({slug:'nuevo-'+item.id,url:item.url});
+      invitations.push({slug:'nuevo-'+item.id,url:item.url,cover:item.cover});
     }
   }
 } catch(error) {
@@ -108,14 +108,19 @@ const context=await browser.newContext({
   reducedMotion:'reduce',
 });
 let created=0,failed=0,skipped=0;
-for(const {slug,url} of invitations){
+for(const {slug,url,cover} of invitations){
   const filename=resolve(folder,slug+'.jpg');
   if(!process.argv.includes('--force')){
     try {await access(filename);skipped++;continue;}catch {}
   }
-  const page=await context.newPage();
-  try {
-    console.log('Invitación:',slug,url);
+  // Las portadas subidas manualmente tienen prioridad sobre las capturas.
+  if(typeof cover==='string'&&cover.startsWith('/invitation-previews/nuevo-')&&/\.(jpg|png|webp)$/i.test(cover)){
+    try {await access(resolve(root,'public'+cover));skipped++;continue;}catch {}
+  }
+  for(let attempt=1;attempt<=2;attempt++){
+    const page=await context.newPage();
+    try {
+      console.log('Invitación:',slug,url,'intento:',attempt);
     await page.goto(url,{waitUntil:'domcontentloaded',timeout:35000});
     const opened=await openInvitation(page);
     console.log('  Interacciones de apertura:',opened);
@@ -140,13 +145,16 @@ for(const {slug,url} of invitations){
     });
     await page.waitForTimeout(1700);
     await page.screenshot({path:filename,type:'jpeg',quality:82,animations:'disabled',timeout:20000});
-    created++;
-    console.log('  Vista posterior al sobre guardada:',slug);
-  } catch(error) {
-    failed++;
-    console.warn('  Error de captura:',slug,error.message);
-  } finally {
-    await page.close();
+      created++;
+      console.log('  Vista posterior al sobre guardada:',slug);
+      break;
+    } catch(error) {
+      console.warn('  Error de captura:',slug,'intento:',attempt,error.message);
+      if(attempt===2){failed++;console.warn('::warning::No se pudo capturar '+slug+': '+error.message);}
+      else await new Promise(done=>setTimeout(done,2500));
+    } finally {
+      await page.close();
+    }
   }
 }
 await browser.close();
