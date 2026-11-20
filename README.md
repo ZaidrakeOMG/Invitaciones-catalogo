@@ -8,6 +8,7 @@ Incluye **panel privado** para dar de alta invitaciones por URL y pases subiendo
 - `/` — catálogo de invitaciones, filtros, galería "Pases que hemos hecho" y contacto.
 - Conserva las **14 invitaciones** y **6 pases** del proyecto original.
 - Las altas del administrador se suman a estos trabajos; no los reemplazan.
+- Las **invitaciones más recientes aparecen primero**; los diseños iniciales permanecen en el catálogo.
 - `/admin/` — acceso a la administración. La contraseña **no está en el JavaScript del navegador**.
 
 ## Publicación con Vercel + GitHub (importante)
@@ -30,6 +31,14 @@ El catálogo estático se conserva y el administrador utiliza **Vercel Functions
 7. Abre `https://tu-dominio/admin/`, ingresa **2525** y agrega trabajos.
 
 > **Importante:** sin las variables de Vercel, el catálogo público funciona pero el panel no puede iniciar sesión ni guardar archivos. No guardes `GITHUB_TOKEN` ni la clave de sesión en archivos enviados a GitHub.
+
+## Portadas reales automáticas
+
+Las imágenes de `public/invitation-previews/` se capturan directamente de cada demostración HTTPS mediante Playwright, después de intentar abrir el sobre o la pantalla de entrada. No son fotos de pases ni miniaturas inventadas.
+
+Cuando se añade una invitación desde `/admin/`, GitHub Actions ejecuta **Capturar portadas reales de invitaciones**, guarda las capturas y publica los cambios en GitHub/Vercel. También puedes iniciarlo manualmente desde **GitHub → Actions → Capturar portadas reales de invitaciones → Run workflow**. Si una demo no se puede capturar, se conserva la portada anterior o la ficha visual de respaldo, y la invitación sigue enlazando a su sitio original.
+
+El flujo guarda las capturas **antes de sincronizar Git**, para que los cambios hechos desde el administrador durante la captura no provoquen que falle la publicación de imágenes.
 
 ## ¿Cómo funciona el panel?
 
