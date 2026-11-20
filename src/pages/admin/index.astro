@@ -19,6 +19,10 @@ import UiIcon from '../../components/UiIcon.astro';
         <form id="invitation-form" class="admin-fields"><label for="invite-url">URL de la invitación <span>*</span></label><input id="invite-url" type="url" required placeholder="https://mi-invitacion.netlify.app/" pattern="https://.*" />
           <label for="invite-name">Nombre (opcional)</label><input id="invite-name" type="text" maxlength="90" placeholder="Ej. XV años Valentina" />
           <label for="invite-category">Categoría</label><select id="invite-category"><option>Bodas</option><option>XV años</option><option>Celebraciones</option><option>Sacramentos</option></select>
+          <label for="invite-cover">Portada personalizada (opcional)</label>
+          <label class="admin-dropzone admin-dropzone--cover" for="invite-cover"><span class="admin-dropzone__icon" aria-hidden="true"><UiIcon name="image" size={22}/></span><strong id="invite-cover-label">Elegir captura de la invitación</strong><small>Si no subes imagen, CAZAMI generará una captura automática después de guardar.</small></label>
+          <input id="invite-cover" type="file" accept="image/png,image/jpeg,image/webp" class="admin-file-input" />
+          <img id="invite-cover-preview" class="admin-cover-preview" alt="Vista previa de la portada elegida" hidden />
           <button type="submit" class="admin-button">Guardar invitación <UiIcon name="check" size={16}/></button></form>
       </div>
       <div id="tab-pases" class="admin-panel admin-workpanel" role="tabpanel" hidden><span class="admin-label">02 / PASES DIGITALES</span><h2>Publicar un pase</h2><p>Solo sube la imagen; se mostrará en tu galería.</p>
@@ -38,6 +42,8 @@ import UiIcon from '../../components/UiIcon.astro';
     const list=document.getElementById('admin-list')!;
     const imageInput=document.getElementById('pass-image') as HTMLInputElement;
     const preview=document.getElementById('pass-preview') as HTMLImageElement;
+    const coverInput=document.getElementById('invite-cover') as HTMLInputElement;
+    const coverPreview=document.getElementById('invite-cover-preview') as HTMLImageElement;
     let active:'invitaciones'|'pases'='invitaciones';
     let catalog:Catalog={invitaciones:[],pases:[]};
     const say=(message:string,error=false)=>{status.textContent=message;status.classList.toggle('is-error',error);};
@@ -63,7 +69,7 @@ import UiIcon from '../../components/UiIcon.astro';
         const row=document.createElement('div');row.className='admin-list-item';
         const label=document.createElement('div');label.className='admin-list-item__name';
         if(active==='pases'&&item.image){const img=document.createElement('img');img.src=item.image;img.alt='Imagen de pase';label.append(img);}
-        else{const heading=document.createElement('strong');heading.textContent=item.name||'Invitación';label.append(heading);const sub=document.createElement('small');sub.textContent=item.category||'';label.append(sub);}
+        else{const thumb=document.createElement('img');thumb.src=item.cover||`/invitation-previews/nuevo-${item.id}.jpg`;thumb.alt='Portada de invitación';thumb.onerror=()=>{thumb.hidden=true;};label.append(thumb);const heading=document.createElement('strong');heading.textContent=item.name||'Invitación';label.append(heading);const sub=document.createElement('small');sub.textContent=item.category||'';label.append(sub);}
         const del=document.createElement('button');del.type='button';del.dataset.deleteId=item.id;del.textContent='Eliminar';del.setAttribute('aria-label','Eliminar trabajo');row.append(label,del);list.append(row);
       });
     }
@@ -76,11 +82,22 @@ import UiIcon from '../../components/UiIcon.astro';
     document.getElementById('logout')?.addEventListener('click',async()=>{
       try{await request('/api/logout',{method:'POST'});}finally{showAdmin(false);say('Sesión cerrada.');}
     });
+    coverInput.addEventListener('change',()=>{
+      const file=coverInput.files?.[0];coverPreview.hidden=!file;
+      const label=document.getElementById('invite-cover-label');if(label)label.textContent=file?.name||'Elegir captura de la invitación';
+      if(file){const url=URL.createObjectURL(file);coverPreview.src=url;coverPreview.onload=()=>URL.revokeObjectURL(url);}
+    });
     document.getElementById('invitation-form')?.addEventListener('submit',async e=>{
       e.preventDefault();const form=e.currentTarget as HTMLFormElement;const button=form.querySelector('button')!;button.disabled=true;say('Guardando invitación…');
       try{
-        await request('/api/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'invitacion',url:(document.getElementById('invite-url') as HTMLInputElement).value,name:(document.getElementById('invite-name') as HTMLInputElement).value,category:(document.getElementById('invite-category') as HTMLSelectElement).value})});
-        form.reset();await load();say('Invitación guardada. Aparecerá primero en el catálogo. GitHub generará su portada real y Vercel publicará la actualización.');
+        const coverFile=coverInput.files?.[0];
+        if(coverFile&&!['image/jpeg','image/png','image/webp'].includes(coverFile.type))throw new Error('Sube una portada JPG, PNG o WEBP.');
+        const cover=coverFile?await canvasDataURL(coverFile):undefined;
+        say(cover?'Guardando invitación y portada…':'Guardando invitación…');
+        await request('/api/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'invitacion',url:(document.getElementById('invite-url') as HTMLInputElement).value,name:(document.getElementById('invite-name') as HTMLInputElement).value,category:(document.getElementById('invite-category') as HTMLSelectElement).value,cover})});
+        form.reset();coverPreview.hidden=true;
+        const label=document.getElementById('invite-cover-label');if(label)label.textContent='Elegir captura de la invitación';
+        await load();say(cover?'Invitación y portada guardadas. Aparecerán al publicarse Vercel.':'Invitación guardada. Aparecerá primero; su portada real se generará automáticamente.');
       }catch(err){say((err as Error).message,true);}finally{button.disabled=false;}
     });
     function canvasDataURL(file:File):Promise<string>{return new Promise((resolve,reject)=>{
