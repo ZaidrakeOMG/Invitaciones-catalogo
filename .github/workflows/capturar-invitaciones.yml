@@ -9,12 +9,18 @@ on:
       - 'scripts/capture-previews.mjs'
       - '.github/workflows/capturar-invitaciones.yml'
   workflow_dispatch:
+    inputs:
+      recapturar_todas:
+        description: 'Volver a generar todas las portadas'
+        type: boolean
+        required: false
+        default: false
 
 # Si se publican varias invitaciones seguidas, solo la última ejecución
 # necesita capturar el catálogo completo.
 concurrency:
   group: cazami-capturas-main
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -40,7 +46,12 @@ jobs:
       - name: Instalar Chromium
         run: ./scripts/node_modules/.bin/playwright install chromium --with-deps
       - name: Capturar sitios de invitaciones (no pases)
-        run: node scripts/capture-previews.mjs --force
+        run: |
+          if [ "${{ inputs.recapturar_todas }}" = "true" ]; then
+            node scripts/capture-previews.mjs --force
+          else
+            node scripts/capture-previews.mjs
+          fi
       - name: Guardar capturas en el repositorio
         run: |
           git config user.name "github-actions[bot]"
