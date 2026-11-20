@@ -89,7 +89,8 @@ import { contactHref } from '../data/site';
     function addInvite(item:ExtraInvite,index:number){
       if(!grid||!item.url.startsWith('https://')||!item.id)return;
       const article=document.createElement('article');
-      article.className='work-card work-card--recent reveal visible';
+      const recent=Boolean(item.createdAt&&Date.now()-Date.parse(item.createdAt)<45*86400000);
+      article.className='work-card reveal visible'+(recent?' work-card--recent':'');
       article.dataset.workCard='';
       article.dataset.category=item.category;
       article.dataset.search=(item.name+' '+item.category).toLocaleLowerCase('es-MX');
@@ -136,7 +137,7 @@ import { contactHref } from '../data/site';
       ordinal.className='work-card__ordinal';ordinal.textContent=String(index+1).padStart(2,'0');
       const newBadge=document.createElement('span');
       newBadge.className='work-card__new';newBadge.textContent='NUEVA';
-      link.append(preview,ordinal,newBadge);
+      link.append(preview,ordinal);if(recent)link.append(newBadge);
       const info=document.createElement('div');info.className='work-card__info';
       const type=document.createElement('p');type.className='eyebrow';type.textContent=item.category;
       const title=document.createElement('h3');title.textContent=item.name;
