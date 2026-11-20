@@ -10,6 +10,12 @@ on:
       - '.github/workflows/capturar-invitaciones.yml'
   workflow_dispatch:
 
+# Si se publican varias invitaciones seguidas, solo la última ejecución
+# necesita capturar el catálogo completo.
+concurrency:
+  group: cazami-capturas-main
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -39,10 +45,28 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # Mantener sincronizado el proyecto: las capturas no deben sobrescribir cambios recientes.
-          git pull --ff-only origin main
+          # Primero confirmar las capturas: hacer pull con imágenes sin guardar
+          # abortaba la ejecución y dejaba invitaciones nuevas sin portada.
           git add public/invitation-previews/
-          if ! git diff --cached --quiet; then
-            git commit -m "CAZAMI: actualizar capturas reales de invitaciones"
-            git push
+          if git diff --cached --quiet; then
+            echo "Las portadas ya están actualizadas."
+            exit 0
           fi
+          git commit -m "CAZAMI: actualizar capturas reales de invitaciones"
+          # Reaplicar las nuevas imágenes sobre cualquier cambio publicado mientras
+          # Chromium trabajaba, sin descartar altas recientes del administrador.
+          for intento in 1 2 3; do
+            git fetch origin main
+            if ! git rebase -X theirs origin/main; then
+              git rebase --abort
+              echo "::error::No se pudieron conciliar las capturas con main."
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo "Portadas actualizadas en GitHub."
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "::error::No se pudieron publicar las capturas tras reintentar."
+          exit 1
