@@ -21,7 +21,7 @@ export default async function handler(req,res){
       const url=safeUrl(body.url),category=body.category;
       const name=(typeof body.name==='string'?body.name.trim():'')|| (url?defaultName(url):'');
       if(!url||!allowedCategories.has(category)||name.length>90)return send(res,400,{error:'Indica una URL HTTPS válida, nombre y categoría.'});
-      const item={id:randomUUID(),name,category,url};
+      const item={id:randomUUID(),name,category,url,createdAt:new Date().toISOString()};
       await updateCatalog(data=>{if(data.invitaciones.length>=150)throw new Error('Límite de invitaciones alcanzado.');if(data.invitaciones.some(x=>x.url===url))throw new Error('Esa invitación ya existe.');data.invitaciones.push(item);});
       return send(res,201,{ok:true,item});
     }
