@@ -50,6 +50,13 @@
       "category": "Celebraciones",
       "url": "https://regina-inv-c7.netlify.app/",
       "createdAt": "2026-11-20T20:36:01.880Z"
+    },
+    {
+      "id": "fb781d09-f898-422e-b250-79104418d4e6",
+      "name": "Noche de Ixchel",
+      "category": "XV años",
+      "url": "https://inv-xv-ixchel-c9.netlify.app/",
+      "createdAt": "2026-11-20T20:36:57.716Z"
     }
   ],
   "pases": []
