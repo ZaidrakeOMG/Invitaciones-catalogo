@@ -47,7 +47,7 @@ import { contactHref } from '../data/site';
   <section class="catalog-contact" id="cotizacion"><div class="wrap catalog-contact__inner"><div><span class="eyebrow">TU EVENTO, TU ESTILO</span><h2>¿Creamos el tuyo?</h2><p>Invitaciones y pases digitales personalizados para tu celebración.</p></div><a class="button button--cream" href={contactHref('Hola, CAZAMI. Vi su catálogo de trabajos y quiero cotizar una invitación o pases digitales.')} target="_blank" rel="noopener noreferrer">Cotizar por WhatsApp <UiIcon name="external" size={17}/></a></div></section>
 
   <script>
-    type ExtraInvite = {id:string;name:string;category:string;url:string};
+    type ExtraInvite = {id:string;name:string;category:string;url:string;cover?:string;createdAt?:string};
     type ExtraPass = {id:string;image:string};
     const grid=document.getElementById('works-grid');
     const count=document.getElementById('portfolio-count');
@@ -87,26 +87,64 @@ import { contactHref } from '../data/site';
     prevButton?.addEventListener('click',()=>goPage(-1));
     nextButton?.addEventListener('click',()=>goPage(1));
     function addInvite(item:ExtraInvite,index:number){
-      if(!grid||!/^https:\/\//i.test(item.url))return;
-      const article=document.createElement('article');article.className='work-card reveal visible';article.dataset.workCard='';article.dataset.category=item.category;
-      article.dataset.search=`${item.name} ${item.category}`.toLocaleLowerCase('es-MX');
-      const link=document.createElement('a');link.className='work-card__cover';link.href=item.url;link.target='_blank';link.rel='noopener noreferrer';link.setAttribute('aria-label',`Abrir invitación de ${item.name}`);
-      const preview=document.createElement('div');preview.className='web-preview invitation-preview web-preview--card';
-      const placeholder=document.createElement('div');placeholder.className='invitation-preview__fallback';
-      const eyebrow=document.createElement('span');eyebrow.className='invitation-preview__kind';eyebrow.textContent='INVITACIÓN DIGITAL';
+      if(!grid||!item.url.startsWith('https://')||!item.id)return;
+      const article=document.createElement('article');
+      article.className='work-card work-card--recent reveal visible';
+      article.dataset.workCard='';
+      article.dataset.category=item.category;
+      article.dataset.search=(item.name+' '+item.category).toLocaleLowerCase('es-MX');
+      const link=document.createElement('a');
+      link.className='work-card__cover';link.href=item.url;link.target='_blank';link.rel='noopener noreferrer';
+      link.setAttribute('aria-label','Abrir invitación de '+item.name);
+      const preview=document.createElement('div');
+      preview.className='web-preview invitation-preview web-preview--card is-awaiting-preview';
+      const placeholder=document.createElement('div');
+      placeholder.className='invitation-preview__fallback invitation-preview__fallback--new';
+      const brand=document.createElement('span');
+      brand.className='invitation-preview__brand';brand.textContent='CAZAMI STUDIO';
+      const eyebrow=document.createElement('span');
+      eyebrow.className='invitation-preview__kind';eyebrow.textContent='INVITACIÓN DIGITAL';
       const name=document.createElement('strong');name.textContent=item.name;
-      const hint=document.createElement('span');hint.className='invitation-preview__cta';hint.textContent='Toca para ver la invitación';
-      placeholder.append(eyebrow,name,hint);
-      const image=document.createElement('img');image.className='web-preview__actual invitation-preview__screenshot';image.alt=`Vista de la invitación digital ${item.name}`;image.loading='lazy';image.decoding='async';image.src=`/invitation-previews/nuevo-${item.id}.jpg`;image.onerror=()=>{image.hidden=true;};
-      const blocker=document.createElement('div');blocker.className='web-preview__blocker';preview.append(placeholder,image,blocker);
-      const ordinal=document.createElement('span');ordinal.className='work-card__ordinal';ordinal.textContent=String(index+1).padStart(2,'0');link.append(preview,ordinal);
+      const hint=document.createElement('span');
+      hint.className='invitation-preview__cta';hint.textContent='Explorar diseño';
+      const status=document.createElement('span');
+      status.className='invitation-preview__status';status.textContent='Preparando vista previa';
+      placeholder.append(brand,eyebrow,name,hint,status);
+      const image=document.createElement('img');
+      image.className='web-preview__actual invitation-preview__screenshot';
+      image.alt='Vista real de la invitación '+item.name;
+      image.loading='lazy';image.decoding='async';
+      const automatic='/invitation-previews/nuevo-'+item.id+'.jpg';
+      const allowed=new Set(['/invitation-previews/nuevo-'+item.id+'.jpg','/invitation-previews/nuevo-'+item.id+'.png','/invitation-previews/nuevo-'+item.id+'.webp']);
+      const manual=typeof item.cover==='string'&&allowed.has(item.cover)?item.cover:'';
+      let retries=0;
+      const delays=[20000,60000,150000,300000];
+      image.onload=()=>{image.hidden=false;preview.classList.remove('is-awaiting-preview');status.hidden=true;};
+      image.onerror=()=>{
+        image.hidden=true;preview.classList.add('is-awaiting-preview');status.hidden=false;
+        if(manual&&image.src.includes(manual)){image.src=automatic;return;}
+        if(retries>=delays.length){status.textContent='Vista en preparación · abrir invitación';return;}
+        const delay=delays[retries++];
+        window.setTimeout(()=>{
+          if(!image.isConnected)return;
+          image.hidden=false;image.src=automatic+'?actualizar='+Date.now();
+        },delay);
+      };
+      const blocker=document.createElement('div');blocker.className='web-preview__blocker';
+      preview.append(placeholder,image,blocker);
+      const ordinal=document.createElement('span');
+      ordinal.className='work-card__ordinal';ordinal.textContent=String(index+1).padStart(2,'0');
+      const newBadge=document.createElement('span');
+      newBadge.className='work-card__new';newBadge.textContent='NUEVA';
+      link.append(preview,ordinal,newBadge);
       const info=document.createElement('div');info.className='work-card__info';
       const type=document.createElement('p');type.className='eyebrow';type.textContent=item.category;
       const title=document.createElement('h3');title.textContent=item.name;
       const actions=document.createElement('div');actions.className='work-card__links';
-      const open=document.createElement('a');open.href=item.url;open.target='_blank';open.rel='noopener noreferrer';open.textContent='Abrir invitación';
-      actions.append(open);info.append(type,title,actions);article.append(link,info);grid.prepend(article);
-
+      const open=document.createElement('a');
+      open.href=item.url;open.target='_blank';open.rel='noopener noreferrer';open.textContent='Ver invitación';
+      actions.append(open);info.append(type,title,actions);article.append(link,info);
+      grid.prepend(article);image.src=manual||automatic;
     }
     fetch('/data/catalogo-adicional.json',{cache:'no-store'}).then(async response=>{
       if(!response.ok)return;
@@ -114,7 +152,13 @@ import { contactHref } from '../data/site';
       const initial=grid?.querySelectorAll('[data-work-card]').length||0;
       // El JSON conserva el orden de alta: cada invitación se añade al inicio
       // para que la última publicada aparezca antes de las anteriores.
-      (extra.invitaciones||[]).forEach((item,i)=>addInvite(item,initial+i));
+      // Orden de alta: la última invitación guardada queda al principio.
+      const ordered=(extra.invitaciones||[]).map((item,i)=>({item,i})).sort((a,b)=>{
+        const ta=Date.parse(a.item.createdAt||'')||0;
+        const tb=Date.parse(b.item.createdAt||'')||0;
+        return ta&&tb?ta-tb:a.i-b.i;
+      });
+      ordered.forEach(({item},i)=>addInvite(item,initial+i));
       grid?.querySelectorAll<HTMLElement>('[data-work-card]').forEach((card,i)=>{
         const ordinal=card.querySelector<HTMLElement>('.work-card__ordinal');
         if(ordinal)ordinal.textContent=String(i+1).padStart(2,'0');
