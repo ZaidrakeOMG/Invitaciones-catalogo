@@ -1,5 +1,5 @@
 import {randomUUID} from 'node:crypto';
-import {send,originAllowed,configError,authorized,readJson,getCatalog,updateCatalog,uploadPass,validImage} from '../server/admin-shared.js';
+import {send,originAllowed,configError,authorized,readJson,getCatalog,updateCatalog,uploadPass,uploadInvitationCover,validImage} from '../server/admin-shared.js';
 const allowedCategories=new Set(['Bodas','XV años','Celebraciones','Sacramentos']);
 const safeUrl=(value)=>{try{const url=new URL(value);if(url.protocol!=='https:'||!url.hostname.includes('.')||url.username||url.password||url.port)return null;return url.href;}catch{return null;}};
 const defaultName=(url)=>{const host=new URL(url).hostname.replace(/^www\./,'').split('.')[0];return host.replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase()).slice(0,90)||'Invitación';};
@@ -21,7 +21,19 @@ export default async function handler(req,res){
       const url=safeUrl(body.url),category=body.category;
       const name=(typeof body.name==='string'?body.name.trim():'')|| (url?defaultName(url):'');
       if(!url||!allowedCategories.has(category)||name.length>90)return send(res,400,{error:'Indica una URL HTTPS válida, nombre y categoría.'});
+      const {data:existing}=await getCatalog();
+      if(existing.invitaciones.some(x=>x.url===url))return send(res,409,{error:'Esa invitación ya existe.'});
       const item={id:randomUUID(),name,category,url,createdAt:new Date().toISOString()};
+      if(body.cover!=null&&body.cover!==''){
+        if(typeof body.cover!=='string'||!body.cover.startsWith('data:image/'))
+          return send(res,400,{error:'La portada debe ser JPG, PNG o WEBP.'});
+        const match=body.cover.match(/^data:image\/(?:jpeg|png|webp);base64,([A-Za-z0-9+/]+={0,2})$/);
+        if(!match)return send(res,400,{error:'La portada no tiene un formato válido.'});
+        if(match[1].length>3_400_000)return send(res,413,{error:'La portada es demasiado grande.'});
+        const buffer=Buffer.from(match[1],'base64'),ext=validImage(buffer);
+        if(!ext)return send(res,400,{error:'La portada no es válida o supera 2.5 MB.'});
+        item.cover=await uploadInvitationCover(item.id,buffer,ext);
+      }
       await updateCatalog(data=>{if(data.invitaciones.length>=150)throw new Error('Límite de invitaciones alcanzado.');if(data.invitaciones.some(x=>x.url===url))throw new Error('Esa invitación ya existe.');data.invitaciones.push(item);});
       return send(res,201,{ok:true,item});
     }
