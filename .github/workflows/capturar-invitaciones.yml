@@ -38,6 +38,11 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+      - name: Verificar catálogo y administrador
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+          npm run test:admin
       - name: Instalar solo Playwright estable para capturas
         run: |
           cd scripts
