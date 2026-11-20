@@ -57,7 +57,7 @@ import UiIcon from '../../components/UiIcon.astro';
       try{catalog=await request('/api/items');render();}catch(e){say((e as Error).message,true);}
     }
     function render(){
-      list.replaceChildren();const items=catalog[active];
+      list.replaceChildren();const items=[...catalog[active]].reverse();
       if(items.length===0){const empty=document.createElement('p');empty.className='admin-muted';empty.textContent='Todavía no hay nuevos trabajos en esta sección.';list.append(empty);return;}
       items.forEach(item=>{
         const row=document.createElement('div');row.className='admin-list-item';
