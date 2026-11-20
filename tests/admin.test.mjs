@@ -115,3 +115,20 @@ test('acepta un token PAT nuevo rodeado de texto copiado accidentalmente',async(
    assert.equal(lastAuthorization,'Bearer '+fake);
  }finally{process.env.GITHUB_TOKEN=prev;}
 });
+
+
+test('se publica una invitación con portada propia y se guarda en GitHub',async()=>{
+ const loginResponse=await call(login,req('POST',{password:'2525'}));
+ const cookie=loginResponse.headers['set-cookie'].split(';')[0];
+ const png=Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),Buffer.alloc(32)]);
+ const posted=await call(items,req('POST',{
+   type:'invitacion',url:'https://portada-prueba.netlify.app/',name:'Portada prueba',
+   category:'XV años',cover:'data:image/png;base64,'+png.toString('base64')
+ },cookie));
+ assert.equal(posted.code,201);
+ assert.match(posted.data.item.cover,/^\/invitation-previews\/nuevo-[0-9a-f-]{36}\.png$/);
+ assert.equal(current.invitaciones.some(inv=>inv.cover===posted.data.item.cover),true);
+ assert.equal([...images.keys()].some(p=>p.endsWith(posted.data.item.cover)),true);
+ const removed=await call(items,req('DELETE',{type:'invitaciones',id:posted.data.item.id},cookie));
+ assert.equal(removed.code,200);
+});
