@@ -5,6 +5,7 @@ import '../styles/visual-fix.css';
 import '../styles/portfolio-refresh.css';
 import '../styles/studio-redesign.css';
 import '../styles/cazami-mobile-luxe.css';
+import '../styles/android-desktop-fit.css';
 import {site,contactHref} from '../data/site';
 import UiIcon from '../components/UiIcon.astro';
 interface Props {title?:string;description?:string;image?:string;noindex?:boolean}
@@ -14,7 +15,24 @@ const canonical=origin?new URL(Astro.url.pathname,origin).toString():undefined;
 const og=origin?new URL(image,origin).toString():undefined;
 ---
 <!doctype html><html lang="es"><head>
-<meta charset="utf-8"/>{noindex && <meta name="robots" content="noindex,nofollow"/>}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/><meta name="theme-color" content="#261f22"/><meta name="description" content={description}/>
+<meta charset="utf-8"/>{noindex && <meta name="robots" content="noindex,nofollow"/>}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+{Astro.url.pathname === '/' && <script is:inline>
+  (function(){
+    // En Android mostramos el mismo lienzo que en PC, reducido por el navegador.
+    // Solo la portada pública cambia; el administrador conserva su tamaño móvil.
+    var isAndroid=/Android/i.test(navigator.userAgent);
+    var saved='';
+    try{saved=localStorage.getItem('cazami-catalogo-vista')||'';}catch(e){}
+    var useDesktop=saved==='pc'||(isAndroid&&saved!=='movil');
+    var root=document.documentElement;
+    if(useDesktop){
+      root.classList.add('cazami-desktop-fit');
+      var meta=document.querySelector('meta[name="viewport"]');
+      if(meta)meta.setAttribute('content','width=1080, viewport-fit=cover');
+    }
+    root.dataset.cazamiSwitcher=(isAndroid||saved)?'true':'false';
+  })();
+</script>}<meta name="theme-color" content="#261f22"/><meta name="description" content={description}/>
 <meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/>
 {og && <meta property="og:image" content={og}/>}{canonical && <><meta property="og:url" content={canonical}/><link rel="canonical" href={canonical}/></>}
 <link rel="icon" type="image/png" href="/favicon.png"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -28,12 +46,26 @@ const og=origin?new URL(image,origin).toString():undefined;
 <a class="header__admin" href="/admin/" rel="nofollow" aria-label="Abrir administrador de invitaciones y pases"><UiIcon name="lock" size={16}/><span>Admin</span></a><a class="header__quote" href={contactHref()} target="_blank" rel="noopener noreferrer">Hablemos <UiIcon name="external" size={14}/></a><button id="menu-toggle" type="button" class="menu-toggle" aria-controls="navigation" aria-expanded="false" aria-label="Abrir menú"><span></span><span></span></button>
 </div></header><main><slot/></main>
 {Astro.url.pathname === '/' && <nav class="mobile-dock" aria-label="Menú rápido del catálogo"><a href="#inicio"><UiIcon name="sparkles" size={19}/><span>Inicio</span></a><a href="#novedades"><UiIcon name="image" size={19}/><span>Nuevos</span></a><a href="#coleccion"><UiIcon name="grid" size={19}/><span>Catálogo</span></a><a class="mobile-dock__cta" href={contactHref('Hola, CAZAMI. Quiero cotizar una invitación digital.')} target="_blank" rel="noopener noreferrer"><UiIcon name="arrow" size={19}/><span>Cotizar</span></a></nav>}
+{Astro.url.pathname === '/' && <button type="button" id="catalog-view-toggle" class="catalog-view-toggle" hidden aria-label="Cambiar vista del catálogo"><UiIcon name="grid" size={19}/><span>Vista PC</span></button>}
 <footer class="footer"><div class="wrap"><div class="footer__top"><div><a href="/" class="footer__brand">CAZAMI<span>®</span></a><p>Diseño digital para momentos que merecen ser recordados.</p></div><a href="#" class="footer__up">Volver arriba <UiIcon name="arrow-up" size={15}/></a></div><div class="footer__line"></div><div class="footer__bottom"><span>© {new Date().getFullYear()} CAZAMI STUDIO</span><div><a href={contactHref()} target="_blank" rel="noopener noreferrer">WhatsApp <UiIcon name="external" size={13}/></a><a href={site.tiktok} target="_blank" rel="noopener noreferrer">TikTok <UiIcon name="external" size={13}/></a><a href={site.facebook} target="_blank" rel="noopener noreferrer">Facebook <UiIcon name="external" size={13}/></a><a href="/admin/" rel="nofollow">Admin</a></div></div></div></footer>
 <script>
  const header=document.getElementById('header');const toggle=document.getElementById('menu-toggle');const menu=document.getElementById('navigation');
  const closeMenu=()=>{toggle?.setAttribute('aria-expanded','false');menu?.classList.remove('navigation--open');document.body.classList.remove('menu-open');};
  toggle?.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!open));menu?.classList.toggle('navigation--open',!open);document.body.classList.toggle('menu-open',!open);});
  menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+ const viewToggle=document.getElementById('catalog-view-toggle');
+ if(viewToggle && document.documentElement.dataset.cazamiSwitcher==='true'){
+   const isDesktop=document.documentElement.classList.contains('cazami-desktop-fit');
+   const label=viewToggle.querySelector('span');
+   viewToggle.hidden=false;
+   if(label)label.textContent=isDesktop?'Vista móvil':'Vista PC';
+   viewToggle.setAttribute('aria-label',isDesktop?'Mostrar la versión móvil con textos más grandes':'Mostrar la versión de computadora escalada');
+   viewToggle.setAttribute('aria-pressed',String(isDesktop));
+   viewToggle.addEventListener('click',()=>{
+     try{localStorage.setItem('cazami-catalogo-vista',isDesktop?'movil':'pc');}catch(error){}
+     window.location.reload();
+   });
+ }
  const bar=document.getElementById('reading-progress');const updateScroll=()=>{header?.classList.toggle('header--scrolled',window.scrollY>15);if(bar){const max=document.documentElement.scrollHeight-window.innerHeight;bar.style.transform=`scaleX(${max>0?window.scrollY/max:0})`;}};
  window.addEventListener('scroll',updateScroll,{passive:true});updateScroll();
  if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}}),{threshold:.08,rootMargin:'0px 0px -24px 0px'});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));}else document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
