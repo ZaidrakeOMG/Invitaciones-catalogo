@@ -64,6 +64,69 @@ for(const viewport of cases){
  }catch(error){console.error('QA fallida en '+viewport.width+': '+error.message);errors++;}
  finally{await page.close();}
 }
+// Android real: comprobar que el navegador adapta el lienzo de PC al ancho físico.
+const android=await browser.newContext({
+ viewport:{width:390,height:844},deviceScaleFactor:2.75,
+ isMobile:true,hasTouch:true,
+ userAgent:'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36',
+ locale:'es-MX'
+});
+const androidPage=await android.newPage();
+try{
+ const browserIssues=[];
+ androidPage.on('pageerror',error=>browserIssues.push(error.message));
+ await androidPage.goto(target,{waitUntil:'domcontentloaded',timeout:30000});
+ await androidPage.waitForFunction(()=>document.querySelectorAll('#works-grid [data-work-card]').length>=26,null,{timeout:20000});
+ const read=()=>androidPage.evaluate(()=>{
+  const grid=document.querySelector('#works-grid');
+  const dock=document.querySelector('.mobile-dock');
+  const featured=document.querySelector('#featured-edition-grid');
+  const toggle=document.getElementById('catalog-view-toggle');
+  return {
+    physicalWidth:screen.width,
+    layoutWidth:window.innerWidth,
+    documentWidth:document.documentElement.scrollWidth,
+    viewportMeta:document.querySelector('meta[name="viewport"]')?.content,
+    desktopClass:document.documentElement.classList.contains('cazami-desktop-fit'),
+    columns:getComputedStyle(grid).gridTemplateColumns.split(' ').length,
+    featuredColumns:getComputedStyle(featured).gridTemplateColumns.split(' ').length,
+    dockVisible:getComputedStyle(dock).display!=='none',
+    toggleVisible:toggle&&!toggle.hidden,
+    toggleText:toggle?.textContent?.trim(),
+    firstCard:grid.querySelector('[data-work-card] h3')?.textContent,
+  };
+ });
+ const pc=await read();
+ const issues=[];
+ if(!pc.desktopClass||!pc.viewportMeta.includes('width=1080'))issues.push('Android no activó el lienzo de PC');
+ if(pc.layoutWidth<1000||pc.layoutWidth>1150)issues.push('Ancho virtual incorrecto '+pc.layoutWidth);
+ if(pc.documentWidth>pc.layoutWidth+2)issues.push('Desborde horizontal '+pc.documentWidth);
+ if(pc.columns!==3)issues.push('No hay tres tarjetas por fila en modo PC: '+pc.columns);
+ if(pc.featuredColumns!==2)issues.push('Falta mosaico editorial de PC');
+ if(pc.dockVisible)issues.push('Dock móvil aparece en vista PC');
+ if(!pc.toggleVisible||pc.toggleText!=='Vista móvil')issues.push('Selector para regresar a móvil no visible');
+ if(!/Amor Eterno/i.test(pc.firstCard||''))issues.push('Se alteró el orden de invitaciones');
+ console.log('Android / PC escalada',JSON.stringify({ ...pc,issues }));
+ if(issues.length)errors++;
+ // Volver a una sola columna sin perder el contenido ni el administrador.
+ await androidPage.locator('#catalog-view-toggle').click();
+ await androidPage.waitForFunction(()=>window.innerWidth<500&&!document.documentElement.classList.contains('cazami-desktop-fit'),null,{timeout:15000});
+ const mobile=await read();
+ const mobileIssues=[];
+ if(mobile.columns!==1)mobileIssues.push('No vuelve a una columna en vista móvil');
+ if(!mobile.dockVisible)mobileIssues.push('No recuperó el menú táctil');
+ if(!mobile.toggleVisible||mobile.toggleText!=='Vista PC')mobileIssues.push('No permite regresar a PC');
+ if(browserIssues.length)mobileIssues.push('Errores del navegador: '+browserIssues.join('; ').slice(0,300));
+ console.log('Android / vista móvil',JSON.stringify({...mobile,issues:mobileIssues}));
+ if(mobileIssues.length)errors++;
+ await androidPage.locator('#catalog-view-toggle').click();
+ await androidPage.waitForFunction(()=>window.innerWidth>=1000&&document.documentElement.classList.contains('cazami-desktop-fit'),null,{timeout:15000});
+ await androidPage.goto(new URL('admin/',target).href,{waitUntil:'domcontentloaded'});
+ const adminWidth=await androidPage.evaluate(()=>window.innerWidth);
+ if(adminWidth>=600){errors++;console.error('El administrador se escaló accidentalmente a '+adminWidth);}
+ else console.log('Android / administrador conserva vista móvil:',adminWidth);
+}catch(error){errors++;console.error('QA Android fallida: '+error.message);}
+finally{await android.close();}
 } finally{await browser.close();}
 if(errors){console.error('QA móvil detectó '+errors+' vistas con problemas.');process.exit(1);}
 console.log('QA móvil aprobada en '+cases.length+' tamaños de pantalla.');
