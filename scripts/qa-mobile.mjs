@@ -64,9 +64,11 @@ for(const viewport of cases){
  }catch(error){console.error('QA fallida en '+viewport.width+': '+error.message);errors++;}
  finally{await page.close();}
 }
-// Pantallas móviles reales emuladas: viewport natural, tarjetas grandes y sin selector.
+// Pantallas móviles reales emuladas: Android 3 x 3; iPhone conserva una columna.
 for(const device of [
+ {name:'Android 320',width:320,height:700,dpr:2.5,ua:'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36'},
  {name:'Android Chrome',width:390,height:844,dpr:2.75,ua:'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36'},
+ {name:'Android 430',width:430,height:932,dpr:2.5,ua:'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36'},
  {name:'iPhone Safari',width:390,height:844,dpr:3,ua:'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'}
 ]){
  const mobile=await browser.newContext({viewport:{width:device.width,height:device.height},deviceScaleFactor:device.dpr,isMobile:true,hasTouch:true,userAgent:device.ua,locale:'es-MX'});
@@ -94,20 +96,33 @@ for(const device of [
     arrowPseudo:getComputedStyle(link,'::after').content,
     svgPresent:!!link?.querySelector('svg'),
     noViewToggle:!document.querySelector('#catalog-view-toggle'),
-    noDesktopClass:!document.documentElement.classList.contains('cazami-desktop-fit')
+    noDesktopClass:!document.documentElement.classList.contains('cazami-desktop-fit'),
+    androidClass:document.documentElement.classList.contains('cazami-android'),
+    visibleCards:[...document.querySelectorAll('#works-grid [data-work-card]')].filter(node=>!node.hidden).length,
+    previewLink:!!card?.querySelector('.work-card__cover[href^="https://"]'),
+    compactCard:Math.round(card?.getBoundingClientRect().height||0)
    };
   });
   const issues=[];
-  if(x.width!==390||x.scrollWidth>392||!x.viewport?.includes('width=device-width'))issues.push('Viewport natural roto');
-  if(x.cols!==1||x.cardWidth<320)issues.push('Las tarjetas siguen muy pequeñas');
-  if(x.titleFont<27)issues.push('Nombres demasiado pequeños');
+  if(x.width!==device.width||x.scrollWidth>device.width+2||!x.viewport?.includes('width=device-width'))issues.push('Viewport natural roto');
+  const isAndroid=device.name.startsWith('Android');
+  if(isAndroid){
+   if(!x.androidClass||x.cols!==3)issues.push('Android no muestra tres columnas');
+   if(x.cardWidth<70||x.cardWidth>160)issues.push('Tarjeta Android fuera de escala');
+   if(x.titleFont<10.5)issues.push('Nombre Android ilegible');
+   if(x.visibleCards!==9)issues.push('Android no muestra tres filas de 3 tarjetas');
+   if(!x.previewLink)issues.push('La tarjeta no abre la invitación');
+  }else{
+   if(x.androidClass||x.cols!==1||x.cardWidth<320)issues.push('iPhone debe conservar las tarjetas grandes');
+   if(x.titleFont<27)issues.push('Nombres iPhone demasiado pequeños');
+  }
   if(!x.noViewToggle||!x.noDesktopClass)issues.push('Selector o vista antigua permanece');
   if(!x.svgPresent||!['none','normal'].includes(x.arrowPseudo))issues.push('Las flechas no son iconos SVG');
   console.log(device.name+' / escala real',JSON.stringify({...x,issues}));
   if(issues.length)errors++;
   await page.goto(new URL('admin/',target).href,{waitUntil:'domcontentloaded'});
   const adminWidth=await page.evaluate(()=>window.innerWidth);
-  if(adminWidth!==390){errors++;console.error(device.name+' / administrador con viewport incorrecto: '+adminWidth);}
+  if(adminWidth!==device.width){errors++;console.error(device.name+' / administrador con viewport incorrecto: '+adminWidth);}
  }catch(e){errors++;console.error(device.name+' / error:',e.message);}
  finally{await mobile.close();}
 }
