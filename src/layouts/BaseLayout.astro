@@ -18,19 +18,28 @@ const og=origin?new URL(image,origin).toString():undefined;
 <meta charset="utf-8"/>{noindex && <meta name="robots" content="noindex,nofollow"/>}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 {Astro.url.pathname === '/' && <script is:inline>
   (function(){
-    // En Android mostramos el mismo lienzo que en PC, reducido por el navegador.
-    // Solo la portada pública cambia; el administrador conserva su tamaño móvil.
-    var isAndroid=/Android/i.test(navigator.userAgent);
-    var saved='';
-    try{saved=localStorage.getItem('cazami-catalogo-vista')||'';}catch(e){}
-    var useDesktop=saved==='pc'||(isAndroid&&saved!=='movil');
+    // Versión PC a escala para teléfonos: Android, iPhone y navegadores con
+    // identificación de escritorio pero pantalla táctil pequeña.
+    var params=new URLSearchParams(window.location.search);
+    var requested=params.get('vista');
+    var handheld=/Android|iPhone|iPod|Mobile/i.test(navigator.userAgent)
+      || (navigator.maxTouchPoints>0 && Math.min(screen.width,screen.height)<=820);
+    // Clave v2 para dejar de reutilizar la preferencia móvil del diseño antiguo.
+    var key='cazami-catalogo-vista-v2',saved='';
+    try{saved=localStorage.getItem(key)||'';}catch(e){}
+    var forced=requested==='pc'||requested==='movil'?requested:'';
+    var mode=forced||saved||(handheld?'pc':'movil');
+    var useDesktop=mode==='pc';
     var root=document.documentElement;
+    root.dataset.cazamiVersion='pc2-20261123';
+    root.dataset.cazamiMode=mode;
     if(useDesktop){
       root.classList.add('cazami-desktop-fit');
       var meta=document.querySelector('meta[name="viewport"]');
       if(meta)meta.setAttribute('content','width=1080, viewport-fit=cover');
     }
-    root.dataset.cazamiSwitcher=(isAndroid||saved)?'true':'false';
+    if(forced){try{localStorage.setItem(key,forced);}catch(e){}}
+    root.dataset.cazamiSwitcher=(handheld||saved||forced)?'true':'false';
   })();
 </script>}<meta name="theme-color" content="#261f22"/><meta name="description" content={description}/>
 <meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/>
@@ -62,7 +71,12 @@ const og=origin?new URL(image,origin).toString():undefined;
    viewToggle.setAttribute('aria-label',isDesktop?'Mostrar la versión móvil con textos más grandes':'Mostrar la versión de computadora escalada');
    viewToggle.setAttribute('aria-pressed',String(isDesktop));
    viewToggle.addEventListener('click',()=>{
-     try{localStorage.setItem('cazami-catalogo-vista',isDesktop?'movil':'pc');}catch(error){}
+     try{localStorage.setItem('cazami-catalogo-vista-v2',isDesktop?'movil':'pc');}catch(error){}
+     // Eliminar ?vista=... para que la selección del botón tenga prioridad.
+     if(new URLSearchParams(window.location.search).has('vista')){
+       const next=new URL(window.location.href);next.searchParams.delete('vista');
+       window.history.replaceState(null,'',next.pathname+next.search+next.hash);
+     }
      window.location.reload();
    });
  }
