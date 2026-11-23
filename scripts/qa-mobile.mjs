@@ -127,6 +127,48 @@ try{
  else console.log('Android / administrador conserva vista móvil:',adminWidth);
 }catch(error){errors++;console.error('QA Android fallida: '+error.message);}
 finally{await android.close();}
+// Verificar también iPhone y el enlace directo ?vista=pc,
+// incluida la preferencia antigua que anteriormente bloqueaba el escalado.
+const iphone=await browser.newContext({
+ viewport:{width:390,height:844},deviceScaleFactor:3,isMobile:true,hasTouch:true,
+ userAgent:'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1',
+ locale:'es-MX'
+});
+const iphonePage=await iphone.newPage();
+try{
+ await iphonePage.goto(target,{waitUntil:'domcontentloaded'});
+ await iphonePage.evaluate(()=>localStorage.setItem('cazami-catalogo-vista','movil'));
+ await iphonePage.reload({waitUntil:'domcontentloaded'});
+ const pc=await iphonePage.evaluate(()=>({
+   width:window.innerWidth,
+   mode:document.documentElement.dataset.cazamiMode,
+   version:document.documentElement.dataset.cazamiVersion,
+   cols:getComputedStyle(document.querySelector('#works-grid')).gridTemplateColumns.split(' ').length,
+   toggle:document.getElementById('catalog-view-toggle')?.textContent?.trim()
+ }));
+ const issues=[];
+ if(pc.width!==1080||pc.cols!==3||pc.mode!=='pc'||pc.toggle!=='Vista móvil'||pc.version!=='pc2-20261123')
+   issues.push('iPhone no recibió vista PC predeterminada con preferencia antigua');
+ await iphonePage.goto(new URL('?vista=movil',target).href,{waitUntil:'domcontentloaded'});
+ const mobile=await iphonePage.evaluate(()=>({
+   width:window.innerWidth,
+   mode:document.documentElement.dataset.cazamiMode,
+   cols:getComputedStyle(document.querySelector('#works-grid')).gridTemplateColumns.split(' ').length
+ }));
+ if(mobile.width!==390||mobile.cols!==1||mobile.mode!=='movil')
+   issues.push('El parámetro ?vista=movil no cambia de vista');
+ await iphonePage.goto(new URL('?vista=pc',target).href,{waitUntil:'domcontentloaded'});
+ const forced=await iphonePage.evaluate(()=>({
+   width:window.innerWidth,
+   mode:document.documentElement.dataset.cazamiMode,
+   cols:getComputedStyle(document.querySelector('#works-grid')).gridTemplateColumns.split(' ').length
+ }));
+ if(forced.width!==1080||forced.cols!==3||forced.mode!=='pc')
+   issues.push('El parámetro ?vista=pc no fuerza el escalado');
+ console.log('iPhone / PC predeterminada, ajustes y enlaces',JSON.stringify({pc,mobile,forced,issues}));
+ if(issues.length)errors++;
+}catch(error){errors++;console.error('QA iPhone fallida:',error.message);}
+finally{await iphone.close();}
 } finally{await browser.close();}
 if(errors){console.error('QA móvil detectó '+errors+' vistas con problemas.');process.exit(1);}
 console.log('QA móvil aprobada en '+cases.length+' tamaños de pantalla.');
