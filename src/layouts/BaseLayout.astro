@@ -16,10 +16,9 @@ const og=origin?new URL(image,origin).toString():undefined;
 ---
 <!doctype html><html lang="es"><head>
 <meta charset="utf-8"/>{noindex && <meta name="robots" content="noindex,nofollow"/>}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-{Astro.url.pathname === '/' && <script is:inline>
-  // Android: 3 columnas de invitaciones con 9 trabajos por página.
-  // No se modifica el viewport ni la apariencia de iPhone o del administrador.
-  if (/Android/i.test(navigator.userAgent)) {
+<script is:inline>
+  // Activar solo en la portada pública y exclusivamente en Android.
+  if (window.location.pathname === '/' && /Android/i.test(navigator.userAgent)) {
     document.documentElement.classList.add('cazami-android');
   }
 </script><meta name="theme-color" content="#261f22"/><meta name="description" content={description}/>
