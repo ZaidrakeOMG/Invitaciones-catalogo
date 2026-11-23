@@ -6,6 +6,7 @@ on:
       - 'src/pages/index.astro'
       - 'src/layouts/BaseLayout.astro'
       - 'src/styles/cazami-mobile-luxe.css'
+      - 'src/styles/mobile-natural-scale.css'
       - 'scripts/qa-mobile.mjs'
       - '.github/workflows/qa-responsive.yml'
   workflow_dispatch:
