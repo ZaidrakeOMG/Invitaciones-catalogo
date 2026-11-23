@@ -229,6 +229,18 @@ import { contactHref } from '../data/site';
       const actions=document.createElement('div');actions.className='work-card__links';
       const open=document.createElement('a');
       open.href=item.url;open.target='_blank';open.rel='noopener noreferrer';open.textContent='Ver invitación';
+      // Icono vectorial, nunca una flecha Unicode que Safari pueda pintar como emoji.
+      const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      icon.setAttribute('class','ui-icon');
+      icon.setAttribute('width','16');icon.setAttribute('height','16');
+      icon.setAttribute('viewBox','0 0 24 24');
+      icon.setAttribute('fill','none');icon.setAttribute('stroke','currentColor');
+      icon.setAttribute('stroke-width','1.8');icon.setAttribute('stroke-linecap','round');
+      icon.setAttribute('stroke-linejoin','round');
+      icon.setAttribute('aria-hidden','true');
+      const iconPath=document.createElementNS('http://www.w3.org/2000/svg','path');
+      iconPath.setAttribute('d','M14 4h6v6 M20 4l-9 9 M20 13v7H4V4h7');
+      icon.append(iconPath);open.append(icon);
       actions.append(open);info.append(type,title,actions);article.append(link,info);
       grid.prepend(article);image.src=manual||automatic;
     }

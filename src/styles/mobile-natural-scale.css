@@ -1,0 +1,186 @@
+/* CAZAMI STUDIO — Escalado natural en Android, Safari y escritorio.
+   Se aplica únicamente a la portada pública; el panel /admin se mantiene intacto.
+   No se usa un viewport simulado de PC ni existe un selector de vistas. */
+html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+.cazami-home{overflow-x:clip;}
+.cazami-home .wrap{width:min(calc(100% - 38px),1320px);}
+.cazami-home .catalog-hero__inner,
+.cazami-home .catalog-hero__copy,
+.cazami-home .featured-edition__intro>div,
+.cazami-home .catalog-heading>div,
+.cazami-home .portfolio-controls,
+.cazami-home #works-grid .work-card{min-width:0}
+.cazami-home .catalog-hero h1,
+.cazami-home .catalog-heading .display-title,
+.cazami-home .featured-edition__intro h2,
+.cazami-home .passes-header .display-title,
+.cazami-home .studio-process h2,
+.cazami-home .catalog-contact h2{overflow-wrap:anywhere;text-wrap:balance}
+/* SVG para todas las flechas de las fichas, sin ::after con caracteres Unicode. */
+.cazami-home #works-grid .work-card__links a::after{display:none!important;content:none!important}
+.cazami-home #works-grid .work-card__links a{display:inline-flex;align-items:center;gap:11px;min-height:37px}
+.cazami-home #works-grid .work-card__links a>.ui-icon{
+ width:34px;height:34px;flex:none;padding:8px;border-radius:50%;
+ border:1px solid #e5cbd4;color:#87516a;background:#faf0ed;
+ transition:transform .2s ease,background .2s ease
+}
+.cazami-home #works-grid .work-card__links a:hover>.ui-icon{transform:translate(2px,-2px);background:#eacdd7}
+/* Mejora la lectura en tarjetas y la selección con el dedo. */
+.cazami-home #works-grid .work-card__cover,
+.cazami-home .featured-piece,
+.cazami-home .portfolio-controls button,
+.cazami-home .catalog-pagination__button{touch-action:manipulation}
+.cazami-home .portfolio-search input{-webkit-appearance:none;appearance:none;}
+.cazami-home .catalog-hero__notes .ui-icon,
+.cazami-home .catalog-hero__bottom .ui-icon,
+.cazami-home .featured-edition__swipe .ui-icon,
+.cazami-home .mobile-dock .ui-icon{flex:none}
+@media(max-width:900px){
+ .cazami-home .wrap{width:min(calc(100% - 42px),760px)}
+ .cazami-home .catalog-hero{padding:clamp(46px,7vw,75px) 0 25px}
+ .cazami-home .catalog-hero__inner{grid-template-columns:minmax(0,1fr);min-height:auto;gap:0}
+ .cazami-home .catalog-hero__copy{max-width:680px;padding:0}
+ .cazami-home .catalog-hero h1{font-size:clamp(68px,10vw,105px);line-height:.91;margin:26px 0 24px}
+ .cazami-home .catalog-hero__lead{font-size:clamp(16px,2vw,19px)!important;line-height:1.7!important}
+ .cazami-home .catalog-hero__actions{margin-top:28px}
+ .cazami-home .catalog-hero__notes{margin-top:26px}
+ .cazami-home .catalog-hero__art{width:100%;height:clamp(335px,55vw,470px);max-width:590px;margin:25px auto 0}
+ .cazami-home .catalog-hero__bottom{margin-top:12px}
+ .cazami-home .featured-edition__intro{display:block;margin-bottom:35px}
+ .cazami-home .featured-edition__intro h2{font-size:clamp(58px,9vw,90px);line-height:.96}
+ .cazami-home .featured-edition__aside{width:100%;max-width:540px;margin-top:23px}
+ .cazami-home .featured-edition__aside p{font-size:14px;max-width:430px}
+ .cazami-home .catalog-heading .display-title{font-size:clamp(58px,8.5vw,90px)}
+ .cazami-home .catalog-heading p{max-width:600px}
+ .cazami-home #works-grid.works-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+ .cazami-home #works-grid .work-card__info{padding:20px 21px 23px}
+ .cazami-home #works-grid .work-card__info h3{font-size:clamp(27px,4.2vw,37px)}
+ .cazami-home #works-grid .work-card__links{display:block}
+ .cazami-home #works-grid .work-card__links a{font-size:13px}
+ .cazami-home #passes-rail.passes-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+}
+@media(max-width:700px){
+ .cazami-home .topline{min-height:29px}
+ .cazami-home .topline .wrap{font-size:9px;letter-spacing:.095em}
+ .cazami-home .header{height:72px}
+ .cazami-home .brand>span{font-size:clamp(22px,4.8vw,28px)}
+ .cazami-home .brand small{font-size:8px}
+ .cazami-home .header__admin{min-height:44px;min-width:44px}
+ .cazami-home .menu-toggle{width:44px;height:44px}
+ .cazami-home .catalog-hero{padding-top:50px}
+ .cazami-home .catalog-hero__eyebrow{font-size:10px;letter-spacing:.14em}
+ .cazami-home .catalog-hero h1{font-size:clamp(68px,11.8vw,88px);line-height:.91}
+ .cazami-home .catalog-hero__lead{font-size:16px!important}
+ .cazami-home .catalog-hero__actions .button{font-size:14px;min-height:55px}
+ .cazami-home .catalog-hero__link{font-size:13px}
+ .cazami-home .catalog-hero__notes>span{font-size:11px;letter-spacing:0}
+ .cazami-home .catalog-hero__art{height:clamp(315px,63vw,430px)}
+ .cazami-home .studio-intro-ribbon__inner{min-height:0;padding:16px 0;gap:9px 22px;font-size:10px}
+ .cazami-home .studio-value{padding-block:20px}
+ .cazami-home .studio-value strong{font-size:16px}
+ .cazami-home .studio-value p{font-size:13px}
+ .cazami-home .featured-edition{padding:80px 0 87px}
+ .cazami-home .featured-edition__eyebrow{font-size:10px}
+ .cazami-home .featured-edition__intro h2{font-size:clamp(57px,10.5vw,80px)}
+ .cazami-home .featured-edition__aside p{font-size:14px}
+ .cazami-home .featured-edition__grid{
+   grid-template-columns:none;grid-template-rows:1fr;
+   grid-auto-flow:column;grid-auto-columns:minmax(260px,78%);
+   height:clamp(410px,65vw,475px);overflow-x:auto;scroll-snap-type:x mandatory;gap:15px;
+   -webkit-overflow-scrolling:touch
+ }
+ .cazami-home .featured-piece,
+ .cazami-home .featured-piece--hero,
+ .cazami-home .featured-piece--secondary{grid-row:auto;width:100%;scroll-snap-align:start}
+ .cazami-home .featured-piece__detail,
+ .cazami-home .featured-piece--secondary .featured-piece__detail{padding:25px}
+ .cazami-home .featured-piece__detail strong,
+ .cazami-home .featured-piece--secondary .featured-piece__detail strong{
+   font-size:clamp(37px,6.6vw,52px);line-height:1.02
+ }
+ .cazami-home .featured-piece__detail>[data-feature-category]{font-size:11px}
+ .cazami-home .featured-piece__view{font-size:12px}
+ .cazami-home .featured-edition__swipe{display:flex;font-size:12px}
+ .cazami-home .portfolio.section-space{padding:79px 0 90px}
+ .cazami-home .catalog-heading .display-title{font-size:clamp(58px,10.2vw,80px);line-height:1}
+ .cazami-home .catalog-heading p{font-size:15px;line-height:1.7}
+ .cazami-home .portfolio-controls{padding:13px!important;gap:13px!important}
+ .cazami-home .portfolio-controls .filterbar{gap:7px}
+ .cazami-home .portfolio-controls .filterbtn{font-size:12px;min-height:45px;padding:10px 18px}
+ .cazami-home .portfolio-search{min-height:49px}
+ .cazami-home .portfolio-search input{font-size:16px}
+ .cazami-home #works-grid .work-card__cover{aspect-ratio:3/4;padding:10px 10px 0}
+ .cazami-home #works-grid .work-card__info h3{font:500 clamp(27px,4.5vw,34px)/1.09 var(--studio-display)}
+ .cazami-home #works-grid .work-card__info .eyebrow{font-size:11px;letter-spacing:.11em}
+ .cazami-home .mobile-dock{display:grid;bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+ .cazami-home .mobile-dock a{font-size:11px;min-height:55px}
+ .cazami-home .mobile-dock .ui-icon{width:21px;height:21px}
+ .cazami-home .footer{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
+ .cazami-home #passes-rail .pass-card__zoom>.ui-icon{width:17px;height:17px}
+}
+@media(max-width:550px){
+ .cazami-home .wrap{width:calc(100% - 36px)}
+ .cazami-home .catalog-hero{padding:48px 0 23px}
+ .cazami-home .catalog-hero__eyebrow{font-size:9px;letter-spacing:.1em}
+ .cazami-home .catalog-hero h1{font-size:clamp(66px,16vw,83px);line-height:.93;margin:27px 0 20px}
+ .cazami-home .catalog-hero__lead{font-size:16px!important}
+ .cazami-home .catalog-hero__actions{gap:13px;margin-top:25px}
+ .cazami-home .catalog-hero__actions .button{font-size:14px;min-height:56px}
+ .cazami-home .catalog-hero__notes{gap:9px 12px}
+ .cazami-home .catalog-hero__notes>span{font-size:11px;border:0;margin:0;padding:0}
+ .cazami-home .catalog-hero__art{height:clamp(305px,85vw,360px);margin:20px auto 0}
+ .cazami-home .hero-art__frame--left{width:43%;height:62%;left:0;top:19%}
+ .cazami-home .hero-art__frame--right{width:42%;height:62%;right:0;top:12%}
+ .cazami-home .hero-art__frame--center{width:52%;height:83%;left:24%;top:5%}
+ .cazami-home .hero-art__name{font-size:13px!important;padding:7px!important}
+ .cazami-home .hero-art__seal{width:76px;height:76px}
+ .cazami-home .catalog-hero__bottom{font-size:9px;letter-spacing:.08em}
+ .cazami-home .featured-edition{padding:69px 0 81px}
+ .cazami-home .featured-edition__intro h2{font-size:clamp(54px,12.6vw,70px)}
+ .cazami-home .featured-edition__aside{display:block;margin-top:20px}
+ .cazami-home .featured-edition__aside a{font-size:13px;margin-top:14px}
+ .cazami-home .featured-edition__grid{grid-auto-columns:87%;height:clamp(390px,112vw,475px)}
+ .cazami-home .featured-piece__detail strong,
+ .cazami-home .featured-piece--secondary .featured-piece__detail strong{font-size:clamp(35px,9vw,50px)}
+ .cazami-home .catalog-heading .display-title{font-size:clamp(55px,12.3vw,72px)}
+ .cazami-home .catalog-heading p{font-size:15px}
+ .cazami-home #works-grid.works-grid{grid-template-columns:minmax(0,1fr);gap:26px}
+ .cazami-home #works-grid .work-card{border-radius:17px}
+ .cazami-home #works-grid .work-card__cover{aspect-ratio:4/4.9;padding:11px 11px 0}
+ .cazami-home #works-grid .work-card__info{padding:19px 22px 23px;min-height:0}
+ .cazami-home #works-grid .work-card__info h3{font:500 clamp(31px,8.5vw,39px)/1.1 var(--studio-display)}
+ .cazami-home #works-grid .work-card__info .eyebrow{font-size:12px;letter-spacing:.1em}
+ .cazami-home #works-grid .work-card__links{display:block;margin-top:0;padding-top:14px}
+ .cazami-home #works-grid .work-card__links a{font-size:14px;min-height:40px;gap:12px}
+ .cazami-home #works-grid .work-card__links a>.ui-icon{width:37px;height:37px;padding:9px}
+ .cazami-home #works-grid .work-card__ordinal{top:21px;left:21px;font-size:11px}
+ .cazami-home #works-grid .work-card__new{top:21px;right:21px;font-size:10px;padding:8px 11px}
+ .cazami-home .invitation-preview__fallback strong{font-size:clamp(28px,8vw,38px)}
+ .cazami-home .invitation-preview__brand{font-size:10px}
+ .cazami-home .invitation-preview__kind{font-size:10px}
+ .cazami-home .invitation-preview__cta{font-size:12px;padding:8px 12px}
+ .cazami-home #passes-rail.passes-grid{grid-template-columns:minmax(0,1fr);gap:19px}
+ .cazami-home #passes-rail .pass-card{padding:10px}
+ .cazami-home #passes-rail .pass-card__image{aspect-ratio:3/4}
+ .cazami-home .passes-header .display-title{font-size:clamp(52px,11vw,69px)}
+ .cazami-home .studio-process__top h2{font-size:clamp(53px,11vw,70px)}
+ .cazami-home .catalog-contact h2{font-size:clamp(56px,12vw,76px)}
+ .cazami-home .catalog-pagination__button{min-height:44px;font-size:12px}
+ .cazami-home .catalog-pagination__label{font-size:11px}
+}
+@media(max-width:365px){
+ .cazami-home .wrap{width:calc(100% - 30px)}
+ .cazami-home .brand>span{font-size:21px}
+ .cazami-home .catalog-hero h1{font-size:clamp(59px,17vw,69px)}
+ .cazami-home .catalog-hero__notes>span{font-size:10px}
+ .cazami-home .catalog-hero__art{height:285px}
+ .cazami-home .featured-edition__intro h2{font-size:54px}
+ .cazami-home .catalog-heading .display-title{font-size:52px}
+ .cazami-home .featured-edition__grid{grid-auto-columns:87%;height:385px}
+ .cazami-home .catalog-pagination__button{font-size:11px;padding:9px}
+ .cazami-home .catalog-pagination__label{min-width:55px}
+}
+/* Preferencias de movimiento: las fichas no saltan ni hacen zoom. */
+@media(prefers-reduced-motion:reduce){
+ .cazami-home #works-grid .work-card__links a>.ui-icon{transition:none!important}
+}
