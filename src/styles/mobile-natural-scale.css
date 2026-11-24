@@ -185,17 +185,17 @@ html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
  .cazami-home #works-grid .work-card__links a>.ui-icon{transition:none!important}
 }
 
-/* ANDROID — Galería 3 x 3, con el viewport natural del teléfono.
-   Nueve tarjetas por página; cada portada conserva su enlace completo.
-   Se acota a la portada pública, sin tocar el panel ni Safari/iOS. */
-@media(max-width:980px){
- html.cazami-android .cazami-home #works-grid.works-grid{
+/* TELÉFONOS — Galería real de 3 columnas por 3 filas.
+   Funciona para Android, iPhone, Safari y Chrome sin detección por agente.
+   El panel /admin conserva sus estilos propios. */
+@media(max-width:700px){
+ .cazami-home #works-grid.works-grid{
    display:grid;
    grid-template-columns:repeat(3,minmax(0,1fr));
    gap:clamp(7px,1.8vw,15px);
    align-items:stretch;
  }
- html.cazami-android .cazami-home #works-grid .work-card{
+ .cazami-home #works-grid .work-card{
    display:flex;
    flex-direction:column;
    min-width:0;
@@ -205,7 +205,7 @@ html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
    box-shadow:0 5px 15px #42273818;
    transform:none;
  }
- html.cazami-android .cazami-home #works-grid .work-card__cover{
+ .cazami-home #works-grid .work-card__cover{
    display:block;
    width:100%;
    flex:none;
@@ -214,26 +214,26 @@ html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
    background:#e5d6d6;
    -webkit-tap-highlight-color:transparent;
  }
- html.cazami-android .cazami-home #works-grid .work-card__cover::after{
+ .cazami-home #works-grid .work-card__cover::after{
    display:none!important;
  }
- html.cazami-android .cazami-home #works-grid .work-card__cover .web-preview{
+ .cazami-home #works-grid .work-card__cover .web-preview{
    border-radius:6px 6px 0 0;
  }
- html.cazami-android .cazami-home #works-grid .work-card__ordinal{
+ .cazami-home #works-grid .work-card__ordinal{
    top:9px;left:9px;
    padding:3px 5px;
    font-size:8px;
    border-radius:5px;
  }
- html.cazami-android .cazami-home #works-grid .work-card__new{
+ .cazami-home #works-grid .work-card__new{
    top:9px;right:7px;
    max-width:55%;
    padding:4px 5px;
    font-size:7px;
    letter-spacing:.025em;
  }
- html.cazami-android .cazami-home #works-grid .work-card__info{
+ .cazami-home #works-grid .work-card__info{
    display:flex;
    flex-direction:column;
    flex:1;
@@ -241,7 +241,7 @@ html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
    min-height:65px;
    padding:9px 8px 11px;
  }
- html.cazami-android .cazami-home #works-grid .work-card__info .eyebrow{
+ .cazami-home #works-grid .work-card__info .eyebrow{
    margin:0 0 5px;
    font-size:8px;
    line-height:1.3;
@@ -250,7 +250,7 @@ html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
    overflow:hidden;
    text-overflow:ellipsis;
  }
- html.cazami-android .cazami-home #works-grid .work-card__info h3{
+ .cazami-home #works-grid .work-card__info h3{
    display:-webkit-box;
    -webkit-box-orient:vertical;
    -webkit-line-clamp:2;
@@ -265,42 +265,42 @@ html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
  }
  /* La portada entera ya es un enlace: eliminamos el botón redundante
     para que las nueve imágenes luzcan claramente en la cuadrícula. */
- html.cazami-android .cazami-home #works-grid .work-card__links{
+ .cazami-home #works-grid .work-card__links{
    display:none!important;
  }
- html.cazami-android .cazami-home #works-grid .invitation-preview__fallback{
+ .cazami-home #works-grid .invitation-preview__fallback{
    gap:4px;
    padding:8px 4px;
  }
- html.cazami-android .cazami-home #works-grid .invitation-preview__brand{
+ .cazami-home #works-grid .invitation-preview__brand{
    font-size:7px;
  }
- html.cazami-android .cazami-home #works-grid .invitation-preview__kind{
+ .cazami-home #works-grid .invitation-preview__kind{
    font-size:7px;
  }
- html.cazami-android .cazami-home #works-grid .invitation-preview__fallback strong,
- html.cazami-android .cazami-home #works-grid .invitation-preview__fallback--new strong{
+ .cazami-home #works-grid .invitation-preview__fallback strong,
+ .cazami-home #works-grid .invitation-preview__fallback--new strong{
    font:600 clamp(12px,2.8vw,20px)/1.08 var(--studio-display);
  }
- html.cazami-android .cazami-home #works-grid .invitation-preview__cta{
+ .cazami-home #works-grid .invitation-preview__cta{
    display:none;
  }
- html.cazami-android .cazami-home #works-grid .invitation-preview__status{
+ .cazami-home #works-grid .invitation-preview__status{
    font-size:8px;
    bottom:7px;
  }
 }
-/* Dispositivos Android particularmente estrechos: pequeñas reducciones de
+/* Teléfonos particularmente estrechos: pequeñas reducciones de
    decoración, nunca escala global ni viewport de 1080 píxeles. */
 @media(max-width:355px){
- html.cazami-android .cazami-home #works-grid .work-card__cover{
+ .cazami-home #works-grid .work-card__cover{
    padding:4px 4px 0;
  }
- html.cazami-android .cazami-home #works-grid .work-card__info{
+ .cazami-home #works-grid .work-card__info{
    padding:8px 6px 10px;
    min-height:61px;
  }
- html.cazami-android .cazami-home #works-grid .work-card__info h3{
+ .cazami-home #works-grid .work-card__info h3{
    font-size:11px;
  }
 }

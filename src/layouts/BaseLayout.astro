@@ -16,12 +16,7 @@ const og=origin?new URL(image,origin).toString():undefined;
 ---
 <!doctype html><html lang="es"><head>
 <meta charset="utf-8"/>{noindex && <meta name="robots" content="noindex,nofollow"/>}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<script is:inline>
-  // Activar solo en la portada pública y exclusivamente en Android.
-  if (window.location.pathname === '/' && /Android/i.test(navigator.userAgent)) {
-    document.documentElement.classList.add('cazami-android');
-  }
-</script><meta name="theme-color" content="#261f22"/><meta name="description" content={description}/>
+<meta name="theme-color" content="#261f22"/><meta name="description" content={description}/>
 <meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/>
 {og && <meta property="og:image" content={og}/>}{canonical && <><meta property="og:url" content={canonical}/><link rel="canonical" href={canonical}/></>}
 <link rel="icon" type="image/png" href="/favicon.png"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
